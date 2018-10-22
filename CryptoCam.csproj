@@ -287,12 +287,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Cryptid.cs" />
+    <Compile Include="Assets\Scripts\Firefly.cs" />
+    <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
+    <Compile Include="Assets\Scripts\Jackalope.cs" />
+    <Compile Include="Assets\Scripts\Move.cs" />
     <Compile Include="Assets\Scripts\Reverse.cs" />
     <Compile Include="Assets\Scripts\Rotate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\CelShader.shader" />
     <None Include="Assets\Shaders\CelShaderNoShadows.shader" />
     <None Include="Assets\Shaders\Grass.shader" />
+    <None Include="Assets\Shaders\Trees.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GrassInteractionHolder : MonoBehaviour {
 
-    public GameObject[] cryptids;
+    GameObject[] cryptids;
     Vector4[] positions = new Vector4[100];
 
     // Use this for initialization
     void Start () {
-        //cryptids = GameObject.FindGameObjectsWithTag("Cryptid");
+        cryptids = GameObject.FindGameObjectsWithTag("Cryptid");
 
     }
 	

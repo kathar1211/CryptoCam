@@ -17,9 +17,14 @@
 		#pragma target 3.0
 
 		half4 LightingCelShadingForward(SurfaceOutput s, half3 lightDir, half atten) {
-			//half NdotL = dot(s.Normal, lightDir);
+			half NdotL = step(0,dot(s.Normal, lightDir));
+			float darkness = .18;
+			float lightness = .2 - darkness;
+			NdotL = darkness + (NdotL*lightness);
 
-			half NdotL = .2;
+			//half NdotL = .2;
+			//atten = saturate(atten);
+			//atten = atten * atten;
 			half4 c;
 			c.rgb = s.Albedo * _LightColor0.rgb * (NdotL * atten * 2);
 			c.a = s.Alpha;

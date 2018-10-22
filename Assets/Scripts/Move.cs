@@ -19,5 +19,6 @@ public class Move : MonoBehaviour {
 
         //turn riht
         transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed);
+        
 	}
 }
