@@ -6,8 +6,9 @@
 		//_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" }
+		Tags { "RenderType" = "Opaque" }
 		LOD 200
+		
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
@@ -27,6 +28,7 @@
 			//atten = atten * atten;
 			half4 c;
 			c.rgb = s.Albedo * _LightColor0.rgb * (NdotL * atten * 2);
+			
 			c.a = s.Alpha;
 			return c;
 		}
@@ -43,6 +45,7 @@
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
+			
 			o.Alpha = c.a;
 		}
 		ENDCG

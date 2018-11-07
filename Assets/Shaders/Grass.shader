@@ -12,12 +12,13 @@
 		_Radius("Radius", float) = 6 // width of the line around the dissolve
 	}
 	SubShader {
-		Tags { "RenderType"="Opaque" "DisableBatching" = "True" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "DisableBatching" = "True" }
 		LOD 200
+
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf CelShadingForward vertex:vert addshadow keepalpha
+		#pragma surface surf CelShadingForward vertex:vert addshadow keepalpha alpha:fade
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -81,6 +82,7 @@
 			// Albedo comes from a texture tinted by color
 			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 			o.Albedo = c.rgb;
+			//clip(c.a - 0.4);
 			o.Alpha = c.a;
 		}
 		ENDCG

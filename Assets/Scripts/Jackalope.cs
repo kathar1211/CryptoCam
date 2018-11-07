@@ -22,6 +22,8 @@ public class Jackalope : Cryptid {
         targetPos.y = transform.position.y;
         currentState = MoveState.run;
         animator = GetComponent<Animator>();
+        cryptidType = "Jackalope";
+        baseScore = 50;
     }
 	
 	// Update is called once per frame
@@ -88,6 +90,6 @@ public class Jackalope : Cryptid {
         transform.rotation = Quaternion.LookRotation(newDir);
 
         transform.position = Vector3.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime);
-        Debug.Log(targetPos);
+        
     }
 }
