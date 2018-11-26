@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Display - Copy.unity
+- path: Assets/Scenes/Display.unity
   isLoaded: 1
   isActive: 1

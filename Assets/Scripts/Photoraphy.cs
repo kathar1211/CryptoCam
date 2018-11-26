@@ -97,7 +97,7 @@ public class Photoraphy : MonoBehaviour {
 
         //determine who's in the photo
         List<GameObject> subjects = new List<GameObject>();
-        GameObject mainSubject = new GameObject();
+        GameObject mainSubject;
         foreach (GameObject cryptid in allCryptids)
         {
             //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
@@ -108,7 +108,8 @@ public class Photoraphy : MonoBehaviour {
                 if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
                 {
                     //if x and y are between 1 and 0 ((0,0) is bottom left corner and (1,1) is top riht) and z (distance from camera) is positive then cryptid is in the shot
-                    subjects.Add(cryptid);
+                    //dont add cryptids that are in frame but not visible
+                    if (checkVisibility(cryptid) != 0) { subjects.Add(cryptid); }
                 }
             }
         }
@@ -123,22 +124,26 @@ public class Photoraphy : MonoBehaviour {
             allPics[picIndex] = pic;
 
             Display(pic.pic);
-            DisplayScore(ScorePhoto(pic));
+            DisplayScore(0);
 
             //move up index
             picIndex++;
             return;
         }
-        else if(subjects.Count == 1)
-        {
+
+        //else if(subjects.Count == 1)
+        //treatin this as default case to avoid issue of mainsubject being unnasigned
+        //{
+
             //allScores[picIndex] = ScoreSubject(subjects[0]);
             mainSubject = subjects[0];
             pic.baseScore = mainSubject.GetComponent<Cryptid>().baseScore;
             pic.subjectName = mainSubject.GetComponent<Cryptid>().cryptidType;
-        }
+
+        //}
         //if more than one cryptid is in the photo determine whos the subject
         //factors to consider: closer to camera (viewpos.z), closer to center of frame, more visible
-        else if (subjects.Count > 1)
+        if (subjects.Count > 1)
         {
             float subjectScore = 1000000f;
             foreach (GameObject cryptid in subjects)
@@ -184,38 +189,24 @@ public class Photoraphy : MonoBehaviour {
         Vector2 dfc = new Vector2(.5f, .5f) - new Vector2(cameraPos.x, cameraPos.y);
         pic.distanceFromCenter = dfc.magnitude;
 
-        //todo: check for visibility
-        //cycle throuh hitboxes on cryptid, raycastin to each one
-        //pic.visibility is hitboxes successfully hit by raycast/total hitboxes
-        Collider[] hitboxes = mainSubject.GetComponentsInChildren<Collider>();
-        int hitCounter = 0;
-        foreach (Collider check in hitboxes)
-        {
-            Ray ray = new Ray(cryptoCam.transform.position, check.transform.position);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000)){
-                //if (hit.collider == check)
-                //rather than checkin if its the exact same collider, check if they have the same parent
-                //this avoids issues where the cryptids head blocks other parts of its body
-                if (hit.collider.transform.root == check.transform.root)
-                {
-                    hitCounter++;
-                }
-            }
-            else
-            {
-                Debug.Log("no hit");
-            }
-        }
-        if (hitboxes.Length != 0) { pic.visibility = (float)hitCounter / (float)hitboxes.Length; }
-        
+        //store visibility
+        pic.visibility = checkVisibility(mainSubject);
 
         //store the pic
         allPics[picIndex] = pic;
 
         //display (debu)
         Display(pic.pic);
-        DisplayScore(ScorePhoto(pic));
+        ScorePhoto(pic);
+        //DisplayScore(ScorePhoto(pic));
+        
+
+        //displaying all elements of score
+        //testtxt.text = "Score: " + ScorePhoto(pic);
+        //testtxt.text += '\n' + "Cryptids in Pic: " + pic.subjectCount;
+        //testtxt.text += '\n' + "Subject: " + pic.subjectName;
+        //testtxt.text += '\n' + "Facin forward: " + pic.facinForward;
+        //testtxt.text += '\n' + "Visibility: " + pic.visibility;
 
         //move up index
         picIndex++;
@@ -229,39 +220,74 @@ public class Photoraphy : MonoBehaviour {
         int finalScore = 0;
 
         //oh, its a TYPE! thats worth BASESCORE points
+        testtxt.text = "Subject: " + pic.subjectName + " (+" + pic.baseScore + ")";
         finalScore += pic.baseScore;
 
+
         //base score reduced to 10 points if facin wron way
+        testtxt.text += '\n' + "Facing forward: " + pic.facinForward;
         if (!pic.facinForward)
         {
             finalScore -= (pic.baseScore - 10);
+            testtxt.text += " (-" + (pic.baseScore - 10) + ")";
         }
 
         //todo: visibility
         finalScore = (int)(finalScore*pic.visibility);
+        testtxt.text += '\n' + "Visibility: " + (int)(pic.visibility * 100) + "% (x" + pic.visibility + ")";
 
         //todo: coolpose
 
         //distancefromcenter should be a float value between 0 and ~.7
         finalScore += (int)(200 * (.7f - pic.distanceFromCenter));
+        testtxt.text += "\n" + "Distance from Center of Frame: \n" + pic.distanceFromCenter + " (+" + (int)(200 * (.7f - pic.distanceFromCenter)) + ")";
 
         //distance from camera is in world units, with 0 on top of camera
         //not sure what ideal distance is, for now well just say the closer the better
         //distance from camera should never be 0, but just in case
         if (pic.distanceFromCamera == 0) { pic.distanceFromCamera = .000001f; }
         finalScore += (int)Mathf.Ceil(5000 * (1 / pic.distanceFromCamera));
+        testtxt.text += "\n" + "Distance from Camera: \n" + pic.distanceFromCamera + "(+" + (int)Mathf.Ceil(5000 * (1 / pic.distanceFromCamera)) + ")";
 
-        //todo: visibility
-        finalScore = (int)(finalScore * pic.visibility);
 
         //and theres more than one cryptid in the shot! thats worth double!
         if (pic.subjectCount > 1)
         {
             finalScore *= 2;
         }
+        testtxt.text += "\nCryptids in Frame: " + pic.subjectCount + " (x" + pic.subjectCount + ")";
 
-
+        testtxt.text += '\n' + "Score: " + finalScore;
 
         return finalScore;
+    }
+
+    float checkVisibility(GameObject mainSubject)
+    {
+        //todo: check for visibility
+        //cycle throuh hitboxes on cryptid, raycastin to each one
+        //pic.visibility is hitboxes successfully hit by raycast/total hitboxes
+        Collider[] hitboxes = mainSubject.GetComponentsInChildren<Collider>();
+        int hitCounter = 0;
+        foreach (Collider check in hitboxes)
+        {
+            Vector3 direction = check.transform.position - cryptoCam.transform.position;
+            Ray ray = new Ray(cryptoCam.transform.position, direction);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 1000))
+            {
+                //if (hit.collider == check)
+                //rather than checkin if its the exact same collider, check if they have the same parent
+                //this avoids issues where the cryptids head blocks other parts of its body
+                if (hit.collider.transform.root == check.transform.root)
+                {
+                    hitCounter++;
+                }
+            }
+        
+        }
+        if (hitboxes.Length != 0) { return (float)hitCounter / (float)hitboxes.Length; }
+
+        return 0;
     }
 }

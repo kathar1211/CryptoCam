@@ -12,6 +12,7 @@ public class Jackalope : Cryptid {
     Animator animator;
     float animationDuration;
     float timeElapsed;
+    float timeChasing;
 
     enum MoveState { run, stand, scratch};
     MoveState currentState;
@@ -28,6 +29,10 @@ public class Jackalope : Cryptid {
 	
 	// Update is called once per frame
 	void Update () {
+
+        timeElapsed += Time.deltaTime;
+        timeChasing += Time.deltaTime;
+
         switch (currentState)
         {
             case MoveState.run:
@@ -56,7 +61,7 @@ public class Jackalope : Cryptid {
             case MoveState.scratch:
             case MoveState.stand:
                 //return to runnin after random amount of time
-                timeElapsed += Time.deltaTime;
+               
                 if (timeElapsed >= animationDuration)
                 {
                     currentState = MoveState.run;
@@ -77,14 +82,16 @@ public class Jackalope : Cryptid {
         //choose a random taret position within rane and move towards it
         //https://answers.unity.com/questions/23010/ai-wandering-script.html
 
-        
 
-        if((transform.position - targetPos).magnitude < 3)
+
+        if ((transform.position - targetPos).magnitude < 3 || timeChasing > 14)
         {
             targetPos = transform.position + transform.forward*(distance/2.0f) +  Random.insideUnitSphere * distance;
             targetPos.y = transform.position.y;
             //transform.LookAt(targetPos);
+            timeChasing = 0;
         }
+
 
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (targetPos - transform.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
