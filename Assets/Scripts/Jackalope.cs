@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Jackalope : Cryptid {
 
-    //wanderin properties
+    //wandering properties
     public float distance;
     public float runSpeed;
     public float rotateSpeed;
@@ -79,10 +79,8 @@ public class Jackalope : Cryptid {
     //move randomly in 2d space
     void Wander()
     {
-        //choose a random taret position within rane and move towards it
+        //choose a random target position within range and move towards it
         //https://answers.unity.com/questions/23010/ai-wandering-script.html
-
-
 
         if ((transform.position - targetPos).magnitude < 3 || timeChasing > 14)
         {
