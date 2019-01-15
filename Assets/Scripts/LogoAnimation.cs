@@ -41,7 +41,8 @@ public class LogoAnimation : MonoBehaviour {
         rightCloud.GetComponent<CanvasGroup>().alpha = 0;
         foreach (GameObject star in stars)
         {
-            star.GetComponent<CanvasGroup>().alpha = 0;
+            //star.GetComponent<CanvasGroup>().alpha = 0;
+            star.SetActive(false);
         }
 
         //move clouds
@@ -68,7 +69,8 @@ public class LogoAnimation : MonoBehaviour {
 
             foreach (GameObject star in stars)
             {
-                star.GetComponent<CanvasGroup>().alpha = 1;
+                //star.GetComponent<CanvasGroup>().alpha = 1;
+                star.SetActive(true);
             }
         }
 
@@ -98,7 +100,8 @@ public class LogoAnimation : MonoBehaviour {
 
             if (starTimer >= starDelay)
             {
-                stars[starIndex].GetComponent<CanvasGroup>().alpha = 1;
+                //stars[starIndex].GetComponent<CanvasGroup>().alpha = 1;
+                stars[starIndex].SetActive(true);
                 starIndex++;
                 starTimer = 0;
             }

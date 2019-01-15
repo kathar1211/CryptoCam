@@ -7,6 +7,8 @@ public class Tsuchinoko : Cryptid {
     public float speed;
     public float rotateSpeed;
     Animator animator;
+    //percent chance that tsuchinoko will switch between being upright or not any given frame
+    public float chanceUpDown;
 
     // Use this for initialization
     void Start () {
@@ -23,6 +25,11 @@ public class Tsuchinoko : Cryptid {
 
         Move();
 
+        if (Random.Range(0.0f, 100.0f) < chanceUpDown)
+        {
+            ToggleRiseLower();
+        }
+
         
 	}
 
@@ -37,7 +44,7 @@ public class Tsuchinoko : Cryptid {
     }
 
     //tsuchinoko assumes the upright position
-    void Rise()
+    /*void Rise()
     {
         animator.SetBool("Upright", true);
     }
@@ -46,5 +53,10 @@ public class Tsuchinoko : Cryptid {
     void Lower()
     {
         animator.SetBool("Upright", false);
+    }*/
+
+    void ToggleRiseLower()
+    {
+        animator.SetBool("Upright", !animator.GetBool("Upright"));
     }
 }

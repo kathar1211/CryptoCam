@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TitleScreen : MonoBehaviour {
 
@@ -20,24 +21,28 @@ public class TitleScreen : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            currentButton += buttons.Length;
-            currentButton--;
-            currentButton %= buttons.Length;
-            MoveSelector(buttons[currentButton]);
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            currentButton++;
-            currentButton %= buttons.Length;
-            MoveSelector(buttons[currentButton]);
-        }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        //only accept input once buttons have appeared on screen
+        if (buttons[buttons.Length - 1].activeInHierarchy)
         {
-            buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                currentButton += buttons.Length;
+                currentButton--;
+                currentButton %= buttons.Length;
+                MoveSelector(buttons[currentButton]);
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                currentButton++;
+                currentButton %= buttons.Length;
+                MoveSelector(buttons[currentButton]);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+            }
         }
     }
 
@@ -51,6 +56,8 @@ public class TitleScreen : MonoBehaviour {
     public void NewGame()
     {
         Debug.Log("clicked newgame");
+        SceneManager.LoadScene("Lab");
+
     }
 
     //bring up options menu
@@ -76,5 +83,7 @@ public class TitleScreen : MonoBehaviour {
         //selector.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(this.transform.position.x + (button.GetComponent<RectTransform>().rect.width), button.GetComponent<RectTransform>().position.y, 0);
         selector.GetComponent<RectTransform>().anchoredPosition = new Vector2(-button.GetComponent<RectTransform>().rect.width/2 -xmargin, button.GetComponent<RectTransform>().anchoredPosition.y + ymargin);
         selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(button.GetComponent<RectTransform>().rect.width + xmargin*2, selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
+
+        currentButton = System.Array.IndexOf(buttons, button);
     }
 }
