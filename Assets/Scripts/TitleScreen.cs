@@ -13,17 +13,30 @@ public class TitleScreen : MonoBehaviour {
 
     int currentButton;
 
-	// Use this for initialization
-	void Start () {
+    //need a short 1 frame buffer for key presses;
+    //keep track of whether the animation is done as well as whether it was done 1 frame ago
+    bool animationDone;
+    bool animationDonePevFrame;
+
+    // Use this for initialization
+    void Start () {
         currentButton = 0;
         MoveSelector(buttons[0]);
+        animationDone = false;
+        animationDonePevFrame = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+        animationDonePevFrame = animationDone;
+
         //only accept input once buttons have appeared on screen
         if (buttons[buttons.Length - 1].activeInHierarchy)
+        {
+            animationDone = true;
+        }
+        if (animationDone && animationDonePevFrame)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {

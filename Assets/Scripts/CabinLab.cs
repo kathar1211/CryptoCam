@@ -21,18 +21,27 @@ public class CabinLab : MonoBehaviour {
     public Sprite[] pages;
     int currentPage;
 
+    //for options
+    public GameObject options;
+
     enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Option };
     MenuState currentState;
 
 	// Use this for initialization
 	void Start () {
-        
+
+        //make sure cursor settings are right
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
         MoveSelector(textButtons[0]);
         currentState = MenuState.Main;
 
         page = cryptidNomicon.transform.GetChild(0).gameObject;
         cryptidNomicon.SetActive(false);
         currentPage = 0;
+
+        options.SetActive(false);
         
     }
 
@@ -70,6 +79,15 @@ public class CabinLab : MonoBehaviour {
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     TurnPage(true);
+                }
+
+                break;
+
+            case MenuState.Talking:
+                //textbox will reach conclusion and handle input on its own, just check if its donw
+                if (!textBox.gameObject.activeInHierarchy)
+                {
+                    currentState = MenuState.Main;
                 }
 
                 break;
@@ -114,8 +132,11 @@ public class CabinLab : MonoBehaviour {
 
     public void Talk()
     {
-        string txt = "This is just some test dialogue. I'll say more interesting things in the final game.";
-        textBox.GetComponent<TextBox>().DisplayText(txt);
+        currentState = MenuState.Talking;
+        textBox.SetActive(true);
+        string[] txt = { "This is just some test dialogue.", "I'll say more interesting things in the final game." };
+        textBox.GetComponent<TextBox>().FeedText(txt);
+        textBox.GetComponent<TextBox>().DisplayText(); //display text should be calling when finished feeding lines
     }
 
     public void Embark()
@@ -134,24 +155,38 @@ public class CabinLab : MonoBehaviour {
 
     public void Items()
     {
+        currentState = MenuState.Talking;
+        textBox.SetActive(true);
         string txt = "You can't look at the items yet.";
-        textBox.GetComponent<TextBox>().DisplayText(txt);
+        textBox.GetComponent<TextBox>().FeedText(txt);
+        textBox.GetComponent<TextBox>().DisplayText();
     }
 
     public void Gallery()
     {
+        currentState = MenuState.Talking;
+        textBox.SetActive(true);
         string txt = "You can't look at the gallery yet.";
-        textBox.GetComponent<TextBox>().DisplayText(txt);
+        textBox.GetComponent<TextBox>().FeedText(txt);
+        textBox.GetComponent<TextBox>().DisplayText();
     }
 
     public void Options()
     {
-
+        options.SetActive(true);
+        currentState = MenuState.Option;
     }
 
     public void Exit()
     {
         SceneManager.LoadScene("Title");
+    }
+
+    public void Return(GameObject submenu)
+    {
+        //return back to main menu
+        submenu.SetActive(false);
+        currentState = MenuState.Main;
     }
 
 

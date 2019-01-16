@@ -58,7 +58,7 @@ public class LogoAnimation : MonoBehaviour {
 	void Update () {
 
         //option to skip animation stuff by pressing enter
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             moon.GetComponent<CanvasGroup>().alpha = 1;
             leftCloud.GetComponent<CanvasGroup>().alpha = 1;
@@ -83,6 +83,7 @@ public class LogoAnimation : MonoBehaviour {
         //fade in moon and clouds first
         if (moon.GetComponent<CanvasGroup>().alpha != 1)
         {
+            //fade in
             moon.GetComponent<CanvasGroup>().alpha += Time.deltaTime / moonDelay;
             leftCloud.GetComponent<CanvasGroup>().alpha += Time.deltaTime / moonDelay;
             rightCloud.GetComponent<CanvasGroup>().alpha += Time.deltaTime / moonDelay;
