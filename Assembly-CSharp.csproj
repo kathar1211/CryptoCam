@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Photography.cs" />
     <Compile Include="Assets\Scripts\Reverse.cs" />
     <Compile Include="Assets\Scripts\Rotate.cs" />
+    <Compile Include="Assets\Scripts\SetRippleShaderEffects.cs" />
     <Compile Include="Assets\Scripts\SpriteFaceForward.cs" />
     <Compile Include="Assets\Scripts\TextBox.cs" />
     <Compile Include="Assets\Scripts\TitleScreen.cs" />
