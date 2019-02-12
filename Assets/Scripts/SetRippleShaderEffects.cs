@@ -4,13 +4,14 @@ using UnityEngine;
 
 
 //https://pastebin.com/ZSvX08fu
-public class SetRippleShaderEffects : MonoBehaviour {
+public class SetRippleShaderEffects : MonoBehaviour
+{
 
     [SerializeField]
     RenderTexture rt;
     [SerializeField]
     Transform target;
-    
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -22,8 +23,8 @@ public class SetRippleShaderEffects : MonoBehaviour {
     private void Update()
     {
         transform.position = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
-        Shader.SetGlobalVector("_Position", transform.position);
+        Shader.SetGlobalVector("_Position", new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
         Shader.SetGlobalFloat("_RippleYPos", target.transform.position.y);
-       // Debug.Log(target.transform.position.y);
+        // Debug.Log(target.transform.position.y);
     }
 }
