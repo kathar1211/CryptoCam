@@ -15,12 +15,12 @@ public class TextBox : MonoBehaviour {
     Queue<string> allText;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         txt = this.transform.GetChild(0).GetComponent<Text>();
         talking = false;
 
         allText = new Queue<string>();
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -62,6 +62,7 @@ public class TextBox : MonoBehaviour {
     //allow other classes to display dialogue
     public void DisplayText()
     {
+        this.gameObject.SetActive(true);
         if(allText.Count!=0)
         DisplayText(allText.Dequeue());
     }

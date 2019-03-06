@@ -42,6 +42,8 @@ public class CabinLab : MonoBehaviour {
         currentPage = 0;
 
         options.SetActive(false);
+
+        textBox.SetActive(false);
         
     }
 
@@ -84,7 +86,7 @@ public class CabinLab : MonoBehaviour {
                 break;
 
             case MenuState.Talking:
-                //textbox will reach conclusion and handle input on its own, just check if its donw
+                //textbox will reach conclusion and handle input on its own, just check if its done
                 if (!textBox.gameObject.activeInHierarchy)
                 {
                     currentState = MenuState.Main;
@@ -136,7 +138,7 @@ public class CabinLab : MonoBehaviour {
         textBox.SetActive(true);
         string[] txt = { "This is just some test dialogue.", "I'll say more interesting things in the final game." };
         textBox.GetComponent<TextBox>().FeedText(txt);
-        textBox.GetComponent<TextBox>().DisplayText(); //display text should be calling when finished feeding lines
+        textBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
     }
 
     public void Embark()

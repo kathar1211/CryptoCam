@@ -52,27 +52,8 @@ public class Photography : MonoBehaviour {
             picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
         }
 
-        //debu
-        if (Input.GetMouseButtonDown(1))
-        {
-            displayIm.sprite = Sprite.Create(test, new Rect(0.0f, 0.0f, test.width, test.height), new Vector2(0.5f, 0.5f));
-        }
+ 
 	}
-
-    //debu method to make sure pics are takin
-    void Display(Texture2D pic)
-    {
-        //index %= allPics.Length;
-        //https://answers.unity.com/questions/243209/how-to-convert-texture2d-to-image-in-c.html
-        displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
-    }
-
-    void DisplayScore(int score)
-    {
-        testtxt.text = "Score: " + score;
-    }
-
-    
 
     //rendertexture (photo) is saved. this is also where some grading happens
     void TakePicture()
@@ -131,8 +112,8 @@ public class Photography : MonoBehaviour {
             //store the pic
             allPics[picIndex] = pic;
 
-            Display(pic.pic);
-            DisplayScore(0);
+            //Display(pic.pic);
+            //DisplayScore(0);
 
             //move up index
             picIndex++;
@@ -204,8 +185,8 @@ public class Photography : MonoBehaviour {
         allPics[picIndex] = pic;
 
         //display (debu)
-        Display(pic.pic);
-        ScorePhoto(pic);
+        //Display(pic.pic);
+        //ScorePhoto(pic);
         //DisplayScore(ScorePhoto(pic));
         
 
@@ -297,5 +278,19 @@ public class Photography : MonoBehaviour {
         if (hitboxes.Length != 0) { return (float)hitCounter / (float)hitboxes.Length; }
 
         return 0;
+    }
+
+    //method to show all saved pics at the end of the level
+    public void ShowThumbnails(Image[] thumbs)
+    {
+        for (int i = 0; i < thumbs.Length; i++)
+        {
+            if (i > allPics.Length) { return; }
+
+            //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
+
+            thumbs[i].sprite = Sprite.Create(allPics[i].pic, new Rect(0f, 0f, allPics[i].pic.width, allPics[i].pic.height), new Vector2(.5f, .5f));
+
+        }
     }
 }

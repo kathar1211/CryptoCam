@@ -8,10 +8,10 @@ public class GameManager : MonoBehaviour {
 
     //max time allowed to complete the level in seconds
     //time to walk from point a to point b with no stopping at walk spped 7 is 4minutes
-    float timeRemaining = 5 * 60 + 1;
+    //float timeRemaining = 5 * 60 + 1;
 
     //pokemon snap allows 60 pictures per course
-    int picsRemaining = 15;
+    //int picsRemaining = 15;
 
    // public Photograph[] picsTaken = new Photograph[15];
 
@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     Image loadingAnim;
+
+    bool LevelOver;
 
     //when scene is loaded and level begins start with some panning shots of the level before transitioning into gameplay
     public bool transitionsEnabled;
@@ -58,15 +60,16 @@ public class GameManager : MonoBehaviour {
         }
 
         //decrease timer
-        timeRemaining -= Time.deltaTime;
-        int minutes = Mathf.FloorToInt(timeRemaining / 60f);
-        int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
-        timeText.text = "Time Remaining: " + string.Format("{0:0}:{1:00}", minutes, seconds);
+        //timeRemaining -= Time.deltaTime;
+        //int minutes = Mathf.FloorToInt(timeRemaining / 60f);
+        //int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
+       // timeText.text = "Time Remaining: " + string.Format("{0:0}:{1:00}", minutes, seconds);
 	}
 
     //ask the user if they would like to end the course
     public void EndPrompt()
     {
+        if (LevelOver) { return; }
         if (!endprompt.gameObject.activeSelf)
         {
             Time.timeScale = 0;
@@ -82,6 +85,7 @@ public class GameManager : MonoBehaviour {
     //overload end prompt that allows for a custom message
     public void EndPrompt(string txt)
     {
+        if (LevelOver) { return; }
         if (!endprompt.gameObject.activeSelf)
         {
             Time.timeScale = 0;
@@ -99,7 +103,8 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = 1;
 
         //load async next scene
-        SceneManager.LoadSceneAsync("Lab", LoadSceneMode.Single);
+        LevelOver = true;
+        SceneManager.LoadSceneAsync("Grading", LoadSceneMode.Single);
 
         //set loading icon to active
         loadingAnim.gameObject.SetActive(true);

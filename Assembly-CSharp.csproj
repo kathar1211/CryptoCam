@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Firefly.cs" />
     <Compile Include="Assets\Scripts\FresnoNightcrawler.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GradeManager.cs" />
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />
