@@ -122,11 +122,11 @@ Shader "Custom/Water"
 
 
 		float ripples = tex2D(_GlobalEffectRT, uv).b;
-		ripples = step(.99, ripples * 2.5);
+		ripples = step(.99, ripples * 3);
 		//color += (ripples*_EdgeColor);
 
 		//use y position to determine whether or not there should be any ripples
-		ripples *= step(input.worldPos.y - 5, _RippleYPos);
+		//ripples *= step(input.worldPos.y - 5, _RippleYPos);
 
 
 		float4 albedo = tex2D(_MainTex, input.texCoord.xy * _TileFactor + _Time * _AnimSpeed);

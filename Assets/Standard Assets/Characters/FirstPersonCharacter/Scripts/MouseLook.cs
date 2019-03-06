@@ -30,6 +30,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public void LookRotation(Transform character, Transform camera)
         {
+            if (Time.timeScale == 0) { return; } //freeze looking when game is paused
+
             float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
             float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
 
@@ -52,7 +54,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 camera.localRotation = m_CameraTargetRot;
             }
 
-            UpdateCursorLock();
+           // UpdateCursorLock();
         }
 
         public void SetCursorLock(bool value)

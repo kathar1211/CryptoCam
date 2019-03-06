@@ -143,7 +143,9 @@ public class CabinLab : MonoBehaviour {
     {
         //todo: level selector
         //for now just load gameplay scene
-        SceneManager.LoadScene("TerrainTest");
+        Destroy(GameObject.Find("GameManager"));
+        SceneManager.LoadSceneAsync("TerrainTest", LoadSceneMode.Single);
+        
         
     }
 

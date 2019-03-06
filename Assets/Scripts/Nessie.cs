@@ -17,6 +17,8 @@ public class Nessie : Cryptid {
     enum MoveState { underWaterSwim, aboveWaterSwim, breach, look};
     MoveState currentState;
 
+    ParticleSystem ripples;
+
     // Use this for initialization
     void Start () {
         cryptidType = "Loch Ness Monster";
@@ -24,6 +26,7 @@ public class Nessie : Cryptid {
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
         animator = GetComponent<Animator>();
+        ripples = GetComponentInChildren<ParticleSystem>();
     }
 	
 	// Update is called once per frame
@@ -34,10 +37,11 @@ public class Nessie : Cryptid {
         {
             case MoveState.underWaterSwim:
                 MoveinCircle(speed,rotateSpeed);
-                if (transform.position.y > belowPos) //the point at which nessies body peeks out of the water
+                if (transform.position.y > belowPos) //the point at which nessies goes deepest
                 {
                     
-                    transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move up until breach
+                    transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move down until breach
+                    ripples.Stop();
                 }
                 else if (RandomChance(.1f))
                 {
@@ -62,6 +66,7 @@ public class Nessie : Cryptid {
                 {
                     
                     currentState = MoveState.aboveWaterSwim;
+                    ripples.Play();
                 }
                 break;
             case MoveState.aboveWaterSwim:

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-struct Photograph
+public struct Photograph
 {
     //store information about the photo
     public int subjectCount; //number of cryptids in the photo
@@ -20,13 +20,18 @@ struct Photograph
 
 public class Photography : MonoBehaviour {
 
-    Photograph[] allPics = new Photograph[40]; //store pictures as they're taken    
+    Photograph[] allPics = new Photograph[15]; //store pictures as they're taken    
    // Dictionary<Texture2D, int> finalPics; //store photos to be raded and associated scores 
     int picIndex; //where we are in our photo takin
     public Camera cryptoCam; // camera bein used to take pictures
+
+
     public Image displayIm;
     public Texture2D test;
     public Text testtxt;
+
+    [SerializeField]
+    Text picText;
 
     //tentative method for subject- et list of all cryptids and check if visible in frame
     GameObject[] allCryptids;
@@ -35,6 +40,7 @@ public class Photography : MonoBehaviour {
 	void Start () {
         picIndex = 0;
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
+        picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
 
     }
 	
@@ -42,7 +48,8 @@ public class Photography : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0))
         {
-            TakePicture();   
+            TakePicture();
+            picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
         }
 
         //debu
@@ -71,8 +78,9 @@ public class Photography : MonoBehaviour {
     void TakePicture()
     {
         //check if we're allowed to take any more photos
-        if (picIndex >= allPics.Length - 1)
+        if (picIndex >= allPics.Length)
         {
+            this.GetComponent<GameManager>().EndPrompt();
             return;
         }
 
