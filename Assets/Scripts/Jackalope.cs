@@ -13,6 +13,7 @@ public class Jackalope : Cryptid {
     float animationDuration;
     float timeElapsed;
     float timeChasing;
+    float minDistance = 3;
 
     enum MoveState { run, stand, scratch};
     MoveState currentState;
@@ -82,11 +83,10 @@ public class Jackalope : Cryptid {
         //choose a random target position within range and move towards it
         //https://answers.unity.com/questions/23010/ai-wandering-script.html
 
-        if ((transform.position - targetPos).magnitude < 3 || timeChasing > 14)
+        if ((transform.position - targetPos).magnitude < minDistance || timeChasing > 14)
         {
             targetPos = transform.position + transform.forward*(distance/2.0f) +  Random.insideUnitSphere * distance;
             targetPos.y = transform.position.y;
-            //transform.LookAt(targetPos);
             timeChasing = 0;
         }
 

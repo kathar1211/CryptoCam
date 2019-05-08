@@ -8,8 +8,8 @@ public struct Photograph
 {
     //store information about the photo
     public int subjectCount; //number of cryptids in the photo
-    public bool facinForward; //whether or not the main subject is facin the camera
-    public bool coolPose; //whether or not the main subject is doin a special animation
+    public bool facinForward; //whether or not the main subject is facing the camera
+    public bool coolPose; //whether or not the main subject is doing a special animation
     public string subjectName; //type of cryptid
     public int baseScore; //base score for type of cryptid
     public float distanceFromCenter; //distance of subject from center of frame ((.5,.5) in viewport coordinates)
@@ -20,10 +20,11 @@ public struct Photograph
 
 public class Photography : MonoBehaviour {
 
-    Photograph[] allPics = new Photograph[15]; //store pictures as they're taken    
-   // Dictionary<Texture2D, int> finalPics; //store photos to be raded and associated scores 
-    int picIndex; //where we are in our photo takin
-    public Camera cryptoCam; // camera bein used to take pictures
+    public int maxPics;
+    Photograph[] allPics; //store pictures as they're taken    
+  
+    int picIndex; //where we are in our photo taking
+    public Camera cryptoCam; // camera being used to take pictures
 
 
     public Image displayIm;
@@ -39,6 +40,7 @@ public class Photography : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         picIndex = 0;
+        allPics = new Photograph[maxPics];
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
 
@@ -280,17 +282,10 @@ public class Photography : MonoBehaviour {
         return 0;
     }
 
-    //method to show all saved pics at the end of the level
-    public void ShowThumbnails(Image[] thumbs)
+    public Photograph[] GetPhotographs()
     {
-        for (int i = 0; i < thumbs.Length; i++)
-        {
-            if (i > allPics.Length) { return; }
-
-            //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
-
-            thumbs[i].sprite = Sprite.Create(allPics[i].pic, new Rect(0f, 0f, allPics[i].pic.width, allPics[i].pic.height), new Vector2(.5f, .5f));
-
-        }
+        return allPics;
     }
+
+   
 }
