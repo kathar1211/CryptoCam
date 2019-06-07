@@ -14,9 +14,13 @@ public class TextBox : MonoBehaviour {
     string currentText;
     Queue<string> allText;
 
+    //decide whether or not text box disappears when finished scrolling through text
+    public bool CloseOnTextComplete { get; set; }
+
 	// Use this for initialization
 	void Awake () {
         txt = this.transform.GetChild(0).GetComponent<Text>();
+        CloseOnTextComplete = true; //default setting
         talking = false;
 
         allText = new Queue<string>();
@@ -52,7 +56,7 @@ public class TextBox : MonoBehaviour {
                 }
                 else
                 {
-                    this.gameObject.SetActive(false);
+                    if (CloseOnTextComplete) { this.gameObject.SetActive(false); }
                 }
             }
         }

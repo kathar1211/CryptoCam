@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />
+    <Compile Include="Assets\Scripts\LovelandFrogman.cs" />
     <Compile Include="Assets\Scripts\Move.cs" />
     <Compile Include="Assets\Scripts\Nessie.cs" />
     <Compile Include="Assets\Scripts\Options.cs" />

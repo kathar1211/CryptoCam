@@ -16,6 +16,7 @@ public struct Photograph
     public float distanceFromCamera; //distance of subject from camera (viewport.z value)
     public float visibility; //represents how many points on cryptid are visible
     public Texture2D pic; //the actual photo
+    public int finalScore;
 }
 
 public class Photography : MonoBehaviour {
@@ -182,6 +183,9 @@ public class Photography : MonoBehaviour {
 
         //store visibility
         pic.visibility = checkVisibility(mainSubject);
+
+        //score the pic
+        pic.finalScore = ScorePhoto(pic);
 
         //store the pic
         allPics[picIndex] = pic;

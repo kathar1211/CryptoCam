@@ -119,4 +119,15 @@ public class GameManager : MonoBehaviour {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
+
+    public void ReturnToLab(List<Photograph> finalPhotos)
+    {
+        Time.timeScale = 1;
+
+        //load async next scene
+        SceneManager.LoadSceneAsync("Lab", LoadSceneMode.Single);
+
+        //set loading icon to active
+        loadingAnim.gameObject.SetActive(true);
+    }
 }

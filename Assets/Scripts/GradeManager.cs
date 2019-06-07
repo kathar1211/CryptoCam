@@ -15,8 +15,13 @@ public class GradeManager : MonoBehaviour {
 
     GameObject YesButton;
     GameObject NoButton;
+    GameObject AutoButton;
+    GameObject DoneButton;
 
     GameObject gameManager;
+
+    [SerializeField]
+    GameObject ConfirmScreen;
 
     enum GradeState { allThumbs, bigThumb};
     GradeState currentState;
@@ -36,6 +41,8 @@ public class GradeManager : MonoBehaviour {
 
         YesButton = GameObject.Find("YesButton");
         NoButton = GameObject.Find("NoButton");
+        DoneButton = GameObject.Find("Done");
+        AutoButton = GameObject.Find("Auto");
 
         YesButton.SetActive(false);
         NoButton.SetActive(false);
@@ -49,6 +56,7 @@ public class GradeManager : MonoBehaviour {
         //display the pictures from the game manager
         ShowThumbnails(gameManager.GetComponent<Photography>().GetPhotographs());
 
+        textbox.CloseOnTextComplete = false;
         textbox.FeedText("Select pictures to show to Ted");
         textbox.DisplayText();
 
@@ -65,6 +73,9 @@ public class GradeManager : MonoBehaviour {
     {
         YesButton.SetActive(!YesButton.activeSelf);
         NoButton.SetActive(!NoButton.activeSelf);
+
+        DoneButton.SetActive(!DoneButton.activeSelf);
+        AutoButton.SetActive(!AutoButton.activeSelf);
     }
 
     //bring up image on click
@@ -93,29 +104,38 @@ public class GradeManager : MonoBehaviour {
         //if a photo of that cryptid has already been added, deselect and replace
         else
         {
-            Image deselect = null;
-            Photograph toRemove = finalSelection[picToAdd.subjectName];
-            //looping through dictionary to find image is a hit to performance, 
-            //but preferable to hit to memory from an inverse dictionary of hd photos
-            foreach (KeyValuePair<Image,Photograph> pair in allPhotos)
+            if (!picToAdd.Equals(finalSelection[picToAdd.subjectName]))
             {
-                if (pair.Value.Equals(toRemove))
-                {
-                    deselect = pair.Key;
-                    break;
-                }
+                UpdatePhoto(picToAdd);
             }
-
-            if (deselect != null)
-            {
-                deselect.gameObject.transform.Find("Selected").gameObject.SetActive(false);
-            }
-            finalSelection[picToAdd.subjectName] = picToAdd;
         }
 
         //hide buttons and return to photo view
         ToggleInputButtons();
         Delarge();
+    }
+
+    //for when an entry in the dictionary of final selected photos needs to be replaced
+    void UpdatePhoto(Photograph pic)
+    {
+        Image deselect = null;
+        Photograph toRemove = finalSelection[pic.subjectName];
+        //looping through dictionary to find image is a hit to performance, 
+        //but preferable to hit to memory from an inverse dictionary of hd photos
+        foreach (KeyValuePair<Image, Photograph> pair in allPhotos)
+        {
+            if (pair.Value.Equals(toRemove))
+            {
+                deselect = pair.Key;
+                break;
+            }
+        }
+
+        if (deselect != null)
+        {
+            deselect.gameObject.transform.Find("Selected").gameObject.SetActive(false);
+        }
+        finalSelection[pic.subjectName] = pic;
     }
 
     //photo dismissed
@@ -150,5 +170,57 @@ public class GradeManager : MonoBehaviour {
             thumbnails[i].sprite = Sprite.Create(pics[i].pic, new Rect(0f, 0f, pics[i].pic.width, pics[i].pic.height), new Vector2(.5f, .5f));
             allPhotos.Add(thumbnails[i], pics[i]);
         }
+    }
+
+    //automatically select the highest scoring photos for grading
+    public void AutoSelect()
+    {
+        foreach (KeyValuePair<Image, Photograph> pair in allPhotos)
+        {
+            Image img = pair.Key;
+            Photograph photo = pair.Value;
+
+            if (finalSelection.ContainsKey(photo.subjectName))
+            {
+                Photograph compareTo = finalSelection[photo.subjectName];
+
+                if(photo.finalScore > compareTo.finalScore)
+                {
+                    UpdatePhoto(photo);
+                    img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                finalSelection.Add(photo.subjectName, photo);
+                img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+            }
+        }
+    }
+
+    //prompt the user to confirm that they want to exit the selection screen
+    public void DoneButtonClick()
+    {
+        ConfirmScreen.SetActive(true);
+        ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = "Proceed with " + finalSelection.Count + " photos selected?";
+
+        AutoButton.SetActive(false);
+        DoneButton.SetActive(false);
+    }
+
+    //if user confirms they want to proceed to grading
+    public void ConfirmDone()
+    {
+        List<Photograph> photos = new List<Photograph>();
+        photos.AddRange(finalSelection.Values);
+        gameManager.GetComponent<GameManager>().ReturnToLab(photos);
+    }
+
+    //if user decided to return to selection
+    public void DeconfirmDone()
+    {
+        ConfirmScreen.SetActive(false);
+        AutoButton.SetActive(true);
+        DoneButton.SetActive(true);
     }
 }
