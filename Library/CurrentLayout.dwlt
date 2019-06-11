@@ -43,7 +43,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 80
+  controlID: 51
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 81
+  controlID: 52
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 82
+  controlID: 53
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -366,10 +366,10 @@ MonoBehaviour:
     height: 655
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 1456}
-    m_SelectedIDs: bae9ffff
-    m_LastClickedID: -5702
-    m_ExpandedIDs: 0cf4fffffaf4ffffe6fbffff00000000980f0000fe12000076140000
+    scrollPos: {x: 0, y: 16}
+    m_SelectedIDs: ec330000
+    m_LastClickedID: 13292
+    m_ExpandedIDs: 96dfffff9aedffff6cf6ffffe6fbffff000000002e330000d8360000e2380000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -419,14 +419,14 @@ MonoBehaviour:
     height: 655
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneLighting: 1
-  lastFramingTime: 1632.565049511515
+  lastFramingTime: 1600.997493766416
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -71.92588, y: 36.58146, z: -111.58753}
+    m_Target: {x: -317.08743, y: -63.70749, z: -138.3266}
     speed: 2
-    m_Value: {x: -71.92588, y: 36.58146, z: -111.58753}
+    m_Value: {x: -317.08743, y: -63.70749, z: -138.3266}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -454,13 +454,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.0011040849, y: -0.9991555, z: 0.016472753, w: 0.04350588}
+    m_Target: {x: 0.014669163, y: 0.9789606, z: -0.1902924, w: 0.074408166}
     speed: 2
-    m_Value: {x: 0.0011038216, y: -0.9989172, z: 0.016468825, w: 0.043495506}
+    m_Value: {x: 0.014666768, y: 0.9788007, z: -0.19026133, w: 0.074396014}
   m_Size:
-    m_Target: 151.86664
+    m_Target: 985.71
     speed: 2
-    m_Value: 151.86664
+    m_Value: 985.71
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -687,20 +687,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs/Environment
+    - Assets/Scenes
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Prefabs/Environment
+  - Assets/Scenes
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Kat\Documents\GitHub\CryptoCam
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 60}
-    m_SelectedIDs: 160d0000
-    m_LastClickedID: 3350
-    m_ExpandedIDs: 000000000c090000da0900002a0b0000340b0000ea0c0000000d0000700e0000ae0e0000da0e00001c3a00001e3a0000203a0000223a0000243a0000263a0000283a00002a3a00002c3a00002e3a0000303a000000ca9a3b
+    m_SelectedIDs: 400d0000
+    m_LastClickedID: 3392
+    m_ExpandedIDs: 000000000c090000da0900002a0b0000340b0000ea0c0000000d0000700e0000ae0e0000da0e0000cc320000ce320000d0320000d2320000d4320000d6320000d8320000da320000dc320000de320000e032000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -728,7 +728,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000c090000da0900002a0b0000340b0000ea0c0000000d0000700e0000ae0e0000da0e00001c3a00001e3a0000203a0000223a0000243a0000263a0000283a00002a3a00002c3a00002e3a0000303a0000
+    m_ExpandedIDs: 000000000c090000da0900002a0b0000340b0000ea0c0000000d0000700e0000ae0e0000da0e0000cc320000ce320000d0320000d2320000d4320000d6320000d8320000da320000dc320000de320000e0320000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
