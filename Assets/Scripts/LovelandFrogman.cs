@@ -15,7 +15,13 @@ public class LovelandFrogman : Cryptid {
     [SerializeField]
     Vector3 leapOffset;
 
+    public float walkSpeed;
+    public float swimSpeed;
+
     bool needToAdjustPosition; //used to adjust transform information to match up with visuals after an edge leap
+
+    //for demo video purposes only: in game frogman will respond to triggers not specific locations
+    Vector3 LeapPosition = new Vector3(-294.82f, .4f, -14.49f);
 
 	// Use this for initialization
 	void Start () {
@@ -42,14 +48,43 @@ public class LovelandFrogman : Cryptid {
         {
             currentState = MoveState.sit;
         }
-
-        if (needToAdjustPosition)
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("creep"))
         {
-            this.transform.position += leapOffset;
-            needToAdjustPosition = false;
+            currentState = MoveState.walk;
+        }
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("swim"))
+        {
+            currentState = MoveState.swim;
         }
 
-	}
+
+        switch (currentState)
+        {
+            //movement states
+            case MoveState.swim:
+                transform.Translate(Vector3.forward * Time.deltaTime * swimSpeed);
+                break;
+            case MoveState.walk:
+                transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
+                break;
+        }
+
+        //check when to start leapin
+        if ((transform.position - LeapPosition).magnitude <= .2f)
+        {
+            currentState = MoveState.edgeLeap;
+            animator.SetBool("climb", true);
+        }
+
+        //apply position offset
+        if (needToAdjustPosition)
+        {
+            transform.position += leapOffset;
+            needToAdjustPosition = false;
+        }
+        
+
+    }
 
     //event for when frog leap animation is finished
     public void EndFrogLeap()
