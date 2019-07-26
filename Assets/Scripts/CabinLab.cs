@@ -137,7 +137,8 @@ public class CabinLab : MonoBehaviour {
         currentState = MenuState.Talking;
         textBox.SetActive(true);
         string[] txt = { "This is just some test dialogue.", "I'll say more interesting things in the final game." };
-        textBox.GetComponent<TextBox>().FeedText(txt);
+        TedMoods[] moods = { TedMoods.Satisfied, TedMoods.LookUp };
+        textBox.GetComponent<TextBox>().FeedText(txt,moods);
         textBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
     }
 
@@ -163,6 +164,7 @@ public class CabinLab : MonoBehaviour {
         textBox.SetActive(true);
         string txt = "You can't look at the items yet.";
         textBox.GetComponent<TextBox>().FeedText(txt);
+        textBox.GetComponent<TextBox>().FeedTed(TedMoods.SquintHandUp);
         textBox.GetComponent<TextBox>().DisplayText();
     }
 
@@ -172,6 +174,7 @@ public class CabinLab : MonoBehaviour {
         textBox.SetActive(true);
         string txt = "You can't look at the gallery yet.";
         textBox.GetComponent<TextBox>().FeedText(txt);
+        textBox.GetComponent<TextBox>().FeedTed(TedMoods.Uncertain);
         textBox.GetComponent<TextBox>().DisplayText();
     }
 

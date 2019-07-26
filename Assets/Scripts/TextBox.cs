@@ -9,6 +9,9 @@ public class TextBox : MonoBehaviour {
     public float textDelay; //text scroll speed
     int textIndex;
 
+    public Ted ted; //update ted sprites with text as needed
+    Queue<TedMoods> allTeds; //queue ted sprites along with text lines
+
     bool talking; //keep track of whether text is being displayed
 
     string currentText;
@@ -24,6 +27,7 @@ public class TextBox : MonoBehaviour {
         talking = false;
 
         allText = new Queue<string>();
+        allTeds = new Queue<TedMoods>();
         //this.gameObject.SetActive(false);
 	}
 	
@@ -41,7 +45,11 @@ public class TextBox : MonoBehaviour {
                 }
                 else
                 {
+                    if (allTeds.Count != 0 && ted!= null){
+                        ted.SetTedSprite(allTeds.Dequeue());
+                    }                
                     DisplayText(allText.Dequeue());
+                    
                 }
             }
         }
@@ -69,6 +77,8 @@ public class TextBox : MonoBehaviour {
         this.gameObject.SetActive(true);
         if(allText.Count!=0)
         DisplayText(allText.Dequeue());
+        if (allTeds.Count != 0)
+            ted.SetTedSprite(allTeds.Dequeue());
     }
 
     void DisplayText(string text)
@@ -82,19 +92,25 @@ public class TextBox : MonoBehaviour {
         StartCoroutine("displayText",text);
     }
 
+    void DisplayTextWithTed(string text, TedMoods tedMood)
+    {
+        if (ted != null && !talking)
+        {
+            ted.SetTedSprite(tedMood);
+        }
+        displayText(text);
+    }
+
 
     //stop the dialogue scrolling animation and just display the text
     public void Skip()
     {
-        
         if (talking)
         {
             StopCoroutine("displayText");
             txt.text = currentText;
             talking = false;
         }
-
-
     }
 
     //show new dialogue
@@ -108,13 +124,9 @@ public class TextBox : MonoBehaviour {
 
         while (textIndex < text.Length)
         {
-            
-
             txt.text += text[textIndex];
             textIndex++;
             yield return new WaitForSeconds (textDelay);
-
-           
         }
 
         talking = false;
@@ -139,15 +151,31 @@ public class TextBox : MonoBehaviour {
         
     }
 
-    //allow adding single lines of text
-    public void FeedText(string line)
+    //overload method that also take a ted sprite to go with each line
+    public void FeedText(string[] text, TedMoods[] sprites)
     {
-        allText.Enqueue(line);
-       
+        foreach (string line in text)
+        {
+            FeedText(line);
+        }
+        foreach (TedMoods ted in sprites)
+        {
+            FeedTed(ted);
+        }
     }
 
 
-
+    //allow adding single lines of text
+    public void FeedText(string line)
+    {
+        allText.Enqueue(line); 
+    }
+    //add sprites to ted queue
+    public void FeedTed(TedMoods ted)
+    {
+        allTeds.Enqueue(ted);
+    }
+        
     //method to cancel text thats been sent
     public void ClearTextQueue()
     {
