@@ -1,0 +1,42 @@
+Ted emote key 
+{
+Default - 0
+LookDownHandUp - 1
+LookDownHandUpBlush - 2
+LookUpHandUp - 3
+LookUp - 4
+LookUpBlush - 5
+SquintHandUp - 6
+SquintHandUpBlush - 7
+Surprised - 8
+Disappointed - 9
+Satisfied - 10
+LeanForward - 11
+Pleased - 12
+Uncertain - 13
+Happy - 14
+}
+
+/STARTBLURB/
+8/What? Goodness no, I would never hurt an innocent cryptid.
+0/Oh, the Jackalope on the mantle. That's a fake, of course. It has buttons for eyes. You should really learn the difference if you're going to be a cryptid photographer.
+4/The net? ...That's not for cryptids.
+/ENDBLURB/
+
+/STARTBLURB/
+8/Oh no, no, don't get the wrong idea. My interest in Bigfoot in strictly academic.
+2/Well, yes, of course he has a gentle charm and is ruggedly handsome... but it's not like that.
+5/...Why? ......Did he ask about me?
+/ENDBLURB/
+
+/STARTBLURB/
+0/Of course I'm a real human. Why would you even ask that? I have a hat, and a PhD in cryptozoology.
+11/Yes, it's a real degree from a real university.
+6/...No, you can't see it.
+/ENDBLURB/
+
+/STARTBLURB/
+4/Actually, there's something I've been meaning to ask you about.
+2/I'm... not sure how to bring this up but... why is it that, every time you leave...
+0/...you always climb out through the window? I do have a door you know.
+/ENDBLURB/

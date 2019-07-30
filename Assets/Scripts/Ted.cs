@@ -11,6 +11,7 @@ public enum TedMoods
     LookDownHandUpBlush,
     LookUpHandUp,
     LookUp,
+    LookUpBlush,
     SquintHandUp,
     SquintHandUpBlush,
     Surprised,
@@ -34,6 +35,7 @@ public class Ted : MonoBehaviour {
     public Sprite lookDownHandUpBlush;
     public Sprite lookUpHandUp;
     public Sprite lookUp;
+    public Sprite lookUpBlush;
     public Sprite squintHandUp;
     public Sprite squintHandUpBlush;
     public Sprite surprised;
@@ -76,6 +78,9 @@ public class Ted : MonoBehaviour {
                 break;
             case TedMoods.LookUp:
                 tedImg.sprite = lookUp;
+                break;
+            case TedMoods.LookUpBlush:
+                tedImg.sprite = lookUpBlush;
                 break;
             case TedMoods.SquintHandUp:
                 tedImg.sprite = squintHandUp;

@@ -14,6 +14,7 @@ public class CabinLab : MonoBehaviour {
     int currentButton;
 
     public GameObject textBox; //for dialogue
+    public GameObject ted;
 
     //for cryptidnomicon
     public GameObject cryptidNomicon;
@@ -136,10 +137,7 @@ public class CabinLab : MonoBehaviour {
     {
         currentState = MenuState.Talking;
         textBox.SetActive(true);
-        string[] txt = { "This is just some test dialogue.", "I'll say more interesting things in the final game." };
-        TedMoods[] moods = { TedMoods.Satisfied, TedMoods.LookUp };
-        textBox.GetComponent<TextBox>().FeedText(txt,moods);
-        textBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
+        ted.GetComponent<TedConvos>().Talk();
     }
 
     public void Embark()

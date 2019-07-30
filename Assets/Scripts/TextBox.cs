@@ -151,6 +151,15 @@ public class TextBox : MonoBehaviour {
         
     }
 
+    //a list is fine too
+    public void FeedText(List<string> text)
+    {
+        foreach (string line in text)
+        {
+            FeedText(line);
+        }
+    }
+
     //overload method that also take a ted sprite to go with each line
     public void FeedText(string[] text, TedMoods[] sprites)
     {
@@ -164,6 +173,18 @@ public class TextBox : MonoBehaviour {
         }
     }
 
+    //overload method that also take a ted sprite to go with each line
+    public void FeedText(List<string> text, List<TedMoods> sprites)
+    {
+        foreach (string line in text)
+        {
+            FeedText(line);
+        }
+        foreach (TedMoods ted in sprites)
+        {
+            FeedTed(ted);
+        }
+    }
 
     //allow adding single lines of text
     public void FeedText(string line)

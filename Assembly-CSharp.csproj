@@ -82,12 +82,14 @@
     <Compile Include="Assets\Scripts\spin2d.cs" />
     <Compile Include="Assets\Scripts\SpriteFaceForward.cs" />
     <Compile Include="Assets\Scripts\Ted.cs" />
+    <Compile Include="Assets\Scripts\TedConvos.cs" />
     <Compile Include="Assets\Scripts\TextBox.cs" />
     <Compile Include="Assets\Scripts\TitleScreen.cs" />
     <Compile Include="Assets\Scripts\Tsuchinoko.cs" />
     <None Include="Assets\Shaders\Internal-PrePassLighting.shader" />
     <None Include="Assets\Shaders\Foliage.shader" />
     <None Include="Assets\Shaders\Grass.shader" />
+    <None Include="Assets\Resources\tedconvo.txt" />
     <None Include="Assets\Shaders\CelShader.shader" />
     <None Include="Assets\Shaders\Trees.shader" />
     <None Include="Assets\Shaders\Water.shader" />
