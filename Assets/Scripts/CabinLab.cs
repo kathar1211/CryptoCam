@@ -25,8 +25,12 @@ public class CabinLab : MonoBehaviour {
     //for options
     public GameObject options;
 
-    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Option };
+    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading };
     MenuState currentState;
+
+    List<Photograph> gradeablePhotos = new List<Photograph>();
+    int gradingIndex = 0;
+    public Image gradingThumbnail;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +49,21 @@ public class CabinLab : MonoBehaviour {
         options.SetActive(false);
 
         textBox.SetActive(false);
+
+        //if the gamemanager object is found and it has a non empty list of photos, jump right into grading mode
+        GameObject gameManager = GameObject.Find("GameManager");
+        if (gameManager != null)
+        {
+            List<Photograph> p = gameManager.GetComponent<GameManager>().pics4grading;
+            //move the images from the gamemanager script to the cabin lab script
+            if (p != null && p.Count > 0)
+            {
+                gradeablePhotos.AddRange(p);
+                gameManager.GetComponent<GameManager>().pics4grading.Clear();
+                gradingThumbnail.gameObject.SetActive(true);
+                currentState = MenuState.Grading;
+            }
+        }
         
     }
 
@@ -93,6 +112,24 @@ public class CabinLab : MonoBehaviour {
                     currentState = MenuState.Main;
                 }
 
+                break;
+            case MenuState.Grading:
+                //if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
+                {
+                    if (!textBox.activeInHierarchy && gradingIndex < gradeablePhotos.Count)
+                    {
+                        //if textbox is not active it means its finished with the current photo 
+                        //set it active again and queue up the next photo
+                        textBox.SetActive(true);
+                        GradePhoto(gradeablePhotos[gradingIndex]);
+                        gradingIndex++;
+                    }
+                }
+                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
+                {
+                    currentState = MenuState.Main;
+                    gradingThumbnail.gameObject.SetActive(false);
+                }
                 break;
         }
     }
@@ -179,7 +216,7 @@ public class CabinLab : MonoBehaviour {
     public void Options()
     {
         options.SetActive(true);
-        currentState = MenuState.Option;
+        currentState = MenuState.Options;
     }
 
     public void Exit()
@@ -194,7 +231,34 @@ public class CabinLab : MonoBehaviour {
         currentState = MenuState.Main;
     }
 
+    //iterate through the different attributes of the photo and queue up dialogue and sprites for ted that go with them
+    void GradePhoto(Photograph photo)
+    {
+        gradingThumbnail.sprite = Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
+        List<string> dialogue = new List<string>();
+        List<TedMoods> sprites = new List<TedMoods>();
 
+        //subject: oh, it's X! that's worth Y points
+        //oh it's, uh... what is this supposed to be?
+        dialogue.Add( "Oh, it's " + photo.subjectName + "!");
+        sprites.Add(TedMoods.Default);
+        dialogue.Add("That's worth " + photo.baseScore + " points.");
+        sprites.Add(TedMoods.Pleased);
+        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
+
+        //facinForward: hmm... it isn't facing the right way. i'm afraid that's -10 points
+
+        //visibility: 
+
+        //distance from center
+
+        //distance from camera
+
+        //multiple cryptids in shot
+
+        //final score
+        textBox.GetComponent<TextBox>().DisplayText();
+    }
 
     #endregion
 }

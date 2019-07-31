@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour {
 
     bool LevelOver;
 
+    public List<Photograph> pics4grading = new List<Photograph>();
+
     //when scene is loaded and level begins start with some panning shots of the level before transitioning into gameplay
     public bool transitionsEnabled;
 
@@ -125,9 +127,10 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = 1;
 
         //load async next scene
+        pics4grading = finalPhotos;
         SceneManager.LoadSceneAsync("Lab", LoadSceneMode.Single);
 
         //set loading icon to active
-        loadingAnim.gameObject.SetActive(true);
+        if (loadingAnim!= null) loadingAnim.gameObject.SetActive(true);
     }
 }

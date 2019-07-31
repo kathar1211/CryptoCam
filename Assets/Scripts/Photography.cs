@@ -52,7 +52,7 @@ public class Photography : MonoBehaviour {
 		if (Input.GetMouseButtonDown(0))
         {
             TakePicture();
-            picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
+            if (picText != null) picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
         }
 
  
@@ -219,7 +219,7 @@ public class Photography : MonoBehaviour {
         finalScore += pic.baseScore;
 
 
-        //base score reduced to 10 points if facin wron way
+        //base score reduced to 10 points if facing wrong way
         testtxt.text += '\n' + "Facing forward: " + pic.facinForward;
         if (!pic.facinForward)
         {

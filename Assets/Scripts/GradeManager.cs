@@ -8,7 +8,7 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     Image[] thumbnails;
     [SerializeField]
-    TextBox textbox;
+    TextBox textbox; //this is the textbox that prompts to select photos
     [SerializeField]
     Image bigThumbnail;
     Image selectedImage;
@@ -23,7 +23,7 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     GameObject ConfirmScreen;
 
-    enum GradeState { allThumbs, bigThumb};
+    enum GradeState { allThumbs, bigThumb, tedGrading};
     GradeState currentState;
 
     //photos selected for grading, sorted by subject name
@@ -32,6 +32,16 @@ public class GradeManager : MonoBehaviour {
 
     //store photograph information that corresponds with each thumbnail
     Dictionary<Image, Photograph> allPhotos = new Dictionary<Image, Photograph>();
+
+    //swap between selecting photos and grading photos
+    [SerializeField]
+    Canvas Selectioncanvas;
+    [SerializeField]
+    Canvas GradingCanvas;
+
+    //this is ted's textbox, where grading happens
+    [SerializeField]
+    TextBox tedsays;
 
 	// Use this for initialization
 	void Start () {
@@ -214,6 +224,9 @@ public class GradeManager : MonoBehaviour {
         List<Photograph> photos = new List<Photograph>();
         photos.AddRange(finalSelection.Values);
         gameManager.GetComponent<GameManager>().ReturnToLab(photos);
+        //currentState = GradeState.tedGrading;
+       // Selectioncanvas.enabled = false;
+       // GradingCanvas.enabled = true;
     }
 
     //if user decided to return to selection
