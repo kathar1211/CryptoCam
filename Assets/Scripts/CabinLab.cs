@@ -182,7 +182,7 @@ public class CabinLab : MonoBehaviour {
         //todo: level selector
         //for now just load gameplay scene
         Destroy(GameObject.Find("GameManager"));
-        SceneManager.LoadSceneAsync("TerrainTest", LoadSceneMode.Single);
+        SceneManager.LoadSceneAsync("TerrainTest - Copy", LoadSceneMode.Single);
         
         
     }
@@ -239,24 +239,104 @@ public class CabinLab : MonoBehaviour {
         List<TedMoods> sprites = new List<TedMoods>();
 
         //subject: oh, it's X! that's worth Y points
-        //oh it's, uh... what is this supposed to be?
-        dialogue.Add( "Oh, it's " + photo.subjectName + "!");
-        sprites.Add(TedMoods.Default);
-        dialogue.Add("That's worth " + photo.baseScore + " points.");
-        sprites.Add(TedMoods.Pleased);
-        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
+        if (photo.subjectName == "No one" || photo.finalScore <= 0)
+        {
+            //if theres no cryptid in the photo don't bother with the rest of the grading
+            dialogue.Add("Oh, it's, uh... what is this supposed to be?");
+            sprites.Add(TedMoods.LeanForward);
+            dialogue.Add("...Sorry, that's worth 0 points.");
+            sprites.Add(TedMoods.SquintHandUp);
+            textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
+            textBox.GetComponent<TextBox>().DisplayText();
+            return;
+        }
+        else
+        {
+            dialogue.Add("Oh, it's " + photo.subjectName + "!");
+            sprites.Add(TedMoods.Default);
+            dialogue.Add("That's worth " + photo.baseScore + " points.");
+            sprites.Add(TedMoods.Pleased);
+        }
+
 
         //facinForward: hmm... it isn't facing the right way. i'm afraid that's -10 points
+        if (photo.facinForward == false)
+        {
+            dialogue.Add("Oh, but it's facing away from the camera. I'm afraid that's minus " + (photo.baseScore-10) + " points.");
+            sprites.Add(TedMoods.Disappointed);
+        }
 
-        //visibility: 
+        //visibility: a value between 0 and 1 representing percent of visibility. score is multiplied by this
+        if (photo.visibility >= 1)
+        {
+            dialogue.Add("And you can see it perfectly clearly! 100% visibility, well done.");
+            sprites.Add(TedMoods.Happy);
+        }
+        else if (photo.visibility >= .5)
+        {
+            dialogue.Add("You can see most of it clearly, but overall it's only about " + (int)(photo.visibility * 100) + "% visible.");
+            sprites.Add(TedMoods.LookDownHandUp);
+        }
+        else
+        {
+            dialogue.Add("You can't see it very clearly at all. Only about " + (int)(photo.visibility * 100) + "% of it isn't blocked by obstacles in the shot.");
+            sprites.Add(TedMoods.Uncertain);
+        }
 
         //distance from center
+        //distancefromcenter should be a float value between 0 and ~.7
+        //finalScore += (int)(200 * (.7f - pic.distanceFromCenter));
+        if (photo.distanceFromCenter >= .3f)
+        {
+            dialogue.Add("The cryptid is nowhere near the center of the shot. Try to frame it better next time. " + (int)(200 * (.7f - photo.distanceFromCenter)) + " points.");
+            //dialogue.Add("The distance from center is " + photo.distanceFromCenter);
+            sprites.Add(TedMoods.LeanForward);
+        } 
+        else if (photo.distanceFromCenter >= .1f)
+        {
+            dialogue.Add("It's a little off center, but not too bad. That's plus " + (int)(200 * (.7f - photo.distanceFromCenter)) + " points.");
+            //dialogue.Add("The distance from center is " + photo.distanceFromCenter);
+            sprites.Add(TedMoods.Default);
+        }
+        else
+        {
+            dialogue.Add("Very nice! It's perfectly centered in the shot. That's plus " + (int)(200 * (.7f - photo.distanceFromCenter)) + " points!");
+            //dialogue.Add("The distance from center is " + photo.distanceFromCenter);
+            sprites.Add(TedMoods.Pleased);
+        }
 
         //distance from camera
+        //distance from camera is in world units, with 0 on top of camera
+        //not sure what ideal distance is, for now well just say the closer the better
+        //finalScore += (int)Mathf.Ceil(5000 * (1 / pic.distanceFromCamera));
+        //this number might need to be adjusted but we'll say less that 100 units is close, less than 200 is middle distance, more is far away
+        if (photo.distanceFromCamera < 100)
+        {
+            dialogue.Add("Oho! This is a pretty close up shot! Well done, that's plus " + (int)Mathf.Ceil(5000 * (1 / photo.distanceFromCamera)) + " points.");
+            sprites.Add(TedMoods.Happy);
+        }
+        else if (photo.distanceFromCamera < 200)
+        {
+            dialogue.Add("It's a pretty good distance away. That's plus " + (int)Mathf.Ceil(5000 * (1 / photo.distanceFromCamera)) + " points.");
+            sprites.Add(TedMoods.Satisfied);
+        }
+        else
+        {
+            dialogue.Add("Hmm... it's pretty far away. I know it's asking a lot, but see if you can get closer next time. " + (int)Mathf.Ceil(5000 * (1 / photo.distanceFromCamera)) + " points.");
+            sprites.Add(TedMoods.SquintHandUp);
+        }
 
         //multiple cryptids in shot
+        if (photo.subjectCount > 1)
+        {
+            dialogue.Add("Oh! And there's more than one cryptid in the shot! Excellent work, that's worth double.");
+            sprites.Add(TedMoods.Surprised);
+        }
 
         //final score
+        dialogue.Add("Let's see, overall I give this photo... " + photo.finalScore + " points.");
+        sprites.Add(TedMoods.Satisfied);
+        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
         textBox.GetComponent<TextBox>().DisplayText();
     }
 
