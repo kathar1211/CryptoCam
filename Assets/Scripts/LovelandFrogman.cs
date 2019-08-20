@@ -47,6 +47,8 @@ public class LovelandFrogman : Cryptid {
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("sit"))
         {
             currentState = MoveState.sit;
+            //turn gravity back on after exiting water
+            this.gameObject.GetComponent<Rigidbody>().useGravity = true;
         }
         else if (animator.GetCurrentAnimatorStateInfo(0).IsName("creep"))
         {
@@ -63,17 +65,19 @@ public class LovelandFrogman : Cryptid {
             //movement states
             case MoveState.swim:
                 transform.Translate(Vector3.forward * Time.deltaTime * swimSpeed);
+                //no gravity while swimming
+                this.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 break;
             case MoveState.walk:
                 transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
+
                 break;
         }
 
         //check when to start leapin
         if ((transform.position - LeapPosition).magnitude <= .2f)
         {
-            currentState = MoveState.edgeLeap;
-            animator.SetBool("climb", true);
+           
         }
 
         //apply position offset
@@ -92,6 +96,17 @@ public class LovelandFrogman : Cryptid {
         
         animator.Play("sit", 0);
         needToAdjustPosition = true;
+    
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //frogman approaches shore
+        if (other.tag == "Shore")
+        {
+            currentState = MoveState.edgeLeap;
+            animator.SetBool("climb", true);
+        }
     }
 }
