@@ -22,4 +22,14 @@ public class Cryptid : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    //standard method to move forward some amount and to turn some amount
+    public void Move(float forwardSpeed, float rotateSpeed)
+    {
+        //move forward
+        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+
+        //turn right
+        transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed);
+    }
 }

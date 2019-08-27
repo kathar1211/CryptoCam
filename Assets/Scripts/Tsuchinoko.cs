@@ -23,7 +23,7 @@ public class Tsuchinoko : Cryptid {
         //lock rotation: tsuchinoko is top heavy and has some trouble staying upright
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
-        Move();
+        Move(speed, rotateSpeed);
 
         if (Random.Range(0.0f, 100.0f) < chanceUpDown)
         {
@@ -33,28 +33,7 @@ public class Tsuchinoko : Cryptid {
         
 	}
 
-    void Move()
-    {
-        //move forward
-        //transform.Translate(Vector3.forward * (Mathf.Cos(frequency*Time.time + shift)+forwardShift) * speed);
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
-
-        //turn riht
-        transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed);
-    }
-
-    //tsuchinoko assumes the upright position
-    /*void Rise()
-    {
-        animator.SetBool("Upright", true);
-    }
-
-    //tsuchinoko assumes the downright position
-    void Lower()
-    {
-        animator.SetBool("Upright", false);
-    }*/
-
+    //tsuchinoko switches between upright and lurking
     void ToggleRiseLower()
     {
         animator.SetBool("Upright", !animator.GetBool("Upright"));
