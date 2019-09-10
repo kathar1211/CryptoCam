@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class TextBox : MonoBehaviour {
 
     Text txt; //where to put text
+    public Text scoretxt; //in cases where score is displayed and updated with text
     public float textDelay; //text scroll speed
     int textIndex;
 
     public Ted ted; //update ted sprites with text as needed
     Queue<TedMoods> allTeds; //queue ted sprites along with text lines
+    Queue<string> allScores;
 
     bool talking; //keep track of whether text is being displayed
 
@@ -28,6 +30,7 @@ public class TextBox : MonoBehaviour {
 
         allText = new Queue<string>();
         allTeds = new Queue<TedMoods>();
+        allScores = new Queue<string>();
         //this.gameObject.SetActive(false);
 	}
 	
@@ -45,9 +48,18 @@ public class TextBox : MonoBehaviour {
                 }
                 else
                 {
-                    if (allTeds.Count != 0 && ted!= null){
+                    if (allTeds.Count != 0 && ted!= null)
+                    {
                         ted.SetTedSprite(allTeds.Dequeue());
-                    }                
+                    }
+                    if (allScores.Count != 0 && scoretxt != null)
+                    {
+                        scoretxt.text = allScores.Dequeue();
+                    }  
+                    else
+                    {
+                        scoretxt.text = "";
+                    }              
                     DisplayText(allText.Dequeue());
                     
                 }
@@ -58,12 +70,14 @@ public class TextBox : MonoBehaviour {
             //if theres no text in the queue we're done talking or on the last line
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
             {
+                
                 if (talking)
                 {
                     Skip();
                 }
                 else
                 {
+                    if (scoretxt != null) { scoretxt.text = ""; }
                     if (CloseOnTextComplete) { this.gameObject.SetActive(false); }
                 }
             }
@@ -161,7 +175,7 @@ public class TextBox : MonoBehaviour {
     }
 
     //overload method that also take a ted sprite to go with each line
-    public void FeedText(string[] text, TedMoods[] sprites)
+    public void FeedText(string[] text, TedMoods[] sprites, string[] scores = null)
     {
         foreach (string line in text)
         {
@@ -170,11 +184,18 @@ public class TextBox : MonoBehaviour {
         foreach (TedMoods ted in sprites)
         {
             FeedTed(ted);
+        }
+        if (scores!= null)
+        {
+            foreach (string score in scores)
+            {
+                FeedScore(score);
+            }
         }
     }
 
     //overload method that also take a ted sprite to go with each line
-    public void FeedText(List<string> text, List<TedMoods> sprites)
+    public void FeedText(List<string> text, List<TedMoods> sprites, List<string> scores = null)
     {
         foreach (string line in text)
         {
@@ -183,6 +204,13 @@ public class TextBox : MonoBehaviour {
         foreach (TedMoods ted in sprites)
         {
             FeedTed(ted);
+        }
+        if (scores != null)
+        {
+            foreach (string score in scores)
+            {
+                FeedScore(score);
+            }
         }
     }
 
@@ -196,11 +224,18 @@ public class TextBox : MonoBehaviour {
     {
         allTeds.Enqueue(ted);
     }
+    //queue score indicators if necessary
+    public void FeedScore(string score)
+    {
+        allScores.Enqueue(score);
+    }
         
     //method to cancel text thats been sent
     public void ClearTextQueue()
     {
         allText.Clear();
+        allTeds.Clear();
+        allScores.Clear();
         if (talking) { StopCoroutine("displayText"); }
         talking = false;
     }

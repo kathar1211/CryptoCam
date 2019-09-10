@@ -25,7 +25,7 @@ public class CabinLab : MonoBehaviour {
     //for options
     public GameObject options;
 
-    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading };
+    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading, GradingDone };
     MenuState currentState;
 
     List<Photograph> gradeablePhotos = new List<Photograph>();
@@ -62,6 +62,14 @@ public class CabinLab : MonoBehaviour {
                 gameManager.GetComponent<GameManager>().pics4grading.Clear();
                 gradingThumbnail.gameObject.SetActive(true);
                 currentState = MenuState.Grading;
+
+                //intro
+                string[] dialogue = { "Oh, welcome back! Shall we take a look at those photos? I'm excited to see what you've got." };
+                TedMoods[] sprites = { TedMoods.Default};
+                string[] emptyScoreTxt = { "" };
+                textBox.GetComponent<TextBox>().ClearTextQueue();
+                textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, emptyScoreTxt);
+                textBox.GetComponent<TextBox>().DisplayText();
             }
         }
         
@@ -120,11 +128,22 @@ public class CabinLab : MonoBehaviour {
                     {
                         //if textbox is not active it means its finished with the current photo 
                         //set it active again and queue up the next photo
+                        textBox.GetComponent<TextBox>().ClearTextQueue();
                         textBox.SetActive(true);
                         GradePhoto(gradeablePhotos[gradingIndex]);
                         gradingIndex++;
                     }
                 }
+                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
+                {
+                    //outro
+                    textBox.GetComponent<TextBox>().FeedText(new List<string>{"Well done, thank you as always for sharing your photos with me." }, new List<TedMoods>{TedMoods.Default });
+                    textBox.GetComponent<TextBox>().DisplayText();
+                    currentState = MenuState.GradingDone;
+                    gradingThumbnail.gameObject.SetActive(false);
+                }
+                break;
+            case MenuState.GradingDone:
                 if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
                 {
                     currentState = MenuState.Main;
@@ -237,6 +256,8 @@ public class CabinLab : MonoBehaviour {
         gradingThumbnail.sprite = Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
         List<string> dialogue = new List<string>();
         List<TedMoods> sprites = new List<TedMoods>();
+        List<string> scoreUpdates = new List<string>();
+        int score = 0;
 
         //subject: oh, it's X! that's worth Y points
         if (photo.subjectName == "No one" || photo.finalScore <= 0)
@@ -244,8 +265,10 @@ public class CabinLab : MonoBehaviour {
             //if theres no cryptid in the photo don't bother with the rest of the grading
             dialogue.Add("Oh, it's, uh... what is this supposed to be?");
             sprites.Add(TedMoods.LeanForward);
+            //scoreUpdates.Add("Score: ");
             dialogue.Add("...Sorry, that's worth 0 points.");
             sprites.Add(TedMoods.SquintHandUp);
+            scoreUpdates.Add("Final Score: 0");
             textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
             textBox.GetComponent<TextBox>().DisplayText();
             return;
@@ -254,8 +277,12 @@ public class CabinLab : MonoBehaviour {
         {
             dialogue.Add("Oh, it's " + photo.subjectName + "!");
             sprites.Add(TedMoods.Default);
+            //scoreUpdates.Add("Score: ");
+            //scoreUpdates.Add("Score: " + score);
             dialogue.Add("That's worth " + photo.baseScore + " points.");
             sprites.Add(TedMoods.Pleased);
+            score += photo.baseScore;
+            scoreUpdates.Add("Score: " + score);
         }
 
 
@@ -264,6 +291,8 @@ public class CabinLab : MonoBehaviour {
         {
             dialogue.Add("Oh, but it's facing away from the camera. I'm afraid that's minus " + (photo.baseScore-10) + " points.");
             sprites.Add(TedMoods.Disappointed);
+            score = 10;
+            scoreUpdates.Add("Score: " + score);
         }
 
         //visibility: a value between 0 and 1 representing percent of visibility. score is multiplied by this
@@ -282,6 +311,8 @@ public class CabinLab : MonoBehaviour {
             dialogue.Add("You can't see it very clearly at all. Only about " + (int)(photo.visibility * 100) + "% of it isn't blocked by obstacles in the shot.");
             sprites.Add(TedMoods.Uncertain);
         }
+        score *= (int)photo.visibility;
+        scoreUpdates.Add("Score: " + score);
 
         //distance from center
         //distancefromcenter should be a float value between 0 and ~.7
@@ -304,6 +335,8 @@ public class CabinLab : MonoBehaviour {
             //dialogue.Add("The distance from center is " + photo.distanceFromCenter);
             sprites.Add(TedMoods.Pleased);
         }
+        score += (int)(200 * (.7f - photo.distanceFromCenter));
+        scoreUpdates.Add("Score: " + score);
 
         //distance from camera
         //distance from camera is in world units, with 0 on top of camera
@@ -325,18 +358,24 @@ public class CabinLab : MonoBehaviour {
             dialogue.Add("Hmm... it's pretty far away. I know it's asking a lot, but see if you can get closer next time. " + (int)Mathf.Ceil(5000 * (1 / photo.distanceFromCamera)) + " points.");
             sprites.Add(TedMoods.SquintHandUp);
         }
+        score += (int)Mathf.Ceil(5000 * (1 / photo.distanceFromCamera));
+        scoreUpdates.Add("Score: " + score);
 
         //multiple cryptids in shot
         if (photo.subjectCount > 1)
         {
             dialogue.Add("Oh! And there's more than one cryptid in the shot! Excellent work, that's worth double.");
             sprites.Add(TedMoods.Surprised);
+            score *= 2;
+            scoreUpdates.Add("Score: " + score);
         }
 
         //final score
         dialogue.Add("Let's see, overall I give this photo... " + photo.finalScore + " points.");
         sprites.Add(TedMoods.Satisfied);
-        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
+        scoreUpdates.Add("Final Score: " + score);
+        textBox.GetComponent<TextBox>().ClearTextQueue();
+        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, scoreUpdates);
         textBox.GetComponent<TextBox>().DisplayText();
     }
 
