@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CabinLab.cs" />
     <Compile Include="Assets\Scripts\Cryptid.cs" />
+    <Compile Include="Assets\Scripts\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Firefly.cs" />
     <Compile Include="Assets\Scripts\FresnoNightcrawler.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\Tsuchinoko.cs" />
     <None Include="Assets\Shaders\Internal-PrePassLighting.shader" />
     <None Include="Assets\Shaders\Foliage.shader" />
+    <None Include="Assets\Shaders\Fog.shader" />
     <None Include="Assets\Shaders\Grass.shader" />
     <None Include="Assets\Resources\tedconvo.txt" />
     <None Include="Assets\Shaders\CelShader.shader" />

@@ -16,11 +16,7 @@ public class CabinLab : MonoBehaviour {
     public GameObject textBox; //for dialogue
     public GameObject ted;
 
-    //for cryptidnomicon
     public GameObject cryptidNomicon;
-    GameObject page;
-    public Sprite[] pages;
-    int currentPage;
 
     //for options
     public GameObject options;
@@ -41,10 +37,8 @@ public class CabinLab : MonoBehaviour {
 
         MoveSelector(textButtons[0]);
         currentState = MenuState.Main;
-
-        page = cryptidNomicon.transform.GetChild(0).gameObject;
         cryptidNomicon.SetActive(false);
-        currentPage = 0;
+
 
         options.SetActive(false);
 
@@ -102,14 +96,6 @@ public class CabinLab : MonoBehaviour {
                 break;
 
             case MenuState.CryptidNomicon:
-                if (Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    TurnPage(false);
-                }
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    TurnPage(true);
-                }
 
                 break;
 
@@ -141,6 +127,8 @@ public class CabinLab : MonoBehaviour {
                     textBox.GetComponent<TextBox>().DisplayText();
                     currentState = MenuState.GradingDone;
                     gradingThumbnail.gameObject.SetActive(false);
+                    //send over the photos to the cyrptidnomicon
+                    cryptidNomicon.GetComponent<CryptidNomicon>().RecievePhotos(gradeablePhotos);
                 }
                 break;
             case MenuState.GradingDone:
@@ -170,20 +158,6 @@ public class CabinLab : MonoBehaviour {
         //currentButton = textButtons.
         //todo: update the selected button
         currentButton = System.Array.IndexOf(textButtons, button);
-    }
-
-    //turn pages of the cryptidnomicon. true for forward false for back
-    public void TurnPage(bool forward)
-    {
-        if (forward && currentPage < pages.Length)
-        {
-            currentPage++;
-        }
-        else if (!forward && currentPage > 0)
-        {
-            currentPage--;
-        }
-        page.GetComponent<Image>().sprite = pages[currentPage];
     }
 
     //methods for clicking on various things

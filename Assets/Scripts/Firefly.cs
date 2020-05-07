@@ -10,8 +10,9 @@ public class Firefly : MonoBehaviour {
     public Sprite[] sprites; //sprites used for animation
     bool glowUp;            //keeps track if animation needs to increase or decrease glow
     int spriteIndex;        //index of the sprite currently bein used
-     float frameSpeed; //how lon animation cycles throuh each frame
+    float frameSpeed; //how lon animation cycles throuh each frame
     float currentFrameTime; //time passed since frame was last chaned
+    public bool stationary = false;
 
     // Use this for initialization
     void Start () {
@@ -64,7 +65,7 @@ public class Firefly : MonoBehaviour {
             currentFrameTime = 0;
         }
 
-        Wander();
+        if (!stationary) { Wander(); }
 	}
 
     //fireflies wander in 3 dimensions/hover aimlessly

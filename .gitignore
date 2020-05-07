@@ -19,7 +19,10 @@ $RECYCLE.BIN/
 
 #Unity files
 Library/metadata/**
+Library/ShaderCache/**
+Library/PlayerDataCache/**
 *.meta
+*.bin
 
 # =========================
 # Operating System Files

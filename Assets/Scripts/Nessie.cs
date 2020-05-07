@@ -11,8 +11,8 @@ public class Nessie : Cryptid {
     float timeElapsed;
     public float timeUntilBreach; //in seconds
 
-    float surfacePos = -4;
-    float belowPos = -11;
+    public float surfacePos = -4;
+    public float belowPos = -11;
 
     enum MoveState { underWaterSwim, aboveWaterSwim, breach, look};
     MoveState currentState;

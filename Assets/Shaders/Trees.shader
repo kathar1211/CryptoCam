@@ -12,7 +12,7 @@
 			_Radius("Radius", float) = 6 // width of the line around the dissolve
 		}
 			SubShader{
-			Tags{ "RenderType" = "Opaque" "DisableBatching" = "True" }
+			Tags{ "RenderType" = "Opaque" "DisableBatching" = "True"  }
 			LOD 200
 
 			CGPROGRAM
