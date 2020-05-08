@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/TerrainTest - Copy.unity
+- path: Assets/Scenes/demolvl.unity
   isLoaded: 1
   isActive: 1

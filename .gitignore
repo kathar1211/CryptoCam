@@ -21,6 +21,7 @@ $RECYCLE.BIN/
 Library/metadata/**
 Library/ShaderCache/**
 Library/PlayerDataCache/**
+Temp/**
 *.meta
 *.bin
 
@@ -52,3 +53,4 @@ Library/PlayerDataCache/**
 Network Trash Folder
 Temporary Items
 .apdisk
+*.log
