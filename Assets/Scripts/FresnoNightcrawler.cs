@@ -6,9 +6,7 @@ public class FresnoNightcrawler : Cryptid {
 
     public float speed;
     public float rotateSpeed;
-    Vector3 targetPos;
     public GameObject zone;
-    float timeChasing;
 
     // public float frequency;
     // public float shift;
@@ -54,7 +52,7 @@ public class FresnoNightcrawler : Cryptid {
 
         //if they reach their target position (this is not supposed to happen) give them a new one on the other side of the zone to get them back on track
         //addition of time tracker lets them change target if they get stuck
-        if ((transform.position - targetPos).magnitude < 3 || timeChasing > 30)
+        if ((transform.position - targetPos).magnitude < 3 || timeChasing > 45)
         {
             targetPos = zone.transform.position - (transform.position - zone.transform.position);
             timeChasing = 0;

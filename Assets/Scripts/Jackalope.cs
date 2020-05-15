@@ -8,14 +8,19 @@ public class Jackalope : Cryptid {
     public float distance;
     public float runSpeed;
     public float rotateSpeed;
-    Vector3 targetPos;
+    float minDistance;
+
+    //flee properties
+    Transform fleeFromTarget;
+    public float maxDistance;
+    public float fleeSpeed;
+
     Animator animator;
     float animationDuration;
     float timeElapsed;
-    float timeChasing;
-    float minDistance = 3;
 
-    enum MoveState { run, stand, scratch};
+
+    enum MoveState { run, stand, scratch, flee};
     MoveState currentState;
 
     // Use this for initialization
@@ -26,6 +31,7 @@ public class Jackalope : Cryptid {
         animator = GetComponent<Animator>();
         cryptidType = "Jackalope";
         baseScore = 50;
+        minDistance = 3;
     }
 	
 	// Update is called once per frame
@@ -34,11 +40,12 @@ public class Jackalope : Cryptid {
         timeElapsed += Time.deltaTime;
         timeChasing += Time.deltaTime;
 
+        //jackalope moves differently based on the different move states
         switch (currentState)
         {
+            //wander with random chance to switch states
             case MoveState.run:
-                Wander();
-                //random chance of switchin states
+                Wander(distance, minDistance, runSpeed, rotateSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
                 {
                     currentState = MoveState.scratch;
@@ -59,10 +66,10 @@ public class Jackalope : Cryptid {
                 }
                 break;
 
+            //stand still and do animation
             case MoveState.scratch:
             case MoveState.stand:
-                //return to runnin after random amount of time
-               
+                //return to wandering after random amount of time
                 if (timeElapsed >= animationDuration)
                 {
                     currentState = MoveState.run;
@@ -73,28 +80,34 @@ public class Jackalope : Cryptid {
                 }
 
                 break;
+            //move away from the player
+            case MoveState.flee:
+                Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+                //stop fleeing once jackalope reaches a certain distance from player
+                if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
+                {
+                    currentState = MoveState.run;
+                    animator.SetFloat("Speed", 1);
+                }
+                break;
 
         }
 	}
 
-    //move randomly in 2d space
-    void Wander()
+    private void OnTriggerEnter(Collider other)
     {
-        //choose a random target position within range and move towards it
-        //https://answers.unity.com/questions/23010/ai-wandering-script.html
-
-        if ((transform.position - targetPos).magnitude < minDistance || timeChasing > 14)
+        //flee from player if they come in range
+        if (other.tag == "Player")
         {
-            targetPos = transform.position + transform.forward*(distance/2.0f) +  Random.insideUnitSphere * distance;
-            targetPos.y = transform.position.y;
-            timeChasing = 0;
+            fleeFromTarget = other.gameObject.transform;
+            currentState = MoveState.flee;
+            animator.SetBool("StandUp", false);
+            animator.SetBool("Run", true);
+            animator.SetBool("Sniff", false);
+            targetPos = Vector3.zero;
+            animator.SetFloat("Speed", 2);
         }
-
-
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (targetPos - transform.position), rotateSpeed * Time.deltaTime, 0);
-        transform.rotation = Quaternion.LookRotation(newDir);
-
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime);
-        
     }
+
+
 }

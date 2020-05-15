@@ -62,7 +62,7 @@ public class CryptidNomicon : MonoBehaviour {
     public void TurnPage(bool forward)
     {
         
-        if (forward && currentPage < pageContents.Count + 0)
+        if (forward && currentPage < pageContents.Count + 1)
         {
             currentPage++;
         }
@@ -74,25 +74,25 @@ public class CryptidNomicon : MonoBehaviour {
         //current page will now keep track of content, but only 3 sprites are used: beginning middle and end
         if (currentPage == 0 )
         {
-            page.GetComponent<Image>().sprite = pages[currentPage];
+            page.GetComponent<Image>().sprite = pages[0];
         }
-        else if (currentPage == pageContents.Count )
+        else if (currentPage > pageContents.Count)
         {
-            page.GetComponent<Image>().sprite = pages[pages.Length - 1];
+            page.GetComponent<Image>().sprite = pages[2];
         }
         else
         {
-            page.GetComponent<Image>().sprite = pages[pages.Length - 2];
+            page.GetComponent<Image>().sprite = pages[1];
         }
 
         //if we are still in the middle sprite update the content
-        if (currentPage != 0 && currentPage != pageContents.Count )
+        if (currentPage > 0 && currentPage <= pageContents.Count )
         {
             thumbnail.gameObject.SetActive(true);
             scoreDesc.gameObject.SetActive(true);
             imageDesc.gameObject.SetActive(true);
             nameDesc.gameObject.SetActive(true);
-            PageContent content = pageContents[currentPage];
+            PageContent content = pageContents[currentPage-1];
 
             thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
             scoreDesc.text = "Score: " + content.photoScore;
@@ -127,6 +127,7 @@ public class CryptidNomicon : MonoBehaviour {
     {
         foreach (Photograph photo in finalPhotos)
         {
+            if (photo.finalScore > 0)
             pageContents.Add(PhotoToPage(photo));
         }
     }

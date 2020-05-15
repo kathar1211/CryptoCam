@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviour {
 
         //load async next scene
         LevelOver = true;
+        endprompt.gameObject.SetActive(false);
         SceneManager.LoadSceneAsync("Grading", LoadSceneMode.Single);
 
         //set loading icon to active
@@ -132,5 +133,10 @@ public class GameManager : MonoBehaviour {
 
         //set loading icon to active
         if (loadingAnim!= null) loadingAnim.gameObject.SetActive(true);
+    }
+
+    public void TestFunction()
+    {
+        Debug.Log("test function called");
     }
 }

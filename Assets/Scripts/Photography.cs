@@ -35,6 +35,12 @@ public class Photography : MonoBehaviour {
     [SerializeField]
     Text picText;
 
+    [SerializeField]
+    GameObject cameraOverlay;
+
+    [SerializeField]
+    CameraSnap cameraSnap;
+
     //tentative method for subject- et list of all cryptids and check if visible in frame
     GameObject[] allCryptids;
 
@@ -51,12 +57,34 @@ public class Photography : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0))
         {
+            cameraSnap.SnapShutter();
             TakePicture();
             if (picText != null) picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
         }
-
+        if (Input.GetMouseButtonDown(1))
+        {
+            ReadyCamera();
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            UnReadyCamera();
+        }
  
 	}
+
+    //ready camera by zooming and bringing up camera overlay
+    void ReadyCamera()
+    {
+        cameraOverlay.SetActive(true);
+        cryptoCam.fieldOfView /= 2;
+    }
+
+    //return to default camera state
+    void UnReadyCamera()
+    {
+        cameraOverlay.SetActive(false);
+        cryptoCam.fieldOfView *= 2;
+    }
 
     //rendertexture (photo) is saved. this is also where some grading happens
     void TakePicture()

@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CabinLab.cs" />
+    <Compile Include="Assets\Scripts\CameraSnap.cs" />
     <Compile Include="Assets\Scripts\Cryptid.cs" />
     <Compile Include="Assets\Scripts\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
