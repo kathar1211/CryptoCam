@@ -44,12 +44,16 @@ public class Photography : MonoBehaviour {
     //tentative method for subject- et list of all cryptids and check if visible in frame
     GameObject[] allCryptids;
 
+    //save field of view for non zoom;
+    float defaultFOV;
+
 	// Use this for initialization
 	void Start () {
         picIndex = 0;
         allPics = new Photograph[maxPics];
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
+        defaultFOV = cryptoCam.fieldOfView;
 
     }
 	
@@ -76,14 +80,14 @@ public class Photography : MonoBehaviour {
     void ReadyCamera()
     {
         cameraOverlay.SetActive(true);
-        cryptoCam.fieldOfView /= 2;
+        cryptoCam.fieldOfView = defaultFOV / 2;
     }
 
     //return to default camera state
     void UnReadyCamera()
     {
         cameraOverlay.SetActive(false);
-        cryptoCam.fieldOfView *= 2;
+        cryptoCam.fieldOfView = defaultFOV;
     }
 
     //rendertexture (photo) is saved. this is also where some grading happens
