@@ -15,8 +15,14 @@ public class LovelandFrogman : Cryptid {
     [SerializeField]
     Vector3 leapOffset;
 
+    //amount position needs to be adjusted before a leap
+    [SerializeField]
+    Vector3 preleapOffset;
+
     public float walkSpeed;
     public float swimSpeed;
+    public float leapSpeed;
+    public float leapHeight;
     float rotateSpeed;
     public float maxRotateSpeed;
 
@@ -31,8 +37,13 @@ public class LovelandFrogman : Cryptid {
     float sitTimeMin;
     private float timer;
 
+    //values for wandering
+    public float targetMaxDistance;
+    public float targetMinDistance;
+
 	// Use this for initialization
 	void Start () {
+        StartUp();
         cryptidType = "Loveland Frogman";
         baseScore = 300;
         animator = GetComponent<Animator>();
@@ -42,6 +53,7 @@ public class LovelandFrogman : Cryptid {
         Vector3 upMove = new Vector3(transform.up.x * leapOffset.y, transform.up.y * leapOffset.y, transform.up.z * leapOffset.y);
         Vector3 forwardMove = new Vector3(transform.forward.x * leapOffset.z, transform.forward.y * leapOffset.z, transform.forward.z * leapOffset.z);
         leapOffset = upMove + forwardMove;
+        preleapOffset = leapOffset;
 
         rotateSpeed = Random.Range(-maxRotateSpeed, maxRotateSpeed);
     }
@@ -76,24 +88,27 @@ public class LovelandFrogman : Cryptid {
         {
             //movement states
             case MoveState.swim:
-                Move(swimSpeed, rotateSpeed);
                 //no gravity while swimming
-                this.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                rb.useGravity = false;
+                //Move(swimSpeed, rotateSpeed);
                 Move(swimSpeed, rotateSpeed);
                 break;
             case MoveState.walk:
-                Move(walkSpeed, rotateSpeed);
                 //turn gravity back on after exiting water
-                this.gameObject.GetComponent<Rigidbody>().useGravity = true;
-                Move(walkSpeed, rotateSpeed);
+                rb.useGravity = true;
+                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed);
                 break;
             case MoveState.sit:
+                rb.useGravity = true;
                 if (timer > timeToSit)
                 {
                     timer = 0;
                     animator.SetBool("creep", true);
                     currentState = MoveState.walk;
                 }
+                break;
+            case MoveState.edgeLeap:
+                //Leap(leapSpeed, 0);
                 break;
         }
 
@@ -128,16 +143,23 @@ public class LovelandFrogman : Cryptid {
     {
         
         //frogman leaves shore, returns to water
-        if (other.tag == "Water" && currentState == MoveState.walk)
+        if (other.tag == "Water" && currentState != MoveState.swim)
         {
             currentState = MoveState.swim;
             animator.Play("swim", 0);
+            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
         }
         //frogman approaches shore
         else if (other.tag == "Shore" && currentState == MoveState.swim)
         {
+            transform.Translate(preleapOffset);
+            rb.useGravity = true;
             currentState = MoveState.edgeLeap;
             animator.SetBool("climb", true);
+            //add extra "oomph" to the leap
+            rb.AddForce(Vector3.up * leapHeight);
+            rb.AddForce(Vector3.forward * leapSpeed);
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
     }
 

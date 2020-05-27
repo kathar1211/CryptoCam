@@ -194,11 +194,20 @@ public class Photography : MonoBehaviour {
         }
 
         //once main subject is determined check other score criteria
-        
-        //check if facin forward
-        //if the cos of the anle between the cameras forward vector and the cryptids forward vector is less than 0,
-        //then the vectors are in opposite directions and the cryptid is facin the camera
-        if (Vector3.Dot(cryptoCam.transform.forward, mainSubject.transform.forward) < 0)
+
+        //check if facing forward
+        Vector3 cryptidForward = mainSubject.transform.forward;
+
+        //if cryptid has a "head bone" (object that represents the head and face) then use the forward of that for a more accurate estimate of which way its facing
+        HeadBone cryptidHead = mainSubject.GetComponentInChildren<HeadBone>();
+        if (cryptidHead != null)
+        {
+            cryptidForward = cryptidHead.GetForward();
+        }
+
+        //if the cos of the angle between the cameras forward vector and the cryptids forward vector is less than 0,
+        //then the vectors are in opposite directions and the cryptid is facing the camera
+        if (Vector3.Dot(cryptoCam.transform.forward, cryptidForward) < 0)
         {
             pic.facinForward = true;
         }

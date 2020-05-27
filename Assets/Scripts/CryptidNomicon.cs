@@ -34,6 +34,7 @@ public class CryptidNomicon : MonoBehaviour {
     public Text scoreDesc;
     public Text imageDesc;
     public Text nameDesc;
+    public Image aboutTheAuthor;
 
     List<PageContent> pageContents;
 
@@ -42,6 +43,7 @@ public class CryptidNomicon : MonoBehaviour {
         page = this.transform.GetChild(0).gameObject;
         currentPage = 0;
         pageContents = new List<PageContent>();
+        aboutTheAuthor.gameObject.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -75,14 +77,17 @@ public class CryptidNomicon : MonoBehaviour {
         if (currentPage == 0 )
         {
             page.GetComponent<Image>().sprite = pages[0];
+            aboutTheAuthor.gameObject.SetActive(false);
         }
         else if (currentPage > pageContents.Count)
         {
             page.GetComponent<Image>().sprite = pages[2];
+            aboutTheAuthor.gameObject.SetActive(true);
         }
         else
         {
             page.GetComponent<Image>().sprite = pages[1];
+            aboutTheAuthor.gameObject.SetActive(false);
         }
 
         //if we are still in the middle sprite update the content
@@ -95,6 +100,7 @@ public class CryptidNomicon : MonoBehaviour {
             PageContent content = pageContents[currentPage-1];
 
             thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
+            thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
             scoreDesc.text = "Score: " + content.photoScore;
             imageDesc.text = content.flavorText;
             nameDesc.text = content.name;

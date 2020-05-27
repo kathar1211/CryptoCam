@@ -25,6 +25,7 @@ public class Jackalope : Cryptid {
 
     // Use this for initialization
     void Start () {
+        StartUp();
         targetPos = transform.position + Random.insideUnitSphere * distance;
         targetPos.y = transform.position.y;
         currentState = MoveState.run;
@@ -45,7 +46,8 @@ public class Jackalope : Cryptid {
         {
             //wander with random chance to switch states
             case MoveState.run:
-                Wander(distance, minDistance, runSpeed, rotateSpeed);
+                Wander(maxDistance, minDistance, runSpeed, rotateSpeed);
+                //Wander(distance, minDistance, runSpeed, rotateSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
                 {
                     currentState = MoveState.scratch;

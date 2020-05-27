@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\CabinLab.cs" />
     <Compile Include="Assets\Scripts\CameraSnap.cs" />
     <Compile Include="Assets\Scripts\Cryptid.cs" />
+    <Compile Include="Assets\Scripts\CryptidCollider.cs" />
     <Compile Include="Assets\Scripts\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Firefly.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GradeManager.cs" />
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
+    <Compile Include="Assets\Scripts\HeadBone.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />
     <Compile Include="Assets\Scripts\LovelandFrogman.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Assets\Scripts\Tsuchinoko.cs" />
     <None Include="Assets\Shaders\Internal-PrePassLighting.shader" />
     <None Include="Assets\Shaders\Foliage.shader" />
+    <None Include="Assets\Shaders\CelShaderNonTransparent.shader" />
     <None Include="Assets\Shaders\Fog.shader" />
     <None Include="Assets\Shaders\Grass.shader" />
     <None Include="Assets\Resources\tedconvo.txt" />
@@ -97,7 +100,6 @@
     <None Include="Assets\Shaders\Trees.shader" />
     <None Include="Assets\Shaders\Water.shader" />
     <None Include="Assets\Shaders\UnityDeferredLibrary.cginc" />
-    <None Include="Assets\Shaders\CelShaderNoShadows.shader" />
     <None Include="Assets\Shaders\MapBlender.shader" />
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>C:/Users/Kat/Documents/GitHub/CryptoCam/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>

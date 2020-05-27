@@ -16,9 +16,12 @@ public class Cryptid : MonoBehaviour {
     protected Vector3 targetPos;
     protected float timeChasing;
 
-    // Use this for initialization
-    void Start () {
-		
+    //quick access
+    protected Rigidbody rb;
+
+    // Use this for initialization- needs to be called manually from base class's "Start" function
+    protected void StartUp () {
+        rb = this.gameObject.GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -30,10 +33,24 @@ public class Cryptid : MonoBehaviour {
     public void Move(float forwardSpeed, float rotateSpeed)
     {
         //move forward
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+       // if (rb == null)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        }
+        //else
+        {
+           // rb.AddForce(Vector3.forward * Time.deltaTime * forwardSpeed);
+        }
 
         //turn right
         transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed);
+    }
+
+    //move forward and up
+    public void Leap(float leapSpeed, float leapHeight)
+    {
+        transform.Translate(Vector3.forward * Time.deltaTime * leapSpeed);
+        transform.Translate(Vector3.up * Time.deltaTime * leapSpeed);
     }
 
     //move randomly in 2d space
@@ -41,6 +58,7 @@ public class Cryptid : MonoBehaviour {
     {
         //choose a random target position within range and move towards it
         //https://answers.unity.com/questions/23010/ai-wandering-script.html
+        timeChasing += Time.deltaTime;
 
         //change target position once within a certain range or after chasing it for a period of time
         if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || timeChasing > 14)
@@ -51,6 +69,7 @@ public class Cryptid : MonoBehaviour {
         }
 
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (targetPos - transform.position), rotateSpeed * Time.deltaTime, 0);
+        newDir.y = 0;
         transform.rotation = Quaternion.LookRotation(newDir);
 
         transform.position = Vector3.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime);
@@ -63,5 +82,19 @@ public class Cryptid : MonoBehaviour {
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTarget.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
         Move(forwardSpeed, 0);
+    }
+
+    //move away from a given obstacle
+    public void AvoidCollision(Collider other, float avoidSpeed)
+    {
+        Vector3 objectToCryptid = other.transform.position - transform.position;
+        Vector3 awayFromObject = other.transform.forward * objectToCryptid.magnitude;
+        awayFromObject.y = 0;
+        Vector3 turnAway = Vector3.RotateTowards(transform.forward, awayFromObject, Mathf.PI / 2, 0);
+        /*Vector3 ninetyDegreeTurn = Quaternion.LookRotation(objectToCryptid) * new Vector3(0, 1, 0);
+        ninetyDegreeTurn.x = ninetyDegreeTurn.z = 0;*/
+        transform.rotation = Quaternion.LookRotation(turnAway);
+        targetPos = Vector3.zero;
+       
     }
 }
