@@ -79,7 +79,17 @@ public class Cryptid : MonoBehaviour {
     //move in the opposite direction of a given target
     public void Flee(Transform fleeFromTarget, float forwardSpeed, float rotateSpeed)
     {
+        if (fleeFromTarget == null) { return; }
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTarget.position), rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir);
+        Move(forwardSpeed, 0);
+    }
+
+    //move in the direction of a given target
+    public void MoveToward(Transform target, float forwardSpeed, float rotateSpeed)
+    {
+        if (target == null) { return; }
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, (target.position - transform.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
         Move(forwardSpeed, 0);
     }
@@ -87,6 +97,7 @@ public class Cryptid : MonoBehaviour {
     //move away from a given obstacle
     public void AvoidCollision(Collider other, float avoidSpeed)
     {
+        if (other == null) { return; }
         Vector3 objectToCryptid = other.transform.position - transform.position;
         Vector3 awayFromObject = other.transform.forward * objectToCryptid.magnitude;
         awayFromObject.y = 0;
@@ -96,5 +107,11 @@ public class Cryptid : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(turnAway);
         targetPos = Vector3.zero;
        
+    }
+
+    //method to deal with player entering certain trigger zones; implementation varies by cryptid
+    public virtual void AvoidPlayer(Collider other)
+    {
+        return;
     }
 }

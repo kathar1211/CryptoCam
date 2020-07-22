@@ -61,6 +61,7 @@ public class Photography : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0))
         {
+            if (cameraSnap == null) { return; }
             cameraSnap.SnapShutter();
             TakePicture();
             if (picText != null) picText.text = "Photos Remaining: " + (allPics.Length - picIndex);

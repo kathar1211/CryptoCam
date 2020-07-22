@@ -81,13 +81,13 @@ public class Nessie : Cryptid {
                     currentState = MoveState.look;
                     
                 }
-                else if (RandomChance(.1f))
+                /*else if (RandomChance(.1f))
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", false);
                     animator.SetBool("Dive", true);
                     currentState = MoveState.underWaterSwim;
-                }
+                }*/
                 break;
             case MoveState.look:
                 //move wile looking around
