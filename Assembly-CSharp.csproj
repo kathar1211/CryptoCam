@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\Ted.cs" />
     <Compile Include="Assets\Scripts\TedConvos.cs" />
     <Compile Include="Assets\Scripts\TextBox.cs" />
+    <Compile Include="Assets\Scripts\ThrowObject.cs" />
     <Compile Include="Assets\Scripts\TitleScreen.cs" />
     <Compile Include="Assets\Scripts\Tsuchinoko.cs" />
     <None Include="Assets\Shaders\Internal-PrePassLighting.shader" />

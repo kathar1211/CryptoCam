@@ -24,6 +24,8 @@ public class CryptidCollider : MonoBehaviour {
     {
         //ignore collisions from the cryptid itself
         if (other.transform.root == baseCryptid.transform) { return; }
+        //ignore ground collisions
+        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Water") { return; }
         //handle interactions with player
         if (other.gameObject.tag == "Player"){ baseCryptid.AvoidPlayer(other); }
         //otherwise move

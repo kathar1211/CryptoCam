@@ -54,7 +54,7 @@ public class CabinLab : MonoBehaviour {
             {
                 gradeablePhotos.AddRange(p);
                 gameManager.GetComponent<GameManager>().pics4grading.Clear();
-                gradingThumbnail.gameObject.SetActive(true);
+                //gradingThumbnail.gameObject.SetActive(true);
                 currentState = MenuState.Grading;
 
                 //intro
@@ -227,6 +227,7 @@ public class CabinLab : MonoBehaviour {
     //iterate through the different attributes of the photo and queue up dialogue and sprites for ted that go with them
     void GradePhoto(Photograph photo)
     {
+        gradingThumbnail.gameObject.SetActive(true);
         gradingThumbnail.sprite = Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
         List<string> dialogue = new List<string>();
         List<TedMoods> sprites = new List<TedMoods>();

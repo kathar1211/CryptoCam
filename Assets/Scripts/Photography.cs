@@ -47,6 +47,9 @@ public class Photography : MonoBehaviour {
     //save field of view for non zoom;
     float defaultFOV;
 
+    //state for whether player is preparing to take a photo
+    public bool CameraReady;
+
 	// Use this for initialization
 	void Start () {
         picIndex = 0;
@@ -61,7 +64,7 @@ public class Photography : MonoBehaviour {
 	void Update () {
 		if (Input.GetMouseButtonDown(0))
         {
-            if (cameraSnap == null) { return; }
+            if (cameraSnap == null || CameraReady == false) { return; }
             cameraSnap.SnapShutter();
             TakePicture();
             if (picText != null) picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
@@ -82,6 +85,7 @@ public class Photography : MonoBehaviour {
     {
         cameraOverlay.SetActive(true);
         cryptoCam.fieldOfView = defaultFOV / 2;
+        CameraReady = true;
     }
 
     //return to default camera state
@@ -89,6 +93,7 @@ public class Photography : MonoBehaviour {
     {
         cameraOverlay.SetActive(false);
         cryptoCam.fieldOfView = defaultFOV;
+        CameraReady = false;
     }
 
     //rendertexture (photo) is saved. this is also where some grading happens

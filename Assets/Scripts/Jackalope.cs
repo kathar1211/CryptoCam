@@ -8,31 +8,56 @@ public class Jackalope : Cryptid {
     public float distance;
     public float runSpeed;
     public float rotateSpeed;
-    float minDistance;
+    public float minDistance;
 
     //flee properties
     Transform fleeFromTarget;
     public float maxDistance;
     public float fleeSpeed;
 
+    //move toward/eat properties
+    Transform moveToTarget;
+    public float timeToEat;
+    private float eatingTimer;
+
     Animator animator;
     float animationDuration;
     float timeElapsed;
 
+    //animator parameters
+    string StandUp = "StandUp";
+    string Run = "Run";
+    string Sniff = "Sniff";
+    string Speed = "Speed";
+    string Awake = "Awake";
+    string Eat = "Eat";
+    public bool startAwake;
 
-    enum MoveState { run, stand, scratch, flee};
+    enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward};
     MoveState currentState;
+    MoveState nextState;
+
+    //jackalope has texture switches
+    [SerializeField] Texture2D awakeTexture;
+    [SerializeField] Texture2D asleepTexture;
 
     // Use this for initialization
     void Start () {
         StartUp();
         targetPos = transform.position + Random.insideUnitSphere * distance;
         targetPos.y = transform.position.y;
-        currentState = MoveState.run;
+        currentState = MoveState.sleep;
+        nextState = MoveState.run;
         animator = GetComponent<Animator>();
         cryptidType = "Jackalope";
         baseScore = 50;
-        minDistance = 3;
+
+        if (startAwake)
+        {
+            currentState = MoveState.run;
+            this.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", awakeTexture);
+            animator.Play("run", 0);
+        }
     }
 	
 	// Update is called once per frame
@@ -47,15 +72,14 @@ public class Jackalope : Cryptid {
             //wander with random chance to switch states
             case MoveState.run:
                 Wander(maxDistance, minDistance, runSpeed, rotateSpeed);
-                //Wander(distance, minDistance, runSpeed, rotateSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
                 {
                     currentState = MoveState.scratch;
                     animationDuration = Random.Range(2.0f, 6.0f);
                     timeElapsed = 0;
                     //animator.Play("scratch n sniff");
-                    animator.SetBool("Sniff", true);
-                    animator.SetBool("Run", false);
+                    animator.SetBool(Sniff, true);
+                    animator.SetBool(Run, false);
                 }
                 else if (Random.Range(0.0f, 100.0f) > 99.9f)
                 {
@@ -63,8 +87,8 @@ public class Jackalope : Cryptid {
                     animationDuration = Random.Range(1.0f, 4.9f);
                     timeElapsed = 0;
                     //animator.Play("stand n sniff");
-                    animator.SetBool("StandUp", true);
-                    animator.SetBool("Run", false);
+                    animator.SetBool(StandUp, true);
+                    animator.SetBool(Run, false);
                 }
                 break;
 
@@ -75,9 +99,9 @@ public class Jackalope : Cryptid {
                 if (timeElapsed >= animationDuration)
                 {
                     currentState = MoveState.run;
-                    animator.SetBool("StandUp", false);
-                    animator.SetBool("Run", true);
-                    animator.SetBool("Sniff", false);
+                    animator.SetBool(StandUp, false);
+                    animator.SetBool(Run, true);
+                    animator.SetBool(Sniff, false);
                     //animator.Play("run");
                 }
 
@@ -89,10 +113,46 @@ public class Jackalope : Cryptid {
                 if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
                 {
                     currentState = MoveState.run;
-                    animator.SetFloat("Speed", 1);
+                    animator.SetFloat(Speed, 1);
                 }
                 break;
 
+            //dont move in these states
+            case MoveState.sleep:
+                //temp: sleep for set amount of time then awake
+                if (Time.time > 6)
+                {
+
+                }
+                break;
+            case MoveState.wake:
+                //check for run animation to start moving again
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("run"))
+                {
+                    currentState = nextState;
+                    nextState = MoveState.run;
+                }
+                break;
+            //move toward a specific object
+            case MoveState.runtoward:
+                MoveToward(moveToTarget, runSpeed, rotateSpeed);
+                //switch to eating within a certain range
+                if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
+                {
+                    currentState = MoveState.eat;
+                    animator.SetBool(Eat, true);
+                    eatingTimer = 0;
+                }
+                break;
+            case MoveState.eat:
+                eatingTimer += Time.deltaTime;
+                if (eatingTimer >= timeToEat)
+                {
+                    currentState = MoveState.run;
+                    animator.SetBool(Eat, false);
+                    Destroy(moveToTarget.gameObject);
+                }
+                break;
         }
 	}
 
@@ -102,13 +162,34 @@ public class Jackalope : Cryptid {
         if (other.tag == "Player")
         {
             fleeFromTarget = other.gameObject.transform;
-            currentState = MoveState.flee;
-            animator.SetBool("StandUp", false);
-            animator.SetBool("Run", true);
-            animator.SetBool("Sniff", false);
+            if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.flee; }
+            else { currentState = MoveState.flee; }
+            animator.SetBool(StandUp, false);
+            animator.SetBool(Run, true);
+            animator.SetBool(Sniff, false);
+            animator.SetBool(Eat, false);
             targetPos = Vector3.zero;
-            animator.SetFloat("Speed", 2);
+            animator.SetFloat(Speed, 2);
         }
+        else if (other.tag == "Carrot")
+        {
+            if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
+            else { currentState = MoveState.runtoward; }
+            animator.SetBool(StandUp, false);
+            animator.SetBool(Run, true);
+            animator.SetBool(Sniff, false);
+            animator.SetBool(Eat, false);
+            moveToTarget = other.transform;
+        }
+
+    }
+
+    //transition from sleep state
+    private void WakeUp()
+    {
+        animator.SetBool(Awake, true);
+        this.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", awakeTexture);
+        currentState = MoveState.wake;
     }
 
 

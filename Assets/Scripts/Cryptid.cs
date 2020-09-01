@@ -85,17 +85,23 @@ public class Cryptid : MonoBehaviour {
         Move(forwardSpeed, 0);
     }
 
-    //move in the direction of a given target
+    //move in the direction of a given target (transform)
     public void MoveToward(Transform target, float forwardSpeed, float rotateSpeed)
     {
+        MoveToward(target.position, forwardSpeed, rotateSpeed);
+    }
+
+    //move in the direction of a given target (vector3)
+    public void MoveToward(Vector3 target, float forwardSpeed, float rotateSpeed)
+    {
         if (target == null) { return; }
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (target.position - transform.position), rotateSpeed * Time.deltaTime, 0);
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
         Move(forwardSpeed, 0);
     }
 
     //move away from a given obstacle
-    public void AvoidCollision(Collider other, float avoidSpeed)
+    public virtual void AvoidCollision(Collider other, float avoidSpeed)
     {
         if (other == null) { return; }
         Vector3 objectToCryptid = other.transform.position - transform.position;

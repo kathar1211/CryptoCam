@@ -35,8 +35,13 @@ public class CryptidNomicon : MonoBehaviour {
     public Text imageDesc;
     public Text nameDesc;
     public Image aboutTheAuthor;
+    public Image largeThumbnail;
+    public Image largeThumbnailOverlay;
 
     List<PageContent> pageContents;
+
+    //"state" for when a photo is clicked and enlarged for viewing
+    bool viewing = false;
 
     // Use this for initialization
     void Start () {
@@ -48,14 +53,25 @@ public class CryptidNomicon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //handle page turning if not viewing a photo
+        if (!viewing)
         {
-            TurnPage(false);
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                TurnPage(false);
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                TurnPage(true);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        //close out of viewing a photo on any input
+        else
         {
-            TurnPage(true);
+            if (Input.anyKeyDown)
+            {
+                DelargePhoto();
+            }
         }
 
     }
@@ -136,5 +152,20 @@ public class CryptidNomicon : MonoBehaviour {
             if (photo.finalScore > 0)
             pageContents.Add(PhotoToPage(photo));
         }
+    }
+
+    //select a photo to view it up close
+    public void EnlargePhoto()
+    {
+        largeThumbnailOverlay.gameObject.SetActive(true);
+        largeThumbnail.sprite = thumbnail.sprite;
+        viewing = true;
+    }
+
+    //return to default state after viewing a photo
+    public void DelargePhoto()
+    {
+        largeThumbnailOverlay.gameObject.SetActive(false);
+        viewing = false;
     }
 }

@@ -41,6 +41,9 @@ public class LovelandFrogman : Cryptid {
     public float targetMaxDistance;
     public float targetMinDistance;
 
+    //represents the height frog should be at to look like he's swimming apropriately
+    private float swimHeight = -1;
+
 	// Use this for initialization
 	void Start () {
         StartUp();
@@ -56,51 +59,39 @@ public class LovelandFrogman : Cryptid {
         preleapOffset = leapOffset;
 
         rotateSpeed = Random.Range(-maxRotateSpeed, maxRotateSpeed);
+
+        //set up animator for starting state
+        if (currentState == MoveState.walk || currentState == MoveState.sit)
+        {
+            EndFrogLeap();
+        }
+        else if (currentState == MoveState.swim)
+        {
+            swimHeight = transform.position.y;
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
-
         timer += Time.deltaTime;
-
-        /*
-        //TEMP: animator determines states rather than vice versa
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("ledgeClimb"))
-        {
-            currentState = MoveState.edgeLeap;
-        }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("sit"))
-        {
-            currentState = MoveState.sit;
-            
-        }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("creep"))
-        {
-            currentState = MoveState.walk;
-        }
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("swim"))
-        {
-            currentState = MoveState.swim;
-        }*/
-
 
         switch (currentState)
         {
             //movement states
             case MoveState.swim:
-                //no gravity while swimming
-                rb.useGravity = false;
+
                 //Move(swimSpeed, rotateSpeed);
                 Move(swimSpeed, rotateSpeed);
+                if (swimHeight != -1 && transform.position.y != swimHeight)
+                {
+                    transform.Translate(Vector3.up * (swimHeight - transform.position.y) * swimSpeed * Time.deltaTime);
+                }
                 break;
             case MoveState.walk:
-                //turn gravity back on after exiting water
-                rb.useGravity = true;
+
                 Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed);
                 break;
-            case MoveState.sit:
-                rb.useGravity = true;
-                if (timer > timeToSit)
+            case MoveState.sit:                if (timer > timeToSit)
                 {
                     timer = 0;
                     animator.SetBool("creep", true);
@@ -137,6 +128,7 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.sit;
         needToAdjustPosition = true;
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+        rb.useGravity = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -148,6 +140,8 @@ public class LovelandFrogman : Cryptid {
             currentState = MoveState.swim;
             animator.Play("swim", 0);
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+            //no gravity while swimming
+            rb.useGravity = false;
         }
         //frogman approaches shore
         else if (other.tag == "Shore" && currentState == MoveState.swim)
@@ -163,4 +157,12 @@ public class LovelandFrogman : Cryptid {
         }
     }
 
+    public override void AvoidCollision(Collider other, float avoidSpeed)
+    {
+        //turning sharply away from obstacles causes problems on land; only do it in water
+        if (currentState == MoveState.swim)
+        {
+            base.AvoidCollision(other, avoidSpeed);
+        }
+    }
 }
