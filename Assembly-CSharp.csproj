@@ -62,7 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CabinLab.cs" />
+    <Compile Include="Assets\Scripts\CabinOpen.cs" />
     <Compile Include="Assets\Scripts\CameraSnap.cs" />
+    <Compile Include="Assets\Scripts\Constants.cs" />
     <Compile Include="Assets\Scripts\Cryptid.cs" />
     <Compile Include="Assets\Scripts\CryptidCollider.cs" />
     <Compile Include="Assets\Scripts\CryptidNomicon.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\HeadBone.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
+    <Compile Include="Assets\Scripts\LeaveCourse.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />
     <Compile Include="Assets\Scripts\LovelandFrogman.cs" />
     <Compile Include="Assets\Scripts\Move.cs" />

@@ -89,9 +89,10 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.walk:
 
-                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed);
+                Wander(targetMaxDistance, targetMinDistance, walkSpeed, Mathf.Abs(rotateSpeed));
                 break;
-            case MoveState.sit:                if (timer > timeToSit)
+            case MoveState.sit:
+                if (timer > timeToSit)
                 {
                     timer = 0;
                     animator.SetBool("creep", true);
@@ -153,7 +154,7 @@ public class LovelandFrogman : Cryptid {
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            //rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
     }
 

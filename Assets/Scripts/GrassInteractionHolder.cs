@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class GrassInteractionHolder : MonoBehaviour {
 
-    GameObject[] cryptids;
+    //GameObject[] cryptids;
     Vector4[] positions = new Vector4[100];
+
+    //float minDistance = 10;
+    //[SerializeField]
+    //GameObject[] nearestCryptid;
 
     // Use this for initialization
     void Start () {
-        cryptids = GameObject.FindGameObjectsWithTag("Cryptid");
+       // cryptids = GameObject.FindGameObjectsWithTag("Cryptid");
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        for (int i = 0; i < cryptids.Length; i++)
+
+/*
+        for (int i = 0; i < nearestCryptid.Length; i++)
         {
-            positions[i] = cryptids[i].transform.position;
+            positions[i] = nearestCryptid[i].transform.position;
         }
-        Shader.SetGlobalFloat("_PositionArray", cryptids.Length);
+        Shader.SetGlobalFloat("_PositionArray", nearestCryptid.Length);
         Shader.SetGlobalVectorArray("_Positions", positions);
+        */
+        
     }
 }

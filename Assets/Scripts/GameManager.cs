@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour {
 
     bool paused = false;
 
+    [SerializeField]
+    bool debug;
+    [SerializeField]
+    Text debugText;
+
 	// Use this for initialization
 	void Start () {
         Time.timeScale = 1;
@@ -66,6 +71,13 @@ public class GameManager : MonoBehaviour {
         //int minutes = Mathf.FloorToInt(timeRemaining / 60f);
         //int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
        // timeText.text = "Time Remaining: " + string.Format("{0:0}:{1:00}", minutes, seconds);
+
+        //check framerate
+        if (debug && debugText != null)
+        {
+            int fps = (int)(1f / Time.unscaledDeltaTime);
+            debugText.text = "FPS: " + fps;
+        }
 	}
 
     //ask the user if they would like to end the course

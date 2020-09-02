@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityStandardAssets.CrossPlatformInput;
 
 public struct Photograph
 {
@@ -55,25 +55,26 @@ public class Photography : MonoBehaviour {
         picIndex = 0;
         allPics = new Photograph[maxPics];
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
-        picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
+        picText.text = Constants.photosRemaining + (allPics.Length - picIndex);
         defaultFOV = cryptoCam.fieldOfView;
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetMouseButtonDown(0))
+        //if (Input.GetMouseButtonDown(0))
+        if (CrossPlatformInputManager.GetButtonDown(Constants.TakePicture))
         {
             if (cameraSnap == null || CameraReady == false) { return; }
             cameraSnap.SnapShutter();
             TakePicture();
-            if (picText != null) picText.text = "Photos Remaining: " + (allPics.Length - picIndex);
+            if (picText != null) picText.text = Constants.photosRemaining + (allPics.Length - picIndex);
         }
-        if (Input.GetMouseButtonDown(1))
+        if (CrossPlatformInputManager.GetButtonDown(Constants.ReadyCamera))
         {
             ReadyCamera();
         }
-        if (Input.GetMouseButtonUp(1))
+        if (CrossPlatformInputManager.GetButtonUp(Constants.ReadyCamera))
         {
             UnReadyCamera();
         }
