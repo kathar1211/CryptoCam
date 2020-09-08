@@ -11,4 +11,5 @@ public static class Constants {
     //inputs (button names)
     public static string TakePicture = "TakePicture";
     public static string ReadyCamera = "ReadyCamera";
+    public static string ThrowObject = "ThrowObject";
 }

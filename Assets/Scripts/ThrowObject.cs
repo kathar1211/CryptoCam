@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class ThrowObject : MonoBehaviour {
 
@@ -10,6 +12,9 @@ public class ThrowObject : MonoBehaviour {
     [SerializeField]
     GameManager gameManager;
     Photography photographer;
+
+    [SerializeField]
+    Text objText;
 
     ///forward force applied to the thrown object
     public float throwForce;
@@ -22,11 +27,9 @@ public class ThrowObject : MonoBehaviour {
     //how far in front of player to spawn object
     public float spawnDistance;
 
-    private KeyCode throwKey;
-
 	// Use this for initialization
 	void Start () {
-        throwKey = KeyCode.E;
+        
         timer = coolDownTime;
         currentObjects = 0;
         photographer = gameManager.GetComponent<Photography>();
@@ -41,7 +44,7 @@ public class ThrowObject : MonoBehaviour {
             return;
         }
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
-		if (Input.GetKeyDown(throwKey) && timer >= coolDownTime && currentObjects < objectLimit)
+		if (CrossPlatformInputManager.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
             //create carrot and throw
             GameObject existingCarrot = Instantiate(carrot, this.transform.position + (this.transform.forward*spawnDistance), carrot.transform.rotation);
@@ -52,6 +55,7 @@ public class ThrowObject : MonoBehaviour {
             //update conditions around throwing
             timer = 0;
             currentObjects++;
+            objText.text = (objectLimit - currentObjects).ToString();
         }
 	}
 }

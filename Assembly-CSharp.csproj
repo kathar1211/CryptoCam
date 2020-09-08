@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Tsuchinoko.cs" />
     <None Include="Assets\Shaders\Internal-PrePassLighting.shader" />
     <None Include="Assets\Shaders\Foliage.shader" />
+    <None Include="Assets\Fonts\Nunito\OFL.txt" />
     <None Include="Assets\Shaders\CelShaderNonTransparent.shader" />
     <None Include="Assets\Shaders\Fog.shader" />
     <None Include="Assets\Shaders\Grass.shader" />

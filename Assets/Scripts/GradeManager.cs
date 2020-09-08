@@ -175,6 +175,7 @@ public class GradeManager : MonoBehaviour {
         for (int i = 0; i < thumbnails.Length; i++)
         {
             if (i >= pics.Length) { return; }
+            if (pics[i].pic == null) { return; }
 
             //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
             thumbnails[i].sprite = Sprite.Create(pics[i].pic, new Rect(0f, 0f, pics[i].pic.width, pics[i].pic.height), new Vector2(.5f, .5f));
