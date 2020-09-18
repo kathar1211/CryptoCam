@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class LogoAnimation : MonoBehaviour {
 
@@ -58,7 +59,7 @@ public class LogoAnimation : MonoBehaviour {
 	void Update () {
 
         //option to skip animation stuff by pressing enter
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
         {
             moon.GetComponent<CanvasGroup>().alpha = 1;
             leftCloud.GetComponent<CanvasGroup>().alpha = 1;

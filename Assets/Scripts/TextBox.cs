@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class TextBox : MonoBehaviour {
 
@@ -18,6 +19,9 @@ public class TextBox : MonoBehaviour {
 
     string currentText;
     Queue<string> allText;
+
+    [SerializeField]
+    AudioSource textSFX;
 
     //decide whether or not text box disappears when finished scrolling through text
     public bool CloseOnTextComplete { get; set; }
@@ -40,7 +44,7 @@ public class TextBox : MonoBehaviour {
         //scroll through text if there is text in the queue
         if (allText!= null && allText.Count != 0)
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
             {
                 if (talking)
                 {
@@ -140,6 +144,8 @@ public class TextBox : MonoBehaviour {
         {
             txt.text += text[textIndex];
             textIndex++;
+            //todo: play sound effect for text scrolling
+            if (textSFX != null ) { textSFX.Play(); }
             yield return new WaitForSeconds (textDelay);
         }
 

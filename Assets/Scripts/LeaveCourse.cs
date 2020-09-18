@@ -19,7 +19,7 @@ public class LeaveCourse : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         if (gm != null)
-        gm.EndPrompt(Constants.leaveCoursePrompt);
+        gm.EndPrompt(Constants.LeaveCoursePrompt);
     }
 
 

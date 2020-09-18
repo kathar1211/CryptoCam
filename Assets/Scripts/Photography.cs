@@ -50,12 +50,15 @@ public class Photography : MonoBehaviour {
     //state for whether player is preparing to take a photo
     public bool CameraReady;
 
+    [SerializeField]
+    AudioSource cameraSFX;
+
 	// Use this for initialization
 	void Start () {
         picIndex = 0;
         allPics = new Photograph[maxPics];
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
-        picText.text = Constants.photosRemaining + (allPics.Length - picIndex);
+        picText.text = (allPics.Length - picIndex).ToString();
         defaultFOV = cryptoCam.fieldOfView;
 
     }
@@ -68,7 +71,8 @@ public class Photography : MonoBehaviour {
             if (cameraSnap == null || CameraReady == false) { return; }
             cameraSnap.SnapShutter();
             TakePicture();
-            if (picText != null) picText.text = Constants.photosRemaining + (allPics.Length - picIndex);
+            if (cameraSFX != null) { cameraSFX.Play(); }
+            if (picText != null) picText.text = (allPics.Length - picIndex).ToString();
         }
         if (CrossPlatformInputManager.GetButtonDown(Constants.ReadyCamera))
         {

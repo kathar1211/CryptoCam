@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class TitleScreen : MonoBehaviour {
 
@@ -17,6 +18,11 @@ public class TitleScreen : MonoBehaviour {
     //keep track of whether the animation is done as well as whether it was done 1 frame ago
     bool animationDone;
     bool animationDonePevFrame;
+
+    [SerializeField]
+    AudioSource moveSFX;
+    [SerializeField]
+    AudioSource selectSFX;
 
     // Use this for initialization
     void Start () {
@@ -36,23 +42,28 @@ public class TitleScreen : MonoBehaviour {
         {
             animationDone = true;
         }
-        if (animationDone && animationDonePevFrame)
+        if (animationDone && animationDonePevFrame )
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            float dir = 0;
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical))
+            {
+                dir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+            }
+            if (dir > 0)
             {
                 currentButton += buttons.Length;
                 currentButton--;
                 currentButton %= buttons.Length;
                 MoveSelector(buttons[currentButton]);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (dir < 0)
             {
                 currentButton++;
                 currentButton %= buttons.Length;
                 MoveSelector(buttons[currentButton]);
             }
 
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
             {
                 buttons[currentButton].GetComponent<Button>().onClick.Invoke();
             }
@@ -63,13 +74,16 @@ public class TitleScreen : MonoBehaviour {
     public void Continue()
     {
         Debug.Log("clicked continue");
+        if (selectSFX != null) { selectSFX.Play(); }
     }
 
     //if player selects new game, load next scene
     public void NewGame()
     {
+        PlayerPrefs.DeleteAll();
         Debug.Log("clicked newgame");
         SceneManager.LoadScene("Lab");
+        if (selectSFX != null) { selectSFX.Play(); }
 
     }
 
@@ -77,6 +91,7 @@ public class TitleScreen : MonoBehaviour {
     public void Options()
     {
         Debug.Log("Clicked options");
+        if (selectSFX != null) { selectSFX.Play(); }
     }
 
     //quit
@@ -84,6 +99,7 @@ public class TitleScreen : MonoBehaviour {
     {
         Debug.Log("clicked exit");
         Application.Quit();
+        if (selectSFX != null) { selectSFX.Play(); }
     }
 
     //indicate to player which button is currently selected
@@ -98,5 +114,7 @@ public class TitleScreen : MonoBehaviour {
         selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(button.GetComponent<RectTransform>().rect.width + xmargin*2, selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
 
         currentButton = System.Array.IndexOf(buttons, button);
+
+        if (moveSFX != null) { moveSFX.Play(); }
     }
 }

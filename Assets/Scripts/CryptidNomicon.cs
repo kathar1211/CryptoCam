@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityStandardAssets.CrossPlatformInput;
 
 //holds all content needed for a given page of the cryptidnomicon
 public struct PageContent
@@ -43,6 +43,9 @@ public class CryptidNomicon : MonoBehaviour {
     //"state" for when a photo is clicked and enlarged for viewing
     bool viewing = false;
 
+    [SerializeField]
+    AudioSource pageTurnSFX;
+
     // Use this for initialization
     void Start () {
         page = this.transform.GetChild(0).gameObject;
@@ -56,13 +59,16 @@ public class CryptidNomicon : MonoBehaviour {
         //handle page turning if not viewing a photo
         if (!viewing)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            /*if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 TurnPage(false);
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 TurnPage(true);
+            }*/
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Horizontal)){
+                TurnPage(CrossPlatformInputManager.GetAxis(Constants.Horizontal) > 0);
             }
         }
         //close out of viewing a photo on any input
@@ -79,7 +85,9 @@ public class CryptidNomicon : MonoBehaviour {
     //turn pages of the cryptidnomicon. true for forward false for back
     public void TurnPage(bool forward)
     {
-        
+        //play sound effect
+        if (pageTurnSFX != null) pageTurnSFX.Play();
+
         if (forward && currentPage < pageContents.Count + 1)
         {
             currentPage++;

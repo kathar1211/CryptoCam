@@ -67,7 +67,7 @@ public class GradeManager : MonoBehaviour {
         ShowThumbnails(gameManager.GetComponent<Photography>().GetPhotographs());
 
         textbox.CloseOnTextComplete = false;
-        textbox.FeedText("Select pictures to show to Ted");
+        textbox.FeedText(Constants.ShowTed);
         textbox.DisplayText();
 
         bigThumbnail.gameObject.SetActive(false);
@@ -94,7 +94,7 @@ public class GradeManager : MonoBehaviour {
         selectedImage = src;
         bigThumbnail.sprite = src.sprite;
         bigThumbnail.gameObject.SetActive(true);
-        textbox.FeedText("Select this picture?");
+        textbox.FeedText(Constants.ConfirmSelectPhoto);
         textbox.DisplayText();
         ToggleInputButtons();
     }
@@ -165,7 +165,7 @@ public class GradeManager : MonoBehaviour {
     public void Delarge()
     {
         bigThumbnail.gameObject.SetActive(false);
-        textbox.FeedText("Select pictures to show to Ted");
+        textbox.FeedText(Constants.ShowTed);
         textbox.DisplayText();
     }
 
@@ -213,8 +213,7 @@ public class GradeManager : MonoBehaviour {
     public void DoneButtonClick()
     {
         ConfirmScreen.SetActive(true);
-        ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = "Proceed with " + finalSelection.Count + " photos selected?";
-
+        ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
         AutoButton.SetActive(false);
         DoneButton.SetActive(false);
     }

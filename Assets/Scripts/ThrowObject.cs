@@ -33,7 +33,8 @@ public class ThrowObject : MonoBehaviour {
         timer = coolDownTime;
         currentObjects = 0;
         photographer = gameManager.GetComponent<Photography>();
-	}
+        objText.text = (objectLimit - currentObjects).ToString();
+    }
 	
 	// Update is called once per frame
 	void Update () {
