@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     Text debugText;
 
+
+
 	// Use this for initialization
 	void Start () {
         Time.timeScale = 1;
@@ -45,13 +47,16 @@ public class GameManager : MonoBehaviour {
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        //initialize controls
+        CustomController.LoadAllKeys();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
 		//toggle pause
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (CustomController.GetButtonDown(Constants.Pause))
         {
             if (paused)
             {

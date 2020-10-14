@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Cryptid.cs" />
     <Compile Include="Assets\Scripts\CryptidCollider.cs" />
     <Compile Include="Assets\Scripts\CryptidNomicon.cs" />
+    <Compile Include="Assets\Scripts\CustomController.cs" />
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Firefly.cs" />
     <Compile Include="Assets\Scripts\FresnoNightcrawler.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Assets\Scripts\GradeManager.cs" />
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\HeadBone.cs" />
+    <Compile Include="Assets\Scripts\HelpPrompt.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
     <Compile Include="Assets\Scripts\LeaveCourse.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />

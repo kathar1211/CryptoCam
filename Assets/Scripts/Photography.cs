@@ -66,7 +66,7 @@ public class Photography : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //if (Input.GetMouseButtonDown(0))
-        if (CrossPlatformInputManager.GetButtonDown(Constants.TakePicture))
+        if (CustomController.GetButtonDown(Constants.TakePicture))
         {
             if (cameraSnap == null || CameraReady == false) { return; }
             cameraSnap.SnapShutter();
@@ -74,11 +74,11 @@ public class Photography : MonoBehaviour {
             if (cameraSFX != null) { cameraSFX.Play(); }
             if (picText != null) picText.text = (allPics.Length - picIndex).ToString();
         }
-        if (CrossPlatformInputManager.GetButtonDown(Constants.ReadyCamera))
+        if (CustomController.GetButtonDown(Constants.ReadyCamera))
         {
             ReadyCamera();
         }
-        if (CrossPlatformInputManager.GetButtonUp(Constants.ReadyCamera))
+        if (CustomController.GetButtonUp(Constants.ReadyCamera))
         {
             UnReadyCamera();
         }

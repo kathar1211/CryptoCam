@@ -140,13 +140,16 @@ public class TextBox : MonoBehaviour {
         textIndex = 0;
         talking = true;
 
+        //get current text speed value by multiplying the delay by the saved modifier
+        float modifiedDelay = textDelay / LoadTextSpeed();
+
         while (textIndex < text.Length)
         {
             txt.text += text[textIndex];
             textIndex++;
             //todo: play sound effect for text scrolling
             if (textSFX != null ) { textSFX.Play(); }
-            yield return new WaitForSeconds (textDelay);
+            yield return new WaitForSeconds (modifiedDelay);
         }
 
         talking = false;
@@ -244,5 +247,17 @@ public class TextBox : MonoBehaviour {
         allScores.Clear();
         if (talking) { StopCoroutine("displayText"); }
         talking = false;
+    }
+
+    //grab current text delay modifier
+    float LoadTextSpeed()
+    {
+        if (PlayerPrefs.HasKey(Constants.TextSpeed))
+        {
+            return PlayerPrefs.GetFloat(Constants.TextSpeed);
+        }
+
+        //if nothing is saved return 1 (no modifier)
+        return 1;
     }
 }

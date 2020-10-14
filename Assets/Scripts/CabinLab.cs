@@ -21,8 +21,10 @@ public class CabinLab : MonoBehaviour {
 
     //for options
     public GameObject options;
+    //for credits
+    public GameObject credits;
 
-    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading, GradingDone };
+    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading, GradingDone, Credits };
     MenuState currentState;
 
     List<Photograph> gradeablePhotos = new List<Photograph>();
@@ -75,12 +77,12 @@ public class CabinLab : MonoBehaviour {
                 textBox.GetComponent<TextBox>().ClearTextQueue();
                 textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, emptyScoreTxt);
                 textBox.GetComponent<TextBox>().DisplayText();
-                currentState = MenuState.Talking;
+                //currentState = MenuState.Grading;
             }
         }
 
         //if it's the first time starting the game, set up the intro sequence
-        if (!PlayerPrefs.HasKey(Constants.FirstPlay))
+        else if (!PlayerPrefs.HasKey(Constants.FirstPlay) || PlayerPrefs.GetInt(Constants.FirstPlay) == 0)
         {
             currentState = MenuState.Talking;
             PlayerPrefs.SetInt(Constants.FirstPlay, 1);
@@ -125,7 +127,10 @@ public class CabinLab : MonoBehaviour {
                 break;
 
             case MenuState.CryptidNomicon:
-
+                if (cryptidNomicon.GetComponent<CryptidNomicon>().ReadyToClose)
+                {
+                    Return(cryptidNomicon);
+                }
                 break;
 
             case MenuState.Talking:
@@ -165,6 +170,13 @@ public class CabinLab : MonoBehaviour {
                 {
                     currentState = MenuState.Main;
                     gradingThumbnail.gameObject.SetActive(false);
+                }
+                break;
+            case MenuState.Credits:
+                //exit credits on click
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+                {
+                    Return(credits);
                 }
                 break;
         }
@@ -221,8 +233,10 @@ public class CabinLab : MonoBehaviour {
     {
         if (currentState == MenuState.Main)
         {
+            cryptidNomicon.GetComponent<CryptidNomicon>().ReadyToClose = false;
             cryptidNomicon.SetActive(true);
             currentState = MenuState.CryptidNomicon;
+
         }
     }
 
@@ -258,6 +272,15 @@ public class CabinLab : MonoBehaviour {
         {
             options.SetActive(true);
             currentState = MenuState.Options;
+        }
+    }
+
+    public void Credits()
+    {
+        if (currentState == MenuState.Main)
+        {
+            credits.SetActive(true);
+            currentState = MenuState.Credits;
         }
     }
 

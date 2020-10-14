@@ -7,16 +7,17 @@ public static class Constants {
     //main gameplay ui text
     public static string LeaveCoursePrompt = "Return to the lab with your photos and end the course?";
     public static string PhotosRemaining = "Photos Remaining: ";
-    public static string PhotoHelpPrompt = "Hold right click to ready the camera and press right click to take a picture";
+    public static string PhotoHelpPrompt = "Hold right click to ready the camera; press left click to take a picture";
     public static string ObjectHelpPrompt = "Press Q to throw a carrot";
 
     //inputs (button names)
-    public static string TakePicture = "TakePicture";
-    public static string ReadyCamera = "ReadyCamera";
-    public static string ThrowObject = "ThrowObject";
-    public static string Submit = "Submit";
-    public static string Horizontal = "Horizontal";
-    public static string Vertical = "Vertical";
+    public const string TakePicture = "TakePicture";
+    public const string ReadyCamera = "ReadyCamera";
+    public const string ThrowObject = "ThrowObject";
+    public const string Pause = "Pause";
+    public const string Submit = "Submit";
+    public const string Horizontal = "Horizontal";
+    public const string Vertical = "Vertical";
 
     //grading page text
     public static string ShowTed = "Select pictures to show to Ted";
@@ -69,7 +70,9 @@ public static class Constants {
     };
 
     //player pref keys - used for saving data
-    public static string FirstPlay = "FirstPlay";
+    public static string FirstPlay = "FirstPlay"; //false if this is not the first time booting up the game
+    public static string TextSpeed = "TextSpeed";
+    
 
 
 

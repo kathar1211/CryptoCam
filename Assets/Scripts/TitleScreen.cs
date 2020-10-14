@@ -8,9 +8,12 @@ using UnityStandardAssets.CrossPlatformInput;
 public class TitleScreen : MonoBehaviour {
 
     //handles button clicks and selections for title screen
-
     public GameObject[] buttons;
     public GameObject selector;
+
+    //options handling
+    public GameObject options;
+    bool optionsActive = false;
 
     int currentButton;
 
@@ -36,36 +39,38 @@ public class TitleScreen : MonoBehaviour {
 	void Update () {
 
         animationDonePevFrame = animationDone;
-
-        //only accept input once buttons have appeared on screen
-        if (buttons[buttons.Length - 1].activeInHierarchy)
+        if (!optionsActive)
         {
-            animationDone = true;
-        }
-        if (animationDone && animationDonePevFrame )
-        {
-            float dir = 0;
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical))
+            //only accept input once buttons have appeared on screen
+            if (buttons[buttons.Length - 1].activeInHierarchy)
             {
-                dir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+                animationDone = true;
             }
-            if (dir > 0)
+            if (animationDone && animationDonePevFrame)
             {
-                currentButton += buttons.Length;
-                currentButton--;
-                currentButton %= buttons.Length;
-                MoveSelector(buttons[currentButton]);
-            }
-            if (dir < 0)
-            {
-                currentButton++;
-                currentButton %= buttons.Length;
-                MoveSelector(buttons[currentButton]);
-            }
+                float dir = 0;
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical))
+                {
+                    dir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+                }
+                if (dir > 0)
+                {
+                    currentButton += buttons.Length;
+                    currentButton--;
+                    currentButton %= buttons.Length;
+                    MoveSelector(buttons[currentButton]);
+                }
+                if (dir < 0)
+                {
+                    currentButton++;
+                    currentButton %= buttons.Length;
+                    MoveSelector(buttons[currentButton]);
+                }
 
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
-            {
-                buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+                {
+                    buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+                }
             }
         }
     }
@@ -73,15 +78,14 @@ public class TitleScreen : MonoBehaviour {
     //todo: if player selects continue, load sava data
     public void Continue()
     {
-        Debug.Log("clicked continue");
         if (selectSFX != null) { selectSFX.Play(); }
     }
 
     //if player selects new game, load next scene
     public void NewGame()
     {
-        PlayerPrefs.DeleteAll();
-        Debug.Log("clicked newgame");
+        //PlayerPrefs.DeleteAll();
+        PlayerPrefs.SetInt(Constants.FirstPlay,0);
         SceneManager.LoadScene("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
 
@@ -90,14 +94,15 @@ public class TitleScreen : MonoBehaviour {
     //bring up options menu
     public void Options()
     {
-        Debug.Log("Clicked options");
+        options.SetActive(true);
+        optionsActive = true;
         if (selectSFX != null) { selectSFX.Play(); }
     }
 
     //quit
     public void Exit()
     {
-        Debug.Log("clicked exit");
+
         Application.Quit();
         if (selectSFX != null) { selectSFX.Play(); }
     }
@@ -116,5 +121,11 @@ public class TitleScreen : MonoBehaviour {
         currentButton = System.Array.IndexOf(buttons, button);
 
         if (moveSFX != null) { moveSFX.Play(); }
+    }
+
+    public void CloseOptions()
+    {
+        options.SetActive(false);
+        optionsActive = false;
     }
 }

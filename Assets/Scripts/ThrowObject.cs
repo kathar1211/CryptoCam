@@ -45,7 +45,7 @@ public class ThrowObject : MonoBehaviour {
             return;
         }
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
-		if (CrossPlatformInputManager.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
+		if (CustomController.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
             //create carrot and throw
             GameObject existingCarrot = Instantiate(carrot, this.transform.position + (this.transform.forward*spawnDistance), carrot.transform.rotation);

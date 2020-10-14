@@ -46,6 +46,8 @@ public class CryptidNomicon : MonoBehaviour {
     [SerializeField]
     AudioSource pageTurnSFX;
 
+    public bool ReadyToClose = false;
+
     // Use this for initialization
     void Start () {
         page = this.transform.GetChild(0).gameObject;
@@ -88,7 +90,11 @@ public class CryptidNomicon : MonoBehaviour {
         //play sound effect
         if (pageTurnSFX != null) pageTurnSFX.Play();
 
-        if (forward && currentPage < pageContents.Count + 1)
+        if (forward && currentPage >= pageContents.Count + 1)
+        {
+            ReadyToClose = true;
+        }
+        else if (forward && currentPage < pageContents.Count + 1)
         {
             currentPage++;
         }
@@ -96,6 +102,8 @@ public class CryptidNomicon : MonoBehaviour {
         {
             currentPage--;
         }
+        //close book if player turns pages beyond back cover
+
         
         //current page will now keep track of content, but only 3 sprites are used: beginning middle and end
         if (currentPage == 0 )
