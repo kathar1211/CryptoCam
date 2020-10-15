@@ -33,18 +33,16 @@ public class GradeManager : MonoBehaviour {
     //store photograph information that corresponds with each thumbnail
     Dictionary<Image, Photograph> allPhotos = new Dictionary<Image, Photograph>();
 
-    //swap between selecting photos and grading photos
+    //sound effects
     [SerializeField]
-    Canvas Selectioncanvas;
+    AudioSource ClickSFX;
     [SerializeField]
-    Canvas GradingCanvas;
+    AudioSource ConfirmSFX;
+    [SerializeField]
+    AudioSource CancelSFX;
 
-    //this is ted's textbox, where grading happens
-    [SerializeField]
-    TextBox tedsays;
-
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
         //find the game manager, which has all the data we need from the previous level stored
         gameManager = GameObject.Find("GameManager");
@@ -91,6 +89,9 @@ public class GradeManager : MonoBehaviour {
     //bring up image on click
     public void Enlarge(Image src)
     {
+        //play sfx if applicable
+        if (ClickSFX != null) { ClickSFX.Play(); }
+
         selectedImage = src;
         bigThumbnail.sprite = src.sprite;
         bigThumbnail.gameObject.SetActive(true);
@@ -102,6 +103,9 @@ public class GradeManager : MonoBehaviour {
     //selected photo is added to dictionary, return to view of all photos 
     public void YesButtonClick()
     {
+        //play sfx if applicable
+        if (ConfirmSFX !=null){ ConfirmSFX.Play(); }
+
         //indicate selection
         selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(true);
 
@@ -151,10 +155,13 @@ public class GradeManager : MonoBehaviour {
     //photo dismissed
     public void NoButtonClick()
     {
+        //play sfx if applicable
+        if (CancelSFX != null) { CancelSFX.Play(); }
+
         //if photo has been added remove it
         selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(false);
         Photograph picToRemove = allPhotos[selectedImage];
-        if (finalSelection.ContainsKey(picToRemove.subjectName)){
+        if (finalSelection.ContainsKey(picToRemove.subjectName) && finalSelection[picToRemove.subjectName].Equals(picToRemove)){
             finalSelection.Remove(picToRemove.subjectName);
         }
 
@@ -174,8 +181,8 @@ public class GradeManager : MonoBehaviour {
     {
         for (int i = 0; i < thumbnails.Length; i++)
         {
-            if (i >= pics.Length) { return; }
-            if (pics[i].pic == null) { return; }
+            if (i >= pics.Length) { thumbnails[i].gameObject.SetActive(false); continue; }
+            if (pics[i].pic == null) { thumbnails[i].gameObject.SetActive(false); continue; }
 
             //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
             thumbnails[i].sprite = Sprite.Create(pics[i].pic, new Rect(0f, 0f, pics[i].pic.width, pics[i].pic.height), new Vector2(.5f, .5f));
@@ -186,6 +193,11 @@ public class GradeManager : MonoBehaviour {
     //automatically select the highest scoring photos for grading
     public void AutoSelect()
     {
+
+        //play sfx if applicable
+        if (ClickSFX != null) { ClickSFX.Play(); }
+
+
         foreach (KeyValuePair<Image, Photograph> pair in allPhotos)
         {
             Image img = pair.Key;
@@ -212,6 +224,9 @@ public class GradeManager : MonoBehaviour {
     //prompt the user to confirm that they want to exit the selection screen
     public void DoneButtonClick()
     {
+        //play sfx if applicable
+        if (ClickSFX != null) { ClickSFX.Play(); }
+
         ConfirmScreen.SetActive(true);
         ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
         AutoButton.SetActive(false);
@@ -221,6 +236,9 @@ public class GradeManager : MonoBehaviour {
     //if user confirms they want to proceed to grading
     public void ConfirmDone()
     {
+        //play sfx if applicable
+        if (ConfirmSFX != null) { ConfirmSFX.Play(); }
+
         List<Photograph> photos = new List<Photograph>();
         photos.AddRange(finalSelection.Values);
         gameManager.GetComponent<GameManager>().ReturnToLab(photos);
@@ -232,6 +250,9 @@ public class GradeManager : MonoBehaviour {
     //if user decided to return to selection
     public void DeconfirmDone()
     {
+        //play sfx if applicable
+        if (CancelSFX != null) { CancelSFX.Play(); }
+
         ConfirmScreen.SetActive(false);
         AutoButton.SetActive(true);
         DoneButton.SetActive(true);

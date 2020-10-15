@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\HeadBone.cs" />
     <Compile Include="Assets\Scripts\HelpPrompt.cs" />
+    <Compile Include="Assets\Scripts\IntroCameraBehavior.cs" />
     <Compile Include="Assets\Scripts\Jackalope.cs" />
     <Compile Include="Assets\Scripts\LeaveCourse.cs" />
     <Compile Include="Assets\Scripts\LogoAnimation.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Assets\Scripts\Reverse.cs" />
     <Compile Include="Assets\Scripts\Rotate.cs" />
     <Compile Include="Assets\Scripts\SetRippleShaderEffects.cs" />
+    <Compile Include="Assets\Scripts\ShowLevelIntro.cs" />
     <Compile Include="Assets\Scripts\spin2d.cs" />
     <Compile Include="Assets\Scripts\SpriteFaceForward.cs" />
     <Compile Include="Assets\Scripts\Ted.cs" />

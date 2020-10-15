@@ -6,7 +6,7 @@ using UnityEngine;
 public class CustomController : MonoBehaviour {
 
     //map names to inputs here
-    static Dictionary<string, KeyCode> buttons;
+    static Dictionary<string, KeyCode> buttons = new Dictionary<string, KeyCode>();
 
     //store default inputs
     static Dictionary<string, KeyCode> defaultButtons = new Dictionary<string, KeyCode>

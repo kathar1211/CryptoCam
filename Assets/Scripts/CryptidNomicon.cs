@@ -90,11 +90,13 @@ public class CryptidNomicon : MonoBehaviour {
         //play sound effect
         if (pageTurnSFX != null) pageTurnSFX.Play();
 
-        if (forward && currentPage >= pageContents.Count + 1)
+        /*if (forward && currentPage >= pageContents.Count + 1)
         {
             ReadyToClose = true;
+            return;
         }
-        else if (forward && currentPage < pageContents.Count + 1)
+        else*/
+        if (forward && currentPage < pageContents.Count + 1)
         {
             currentPage++;
         }

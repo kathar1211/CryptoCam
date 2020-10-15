@@ -37,8 +37,10 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     Text debugText;
 
-
-
+    //ui indicating game is paused
+    [SerializeField]
+    GameObject pauseText;
+   
 	// Use this for initialization
 	void Start () {
         Time.timeScale = 1;
@@ -62,11 +64,13 @@ public class GameManager : MonoBehaviour {
             {
                 paused = false;
                 Time.timeScale = 1;
+                pauseText.SetActive(false);
             }
             else if (!paused)
             {
                 paused = true;
                 Time.timeScale = 0;
+                pauseText.SetActive(true);
             }
            // SceneManager.LoadScene("Lab");
         }
