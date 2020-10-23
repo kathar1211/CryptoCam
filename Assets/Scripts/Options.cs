@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
+using System;
+
 
 public class Options : MonoBehaviour {
 
@@ -116,36 +119,42 @@ public class Options : MonoBehaviour {
          * event
 
          */
-        keyEvent = Event.current;
+        if (waitingForKeyPress) {
+            keyEvent = Event.current;
 
 
-        //Executes if a button gets pressed and
+            //Executes if a button gets pressed and
 
-        //the user presses a key
+            //the user presses a key
 
-        if (keyEvent.keyCode != KeyCode.None && waitingForKeyPress)
-        {
-
-            newKey = keyEvent.keyCode; //Assigns newKey to the key user presses
-
-            //make sure it was pressed this frame 
-            if (Input.GetKeyDown(keyEvent.keyCode))
+            if (keyEvent.keyCode != KeyCode.None)
             {
-                waitingForKeyPress = false;
+
+                newKey = keyEvent.keyCode; //Assigns newKey to the key user presses
+
+                //make sure it was pressed this frame 
+                if (Input.GetKeyDown(keyEvent.keyCode))
+                {
+                    waitingForKeyPress = false;
+                }
+
             }
 
-        }
+            //mouse clicks count as acceptable input
+            else if (keyEvent.isMouse)
+            {
+                //convert mouse button number (0 left click, 1 right click) to mouse keycode (323 left click, 324 right click)
+                newKey = (KeyCode)((int)KeyCode.Mouse0 + keyEvent.button);
 
-        //mouse clicks count as acceptable input
-        if (keyEvent.isMouse && waitingForKeyPress)
-        {
-            //convert mouse button number (0 left click, 1 right click) to mouse keycode (323 left click, 324 right click)
-            newKey = (KeyCode)((int)KeyCode.Mouse0 + keyEvent.button);
-
-            //make sure it was pressed this frame
-            if (Input.GetMouseButtonDown(keyEvent.button)){
-                waitingForKeyPress = false;
+                //make sure it was pressed this frame
+                if (Input.GetMouseButtonDown(keyEvent.button)) {
+                    waitingForKeyPress = false;
+                }
             }
+
+            //https://forum.unity.com/threads/how-can-i-know-that-any-button-on-gamepad-is-pressed.757322/
+
+            //var gamepadButtonPressed = Gamepad.current.allControls.Any(x => x is ButtonControl button && x.isPressed && !x.synthetic);
         }
     }
 
@@ -231,5 +240,18 @@ public class Options : MonoBehaviour {
     void SaveTextSpeed()
     {
         PlayerPrefs.SetFloat(Constants.TextSpeed, speed);
+    }
+
+    //if selector is activated it still needs to reflect mouseover options
+    public void MoveSelector(GameObject button)
+    {
+        selectedButton = button;
+        //selectedButtonIndex = ArrayUtility.IndexOf<GameObject>(buttonArray, button);
+        selectedButtonIndex = Array.IndexOf(buttonArray, button);
+        buttonHighlight.transform.position = selectedButton.transform.position;
+        float width = selectedButton.GetComponent<RectTransform>().rect.width;
+        float height = selectedButton.GetComponent<RectTransform>().rect.height;
+        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width + 5);
+        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height + 5);
     }
 }

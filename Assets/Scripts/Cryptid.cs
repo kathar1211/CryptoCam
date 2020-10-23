@@ -54,14 +54,15 @@ public class Cryptid : MonoBehaviour {
     }
 
     //move randomly in 2d space
-    public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed)
+    public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed, float changeTime = 14)
     {
+        rotateSpeed = Mathf.Abs(rotateSpeed); //rotate speed must be positive
         //choose a random target position within range and move towards it
         //https://answers.unity.com/questions/23010/ai-wandering-script.html
         timeChasing += Time.deltaTime;
 
         //change target position once within a certain range or after chasing it for a period of time
-        if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || timeChasing > 14)
+        if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || timeChasing > changeTime)
         {
             targetPos = transform.position + transform.forward * (distance / 2.0f) + Random.insideUnitSphere * distance;
             targetPos.y = transform.position.y;
@@ -79,6 +80,7 @@ public class Cryptid : MonoBehaviour {
     //move in the opposite direction of a given target
     public void Flee(Transform fleeFromTarget, float forwardSpeed, float rotateSpeed)
     {
+        rotateSpeed = Mathf.Abs(rotateSpeed);
         if (fleeFromTarget == null) { return; }
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTarget.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
@@ -88,12 +90,14 @@ public class Cryptid : MonoBehaviour {
     //move in the direction of a given target (transform)
     public void MoveToward(Transform target, float forwardSpeed, float rotateSpeed)
     {
+        rotateSpeed = Mathf.Abs(rotateSpeed);
         MoveToward(target.position, forwardSpeed, rotateSpeed);
     }
 
     //move in the direction of a given target (vector3)
     public void MoveToward(Vector3 target, float forwardSpeed, float rotateSpeed)
     {
+        rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
@@ -120,5 +124,11 @@ public class Cryptid : MonoBehaviour {
     public virtual void AvoidPlayer(Collider other)
     {
         return;
+    }
+
+    //will need to be handled at a lower level - should return true when specific cryptids are doing an interesting animation
+    public virtual bool SpecialPose()
+    {
+        return false;
     }
 }

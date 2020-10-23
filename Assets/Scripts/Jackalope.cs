@@ -192,5 +192,16 @@ public class Jackalope : Cryptid {
         currentState = MoveState.wake;
     }
 
+    //jackalope special poses include sleeping, eating, scratching, and standing
+    public override bool SpecialPose()
+    {
+        if (currentState == MoveState.sleep || currentState == MoveState.eat || currentState == MoveState.scratch || currentState == MoveState.stand)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
 
 }

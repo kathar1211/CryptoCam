@@ -224,9 +224,8 @@ public class Photography : MonoBehaviour {
         }
 
         //todo: check for cool animation
-
+        pic.coolPose = mainSubject.GetComponent<Cryptid>().SpecialPose();
        
-
         //store distance from center and distance from camera
         Vector3 cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.transform.position);
         pic.distanceFromCamera = cameraPos.z;
@@ -284,6 +283,11 @@ public class Photography : MonoBehaviour {
         testtxt.text += '\n' + "Visibility: " + (int)(pic.visibility * 100) + "% (x" + pic.visibility + ")";
 
         //todo: coolpose
+        if (pic.coolPose)
+        {
+            int coolPoseBonus = 200;
+            finalScore += coolPoseBonus;
+        }
 
         //distancefromcenter should be a float value between 0 and ~.7
         finalScore += (int)(200 * (.7f - pic.distanceFromCenter));

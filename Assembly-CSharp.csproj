@@ -105,6 +105,7 @@
     <None Include="Assets\Shaders\Fog.shader" />
     <None Include="Assets\Shaders\Grass.shader" />
     <None Include="Assets\Resources\tedconvo.txt" />
+    <None Include="Assets\Fonts\Architects_Daughter\OFL.txt" />
     <None Include="Assets\Shaders\CelShader.shader" />
     <None Include="Assets\Shaders\Trees.shader" />
     <None Include="Assets\Shaders\Water.shader" />

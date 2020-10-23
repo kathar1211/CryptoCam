@@ -8,7 +8,7 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, edgeLeap, sit}
+    enum MoveState { swim, walk, edgeLeap, sit, flee}
     [SerializeField] MoveState currentState;
 
     //amount position needs to be adjusted after a leap
@@ -25,6 +25,12 @@ public class LovelandFrogman : Cryptid {
     public float leapHeight;
     float rotateSpeed;
     public float maxRotateSpeed;
+    public float changeTargetTime; //how often should direction change during wander behavior
+
+    //properties for fleeing
+    public float fleeSpeed;
+    Transform fleeFromTarget;
+    public float safeZone; //distance at which we no longer flee
 
     bool needToAdjustPosition; //used to adjust transform information to match up with visuals after an edge leap
 
@@ -89,7 +95,7 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.walk:
 
-                Wander(targetMaxDistance, targetMinDistance, walkSpeed, Mathf.Abs(rotateSpeed));
+                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
                 break;
             case MoveState.sit:
                 if (timer > timeToSit)
@@ -101,6 +107,13 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.edgeLeap:
                 //Leap(leapSpeed, 0);
+                break;
+            case MoveState.flee:
+                Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
+                if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
+                {
+                    currentState = MoveState.walk;
+                }
                 break;
         }
 
@@ -156,6 +169,12 @@ public class LovelandFrogman : Cryptid {
             rb.AddForce(Vector3.forward * leapSpeed);
             //rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+        //flee from player on land
+        else if (other.tag == "Player" && currentState == MoveState.walk)
+        {
+            currentState = MoveState.flee;
+            fleeFromTarget = other.gameObject.transform;
+        }
     }
 
     public override void AvoidCollision(Collider other, float avoidSpeed)
@@ -165,5 +184,12 @@ public class LovelandFrogman : Cryptid {
         {
             base.AvoidCollision(other, avoidSpeed);
         }
+    }
+
+    //sitting is frogmans special pose
+    public override bool SpecialPose()
+    {
+        if (currentState == MoveState.sit){ return true; }
+        return base.SpecialPose();
     }
 }

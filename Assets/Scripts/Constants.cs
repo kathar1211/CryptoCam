@@ -45,6 +45,7 @@ public static class Constants {
     public static string GoodDistance = "Oho! This is a pretty close up shot! Well done, that's plus {0} points.";
     public static string OKDistance = "It's a pretty good distance away. That's plus {0} points.";
     public static string PoorDistance = "Hmm... it's pretty far away. I know it's asking a lot, but see if you can get closer next time. {0} points.";
+    public static string SpecialPose = "Ah, and a very nice pose, too. That's {0} bonus points.";
     public static string DoubleCryptid = "Oh! And there's more than one cryptid in the shot! Excellent work, that's worth double.";
     public static string EndGrading = "Let's see, overall I give this photo... {0} points.";
 
@@ -72,7 +73,17 @@ public static class Constants {
     //player pref keys - used for saving data
     public static string FirstPlay = "FirstPlay"; //false if this is not the first time booting up the game
     public static string TextSpeed = "TextSpeed";
-    
+
+    //holds description text for cryptids in the cryptid-nomicon
+    public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()
+    {
+        {"Tsuchinoko","Tsuchinoko, the fat snake cryptid, is identifiable by his distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
+        {"Loch Ness Monster","Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
+        {"Loveland Frogman","These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they weild magic wands, but that's just silly." },
+        {"Fresno Nightcrawler", "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
+        {"Jackalope", "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
+    };
+
 
 
 

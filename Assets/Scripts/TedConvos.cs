@@ -9,6 +9,8 @@ public class TedConvos : MonoBehaviour {
     public TextAsset script;
     //text box to save lines to
     public TextBox tedBox;
+    //text file with convos
+    public TextAsset txtFile;
     
     //a blurb represents a short bit of dialogue, and the sprites associated with it
     public struct Blurb
@@ -37,12 +39,13 @@ public class TedConvos : MonoBehaviour {
         tedBox.GetComponent<TextBox>().FeedText(allBlurbs[blurbIndex].dialogue, allBlurbs[blurbIndex].sprites);
         tedBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
     }
-
+    /*DEPRECATED - now reading from text asset instead of external file
     //read script in from text file and save lines to blurbs
     //expected format for a blurb:
     ///STARTBLURB/
     //int representing sprite/"dialogue in quotes"
     ///ENDBLURB/
+    ///
     void ReadConvos()
     {
         string path = "Assets/Resources/tedconvo.txt";
@@ -56,6 +59,7 @@ public class TedConvos : MonoBehaviour {
         //keep track of lines encountered while reading a blurb
         List<string> blurbLines = new List<string>();
 
+        
         //read the first line and start looping
         string currentLine = reader.ReadLine();
         while (currentLine != null)
@@ -90,6 +94,54 @@ public class TedConvos : MonoBehaviour {
 
         //close reader when finished
         reader.Close();
+    }*/
+
+    //read script in from text asset and save lines to blurbs
+    //expected format for a blurb:
+    ///STARTBLURB/
+    //int representing sprite/"dialogue in quotes"
+    ///ENDBLURB/
+    ///
+    void ReadConvos()
+    {
+
+        string startKey = "/STARTBLURB/";
+        string endKey = "/ENDBLURB/";
+
+        //keep track of whether the line we're reading is part of a blurb
+        bool readingBlurb = false;
+        //keep track of lines encountered while reading a blurb
+        List<string> blurbLines = new List<string>();
+
+        string[] allLines = txtFile.text.Split('\n');
+
+        //read the first line and start looping
+        //string currentLine = reader.ReadLine();
+        foreach (string currentLine in allLines)
+        {
+            //if we find the start key, start paying attention and do nothing else
+            if (currentLine.Contains(startKey))
+            {
+                readingBlurb = true;
+                continue;
+            }
+
+            //if we find the stop key, stop paying attention and create a blurb from what we have saved
+            if (currentLine.Contains(endKey))
+            {
+                readingBlurb = false;
+                allBlurbs.Add(ParseBlurbFromText(blurbLines));
+                blurbLines.Clear();
+                continue;
+            }
+
+            //if we're reading a blurb save the line
+            if (readingBlurb)
+            {
+                blurbLines.Add(currentLine);
+            }
+
+        }
     }
 
     //take text file text and interpret into blurb

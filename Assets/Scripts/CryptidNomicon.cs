@@ -15,15 +15,7 @@ public struct PageContent
 
 public class CryptidNomicon : MonoBehaviour {
 
-    //holds description text for cryptids
-    public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()
-    {
-        {"Tsuchinoko","Tsuchinoko, the fat snake cryptid, is identifiable by is distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
-        {"Loch Ness Monster","Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
-        {"Loveland Frogman","These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they weild magic wands, but that's just silly." },
-        {"Fresno Nightcrawler", "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestial seem to come in pairs, not unlike pants." },
-        {"Jackalope", "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
-    };
+
 
     //for cryptidnomicon
     GameObject page;
@@ -134,7 +126,7 @@ public class CryptidNomicon : MonoBehaviour {
             PageContent content = pageContents[currentPage-1];
 
             thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
-            thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
+            //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
             scoreDesc.text = "Score: " + content.photoScore;
             imageDesc.text = content.flavorText;
             nameDesc.text = content.name;
@@ -157,7 +149,7 @@ public class CryptidNomicon : MonoBehaviour {
         content.image = photo.pic;
         content.name = photo.subjectName;
         content.photoScore = photo.finalScore;
-        if (tedsWriting.ContainsKey(photo.subjectName)) { content.flavorText = tedsWriting[photo.subjectName]; }
+        if (Constants.tedsWriting.ContainsKey(photo.subjectName)) { content.flavorText = Constants.tedsWriting[photo.subjectName]; }
 
         return content;
     }

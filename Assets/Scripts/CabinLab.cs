@@ -82,7 +82,7 @@ public class CabinLab : MonoBehaviour {
         }
 
         //if it's the first time starting the game, set up the intro sequence
-        else if (!PlayerPrefs.HasKey(Constants.FirstPlay) || PlayerPrefs.GetInt(Constants.FirstPlay) == 0)
+        if ((!PlayerPrefs.HasKey(Constants.FirstPlay) || PlayerPrefs.GetInt(Constants.FirstPlay) == 0) && currentState != MenuState.Grading)
         {
             currentState = MenuState.Talking;
             PlayerPrefs.SetInt(Constants.FirstPlay, 1);
@@ -357,13 +357,13 @@ public class CabinLab : MonoBehaviour {
         else if (photo.visibility >= .5)
         {
             //dialogue.Add("You can see most of it clearly, but overall it's only about " + (int)(photo.visibility * 100) + "% visible.");
-            dialogue.Add(Constants.OKVisibility.Replace(Constants.ParameterSTR, ((int)photo.visibility * 100).ToString()));
+            dialogue.Add(Constants.OKVisibility.Replace(Constants.ParameterSTR, ((int)(photo.visibility * 100)).ToString()));
             sprites.Add(TedMoods.LookDownHandUp);
         }
         else
         {
             //dialogue.Add("You can't see it very clearly at all. Only about " + (int)(photo.visibility * 100) + "% of it isn't blocked by obstacles in the shot.");
-            dialogue.Add(Constants.PoorVisibility.Replace(Constants.ParameterSTR, ((int)photo.visibility * 100).ToString()));
+            dialogue.Add(Constants.PoorVisibility.Replace(Constants.ParameterSTR, ((int)(photo.visibility * 100)).ToString()));
             sprites.Add(TedMoods.Uncertain);
         }
         score *= (int)photo.visibility;
@@ -423,6 +423,16 @@ public class CabinLab : MonoBehaviour {
         score += distanceScore;
         scoreUpdates.Add(Constants.Score + score);
 
+        //give bonus points for cool pose if applicable
+        if (photo.coolPose)
+        {
+            int coolPoseBonus = 200;
+            dialogue.Add(Constants.SpecialPose.Replace(Constants.ParameterSTR, coolPoseBonus.ToString()));
+            sprites.Add(TedMoods.LookUpHandUp);
+            score += coolPoseBonus;
+            scoreUpdates.Add(Constants.Score + score);
+        }
+
         //multiple cryptids in shot
         if (photo.subjectCount > 1)
         {
@@ -435,7 +445,7 @@ public class CabinLab : MonoBehaviour {
 
         //final score
         //dialogue.Add("Let's see, overall I give this photo... " + photo.finalScore + " points.");
-        dialogue.Add(Constants.DoneGrading.Replace(Constants.ParameterSTR, photo.finalScore.ToString()));
+        dialogue.Add(Constants.EndGrading.Replace(Constants.ParameterSTR, photo.finalScore.ToString()));
         sprites.Add(TedMoods.Satisfied);
         scoreUpdates.Add(Constants.FinalScore + score);
         textBox.GetComponent<TextBox>().ClearTextQueue();

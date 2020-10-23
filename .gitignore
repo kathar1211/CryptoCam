@@ -25,6 +25,9 @@ Temp/**
 *.meta
 *.bin
 
+#Files that are too large to be allowed
+Assets/Sound/410357__felix-blume__small-wood-at-night-close-to-rio-de-janeiro-on-the-way-to-pedra-bonita.wav
+
 # =========================
 # Operating System Files
 # =========================

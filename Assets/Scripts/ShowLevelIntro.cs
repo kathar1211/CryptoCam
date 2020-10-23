@@ -61,6 +61,7 @@ public class ShowLevelIntro : MonoBehaviour
     //jump back to main camera and start game
     void FinishIntro()
     {
+        if (BGMIntro != null) { BGMIntro.Stop(); }
         if (BGMMain != null) { BGMMain.Play(); }
         foreach (IntroCameraBehavior cam in introCameras)
         {

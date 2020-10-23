@@ -27,6 +27,10 @@ public class ThrowObject : MonoBehaviour {
     //how far in front of player to spawn object
     public float spawnDistance;
 
+    //sound effect
+    [SerializeField]
+    AudioSource throwSFX;
+
 	// Use this for initialization
 	void Start () {
         
@@ -47,16 +51,23 @@ public class ThrowObject : MonoBehaviour {
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
 		if (CustomController.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
-            //create carrot and throw
-            GameObject existingCarrot = Instantiate(carrot, this.transform.position + (this.transform.forward*spawnDistance), carrot.transform.rotation);
-            Vector3 forwardForce = this.transform.forward * throwForce;
-            existingCarrot.GetComponent<Rigidbody>().AddForce(forwardForce, ForceMode.Impulse);
-            //give it a lil spin
-            existingCarrot.GetComponent<Rigidbody>().AddTorque(forwardForce, ForceMode.Impulse);
-            //update conditions around throwing
-            timer = 0;
-            currentObjects++;
-            objText.text = (objectLimit - currentObjects).ToString();
+            ThrowCarrot();
         }
 	}
+
+    void ThrowCarrot()
+    {
+        //create carrot and throw
+        GameObject existingCarrot = Instantiate(carrot, this.transform.position + (this.transform.forward * spawnDistance), carrot.transform.rotation);
+        Vector3 forwardForce = this.transform.forward * throwForce;
+        existingCarrot.GetComponent<Rigidbody>().AddForce(forwardForce, ForceMode.Impulse);
+        //give it a lil spin
+        existingCarrot.GetComponent<Rigidbody>().AddTorque(forwardForce, ForceMode.Impulse);
+        //update conditions around throwing
+        timer = 0;
+        currentObjects++;
+        objText.text = (objectLimit - currentObjects).ToString();
+        //play sfx if exists
+        if (throwSFX != null) { throwSFX.Play(); }
+    }
 }

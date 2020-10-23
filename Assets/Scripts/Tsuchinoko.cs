@@ -110,4 +110,13 @@ public class Tsuchinoko : Cryptid {
         SetUpright(false);
         animator.SetFloat("Speed", fleespeed / speed);
     }
+
+    //tsuchinokos special pose is when he sits up
+    public override bool SpecialPose()
+    {
+        bool isUpright = animator.GetBool("Upright");
+        if (isUpright) { return true; }
+
+        return base.SpecialPose();
+    }
 }
