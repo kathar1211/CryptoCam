@@ -136,8 +136,9 @@ public class Photography : MonoBehaviour {
         foreach (GameObject cryptid in allCryptids)
         {
             //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
+            Renderer renderer = cryptid.GetComponentInChildren<Renderer>();
             //check if cyrptid position is visible by camera
-            if (cryptid.GetComponentInChildren<Renderer>() != null && cryptid.GetComponentInChildren<Renderer>().isVisible)
+            if (renderer != null && renderer.isVisible)
             {
                 Vector3 viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position);
                 if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
