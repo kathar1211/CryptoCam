@@ -26,6 +26,7 @@ public class LovelandFrogman : Cryptid {
     float rotateSpeed;
     public float maxRotateSpeed;
     public float changeTargetTime; //how often should direction change during wander behavior
+    public float seeObstacles;
 
     //properties for fleeing
     public float fleeSpeed;
@@ -94,8 +95,16 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
             case MoveState.walk:
-
-                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
+                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                {
+                    Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
+                }
+                else
+                {
+                    targetPos = Vector3.zero;
+                }
+                //move forward after setting direction in other methods
+                Move(walkSpeed);
                 break;
             case MoveState.sit:
                 if (timer > timeToSit)
@@ -109,7 +118,12 @@ public class LovelandFrogman : Cryptid {
                 //Leap(leapSpeed, 0);
                 break;
             case MoveState.flee:
-                Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
+                
+                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                {
+                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
+                }
+                Move(fleeSpeed);
                 if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                 {
                     currentState = MoveState.walk;
@@ -153,7 +167,7 @@ public class LovelandFrogman : Cryptid {
         {
             currentState = MoveState.swim;
             animator.Play("swim", 0);
-            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
+            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             //no gravity while swimming
             rb.useGravity = false;
         }

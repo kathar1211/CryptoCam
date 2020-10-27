@@ -136,7 +136,7 @@ public class Photography : MonoBehaviour {
         foreach (GameObject cryptid in allCryptids)
         {
             //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
-            Renderer renderer = cryptid.GetComponentInChildren<Renderer>();
+            Renderer renderer = cryptid.GetComponent<Cryptid>().renderer;
             //check if cyrptid position is visible by camera
             if (renderer != null && renderer.isVisible)
             {
@@ -326,7 +326,15 @@ public class Photography : MonoBehaviour {
             Vector3 direction = check.transform.position - cryptoCam.transform.position;
             Ray ray = new Ray(cryptoCam.transform.position, direction);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000))
+
+            // Bit shift the index of the layer (1 - transparent fx) to get a bit mask
+            int layerMask = 1 << 1;
+
+            // This would cast rays only against colliders in layer 1.
+            // But instead we want to collide against everything except layer 1. The ~ operator does this, it inverts a bitmask.
+            layerMask = ~layerMask;
+
+            if (Physics.Raycast(ray, out hit, 1000, layerMask))
             {
                 //if (hit.collider == check)
                 //rather than checkin if its the exact same collider, check if they have the same parent

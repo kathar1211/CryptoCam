@@ -20,12 +20,14 @@ public class FresnoNightcrawler : Cryptid {
     private Transform fleeFromTarget;
     public float fleeSpeed;
     public float maxDistance;
+    public float seeObstacles;
 
     enum MoveState { Walk, Flee, Dance};
     MoveState currentState = MoveState.Walk;
 
     // Use this for initialization
     void Start () {
+        StartUp();
         baseScore = 100;
         cryptidType = "Fresno Nightcrawler";
         animator = this.GetComponent<Animator>();
@@ -50,7 +52,12 @@ public class FresnoNightcrawler : Cryptid {
                 {
                     break;
                 }
-                MoveToward(targetPos, speed, rotateSpeed);
+                //prioritize obstacle avoidance
+                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                {
+                    MoveToward(targetPos, speed, rotateSpeed);
+                }
+                Move(speed);
                 timeChasing += Time.deltaTime;
                 //if they reach their target position give them a new one on the other side of the zone to get them back on track
                 //addition of time tracker lets them change target if they get stuck
@@ -61,7 +68,11 @@ public class FresnoNightcrawler : Cryptid {
                 }
                 break;
             case MoveState.Flee:
-                Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                {
+                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+                }
+                Move(fleeSpeed);
                 //stop fleeing once jackalope reaches a certain distance from player
                 if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
                 {

@@ -16,13 +16,14 @@ public class Nessie : Cryptid {
 
     enum MoveState { underWaterSwim, aboveWaterSwim, breach, look};
     MoveState currentState;
+    bool lookedOnce = true;
 
     ParticleSystem ripples;
 
     // Use this for initialization
     void Start () {
+        StartUp();
         cryptidType = "Loch Ness Monster";
-        baseScore = 500;
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
         animator = GetComponent<Animator>();
@@ -43,7 +44,7 @@ public class Nessie : Cryptid {
                     transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move down until breach
                     ripples.Stop();
                 }
-                else if (RandomChance(.1f))
+                else if (RandomChance(.05f))
                 {
                     //animator.SetBool("Breach", true);
                     //animator.SetBool("Look", false);
@@ -71,23 +72,25 @@ public class Nessie : Cryptid {
                 break;
             case MoveState.aboveWaterSwim:
                 MoveinCircle(speed / 2, rotateSpeed / 2); //move half as fast above water
-                if (RandomChance(.4f))
-                {
-                    animator.SetBool("Breach", false);
-                    animator.SetBool("Look", true);
-                    animator.SetBool("Dive", false);
-                 
-                      
-                    currentState = MoveState.look;
-                    
-                }
-                /*else if (RandomChance(.1f))
+                if (RandomChance(.1f) || (lookedOnce && RandomChance(.4f)))
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", false);
                     animator.SetBool("Dive", true);
                     currentState = MoveState.underWaterSwim;
-                }*/
+                    lookedOnce = false; //reset value when nessie descends
+                }
+                else if(RandomChance(.4f))
+                {
+                    animator.SetBool("Breach", false);
+                    animator.SetBool("Look", true);
+                    animator.SetBool("Dive", false);
+                    lookedOnce = true; //curb back on consecutive looking around animations by increasing the chance of descending after one look per surface appearance
+                      
+                    currentState = MoveState.look;
+                    
+                }
+                
                 break;
             case MoveState.look:
                 //move wile looking around

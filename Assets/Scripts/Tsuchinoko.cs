@@ -24,14 +24,17 @@ public class Tsuchinoko : Cryptid {
     public float maxDistance;
     //distance at which tsuchinoko no longer seeks something
     public float minDistance;
+    //distance at which tsuchinoko sees obstacles
+    public float seeAhead;
 
     // Use this for initialization
     void Start () {
         baseScore = 75;
         cryptidType = "Tsuchinoko";
         animator = this.GetComponent<Animator>();
-
+        animator.SetFloat("Speed", 1);
         target = secondLocation;
+        StartUp();
     }
 	
 	// Update is called once per frame
@@ -45,6 +48,7 @@ public class Tsuchinoko : Cryptid {
             //default state: tsuchinoko slithers in a little circle
             case MoveState.Circling:
                 Move(speed, rotateSpeed);
+                //AvoidObstacles(seeAhead, rotateSpeed);
                 //tsuchinoko only goes upright in his relaxed state
                 if (Random.Range(0.0f, 100.0f) < chanceUpDown)
                 {
@@ -53,7 +57,12 @@ public class Tsuchinoko : Cryptid {
                 break;
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
-                MoveToward(target, fleespeed, rotateSpeed);
+                
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                {
+                    MoveToward(target, fleespeed, rotateSpeed);
+                }
+                Move(fleespeed);
                 if ((secondLocation.position - transform.position).magnitude < minDistance)
                 {
                     currentMovestate = MoveState.Circling;
@@ -62,7 +71,12 @@ public class Tsuchinoko : Cryptid {
                 break;
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
-                Flee(target, fleespeed, rotateSpeed);
+                
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                {
+                    Flee(target, fleespeed, rotateSpeed);
+                }
+                Move(fleespeed);
                 if ((target.position - transform.position).magnitude > maxDistance)
                 {
                     currentMovestate = MoveState.Circling;

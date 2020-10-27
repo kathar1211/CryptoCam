@@ -20,6 +20,9 @@ public class Jackalope : Cryptid {
     public float timeToEat;
     private float eatingTimer;
 
+    //obstacle avoidance distance
+    public float seeAhead;
+
     Animator animator;
     float animationDuration;
     float timeElapsed;
@@ -71,7 +74,11 @@ public class Jackalope : Cryptid {
         {
             //wander with random chance to switch states
             case MoveState.run:
-                Wander(maxDistance, minDistance, runSpeed, rotateSpeed);
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                {
+                    Wander(maxDistance, minDistance, runSpeed, rotateSpeed);
+                }
+                Move(runSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
                 {
                     currentState = MoveState.scratch;
@@ -107,8 +114,12 @@ public class Jackalope : Cryptid {
 
                 break;
             //move away from the player
-            case MoveState.flee:
-                Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+            case MoveState.flee:              
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                {
+                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+                }
+                Move(fleeSpeed);
                 //stop fleeing once jackalope reaches a certain distance from player
                 if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
                 {
