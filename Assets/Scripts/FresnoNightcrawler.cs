@@ -22,8 +22,11 @@ public class FresnoNightcrawler : Cryptid {
     public float maxDistance;
     public float seeObstacles;
 
-    enum MoveState { Walk, Flee, Dance};
+    enum MoveState { Walk, Flee, Dance, Nothing};
     MoveState currentState = MoveState.Walk;
+
+    [SerializeField]
+    Texture2D shutdownTxt;
 
     // Use this for initialization
     void Start () {
@@ -68,6 +71,11 @@ public class FresnoNightcrawler : Cryptid {
                 }
                 break;
             case MoveState.Flee:
+                //dont move during stationary parts of animation
+                if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
+                {
+                    break;
+                }
                 if (!AvoidObstacles(seeObstacles, rotateSpeed))
                 {
                     Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
@@ -81,6 +89,9 @@ public class FresnoNightcrawler : Cryptid {
                     targetPos = zone.transform.position - (transform.position - zone.transform.position);
                     timeChasing = 0;
                 }
+                break;
+            case MoveState.Nothing:
+                //do nothing
                 break;
         }
         
@@ -128,10 +139,35 @@ public class FresnoNightcrawler : Cryptid {
         //flee from player if they come in range
         if (other.tag == "Player")
         {
-            fleeFromTarget = other.gameObject.transform;
-            currentState = MoveState.Flee;
-            targetPos = Vector3.zero;
-            animator.SetFloat(Speed, 2);
+            /* fleeFromTarget = other.gameObject.transform;
+             currentState = MoveState.Flee;
+             targetPos = Vector3.zero;
+             animator.SetFloat(Speed, 2);*/
+
+            //rather than flee, activate defense mechanism and become unrecognizeable
+            rb.useGravity = false;
+            animator.SetTrigger("Recede");
+            currentState = MoveState.Nothing;
+            if (shutdownTxt !=null){
+                renderer.material.SetTexture("_MainTex", shutdownTxt);
+            }
         }
+    }
+
+    //restore gravity when recede animation is finished
+    public void Fall()
+    {
+        rb.useGravity = true;
+    }
+
+    //cryptid does not count when in defensive mode
+    public override bool IsVisible()
+    {
+        if (currentState == MoveState.Nothing)
+        {
+            return false;
+        }
+
+        return base.IsVisible();
     }
 }

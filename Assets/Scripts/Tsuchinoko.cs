@@ -58,7 +58,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                //if (!AvoidObstacles(seeAhead, rotateSpeed))
                 {
                     MoveToward(target, fleespeed, rotateSpeed);
                 }

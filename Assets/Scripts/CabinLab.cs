@@ -366,7 +366,7 @@ public class CabinLab : MonoBehaviour {
             dialogue.Add(Constants.PoorVisibility.Replace(Constants.ParameterSTR, ((int)(photo.visibility * 100)).ToString()));
             sprites.Add(TedMoods.Uncertain);
         }
-        score *= (int)photo.visibility;
+        score = (int)(score*photo.visibility);
         scoreUpdates.Add(Constants.Score + score);
 
         //distance from center

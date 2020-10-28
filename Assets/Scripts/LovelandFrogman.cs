@@ -88,14 +88,20 @@ public class LovelandFrogman : Cryptid {
             case MoveState.swim:
 
                 //Move(swimSpeed, rotateSpeed);
-                Move(swimSpeed, rotateSpeed);
+                if (!AvoidObstacles(seeObstacles, rotateSpeed)){
+                    Move(swimSpeed, rotateSpeed);
+                }
+                else
+                {
+                    Move(swimSpeed);
+                }
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
                     transform.Translate(Vector3.up * (swimHeight - transform.position.y) * swimSpeed * Time.deltaTime);
                 }
                 break;
             case MoveState.walk:
-                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                if (!AvoidObstacles(seeObstacles, rotateSpeed, true))
                 {
                     Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
                 }

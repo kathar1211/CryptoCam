@@ -19,7 +19,7 @@ public class Cryptid : MonoBehaviour {
     //quick access
     protected Rigidbody rb;
 
-    public Renderer renderer;
+    new public Renderer renderer;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
@@ -144,10 +144,25 @@ public class Cryptid : MonoBehaviour {
         return false;
     }
 
-    //should be called after doing all other movement calculations- check for object in front of cryptid and rotate if something is found
-    public bool AvoidObstacles(float aheadDistance, float rotateSpeed)
+    //option to override visibility calculations
+    public virtual bool IsVisible()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        return true;
+    }
+
+    //should be called after doing all other movement calculations- check for object in front of cryptid and rotate if something is found
+    public bool AvoidObstacles(float aheadDistance, float rotateSpeed, bool checkHeadLevel = false)
+    {
+        //check for obstacles at the level of the cryptids head instead of the ground-
+        //useful for cyrptids like frogman who might not fit under the foliage of trees
+        Vector3 position = transform.position;
+        if (checkHeadLevel)
+        {
+            float height = renderer.bounds.size.y / 2;
+            position = new Vector3(position.x, position.y + height, position.z);
+        }
+
+        Ray ray = new Ray(position, transform.forward);
         RaycastHit hit;
         RaycastHit leftHit;
         RaycastHit rightHit;
@@ -165,7 +180,7 @@ public class Cryptid : MonoBehaviour {
         Vector3 forwardRight = Vector3.RotateTowards(transform.forward, transform.right, Mathf.PI / 4, 0);
 
         //if (renderer == null) { renderer = this.gameObject.GetComponentInChildren<Renderer>(); }
-        float cryptidWidth = renderer.bounds.size.x / 2.0f;
+        //float cryptidWidth = renderer.bounds.size.x / 2.0f;
 
         //Ray rightForward = new Ray(transform.position + (transform.right * cryptidWidth), transform.forward);
         //Ray leftForward = new Ray(transform.position - (transform.right * cryptidWidth), transform.forward);
@@ -180,13 +195,13 @@ public class Cryptid : MonoBehaviour {
             obstacleAhead = true;
         }
         //check 45 degrees to the left
-        if (Physics.Raycast(new Ray(transform.position, forwardLeft), out leftHit, aheadDistance) && leftHit.collider.tag != "lvl")
+        if (Physics.Raycast(new Ray(position, forwardLeft), out leftHit, aheadDistance) && leftHit.collider.tag != "lvl")
         {
             obstacleAhead = true;
             turnRight = true;
         }
         //check 45 degrees to the right
-        if (Physics.Raycast(new Ray(transform.position, forwardRight), out rightHit, aheadDistance) && rightHit.collider.tag != "lvl")
+        if (Physics.Raycast(new Ray(position, forwardRight), out rightHit, aheadDistance) && rightHit.collider.tag != "lvl")
         {
             obstacleAhead = true;
             turnLeft = true;
@@ -194,7 +209,7 @@ public class Cryptid : MonoBehaviour {
 
         if (obstacleAhead)
         {
-            Debug.DrawRay(transform.position, (transform.forward * aheadDistance), Color.magenta);
+           // Debug.DrawRay(position, (transform.forward * aheadDistance), Color.magenta);
             //if there's an obstacle on both sides, determine which way to go based on what's closer
             if (turnRight && turnLeft)
             {
@@ -211,8 +226,8 @@ public class Cryptid : MonoBehaviour {
                     transform.rotation = Quaternion.LookRotation(newDir);
                 }
 
-                Debug.DrawRay(transform.position, forwardLeft * aheadDistance, Color.green);
-                Debug.DrawRay(transform.position, forwardRight * aheadDistance, Color.red);
+                //Debug.DrawRay(position, forwardLeft * aheadDistance, Color.green);
+                //Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
             }
             //turn according to what obstacles we found
             else if (turnRight)
@@ -220,14 +235,14 @@ public class Cryptid : MonoBehaviour {
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardRight, rotateSpeed * Time.deltaTime, 0);
                 transform.rotation = Quaternion.LookRotation(newDir);
 
-                Debug.DrawRay(transform.position, forwardLeft * aheadDistance, Color.green);
+                //Debug.DrawRay(transform.position, forwardLeft * aheadDistance, Color.green);
             }
             else if (turnLeft)
             {
                 Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardLeft, rotateSpeed * Time.deltaTime, 0);
                 transform.rotation = Quaternion.LookRotation(newDir);
 
-                Debug.DrawRay(transform.position, forwardRight * aheadDistance, Color.red);
+                //Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
             }
             //default to turn right 
             else
@@ -238,11 +253,11 @@ public class Cryptid : MonoBehaviour {
         }
 
         //debug
-        //Debug.DrawRay(transform.position, (transform.forward * aheadDistance), Color.magenta);
+        Debug.DrawRay(position, (transform.forward * aheadDistance), Color.magenta);
         //Debug.DrawRay(leftForward.origin, leftForward.direction * aheadDistance, Color.green);
         //Debug.DrawRay(rightForward.origin, rightForward.direction * aheadDistance, Color.red);
-        //Debug.DrawRay(transform.position, forwardLeft * aheadDistance, Color.green);
-        //Debug.DrawRay(transform.position, forwardRight * aheadDistance, Color.red);
+        Debug.DrawRay(position, forwardLeft * aheadDistance, Color.green);
+        Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
 
         return obstacleAhead;
     }

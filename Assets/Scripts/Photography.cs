@@ -317,6 +317,10 @@ public class Photography : MonoBehaviour {
     float checkVisibility(GameObject mainSubject)
     {
         //todo: check for visibility
+
+        //if cryptid has set itself to invisible use that
+        if (!mainSubject.GetComponent<Cryptid>().IsVisible()) { return 0; }
+
         //cycle throuh hitboxes on cryptid, raycastin to each one
         //pic.visibility is hitboxes successfully hit by raycast/total hitboxes
         Collider[] hitboxes = mainSubject.GetComponentsInChildren<Collider>();
