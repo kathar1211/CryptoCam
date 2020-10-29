@@ -57,17 +57,22 @@ public static class Constants {
     public static string[] TedIntro =
     {
         "Ah, you must be that photographer I hired! Welcome, welcome, do come in.",
-        "I'm Dr. Ted Krupp, PhD. But you can just call me Ted. Or Dr. Ted if you're feeling fancy.",
-        "This cabin is my base for conducting research on cryptids. I'm compiling information for my upcoming book, the Cryptid-Nomicon.",
-        "As you know, I'm in need of some photos for my book. That's your job, to take pictures of cryptids for me.",
-        "You shouldn't have much trouble finding them in the woods nearby. They seem to like it around here.",
-        "When you're ready to head out, just select \"Embark\". But no rush of course.",
+        "I'm Dr. Ted Krupp, Ph.D. But you can just call me Ted. Or Dr. Ted, if you're feeling fancy.",
+        "This cabin is my base for conducting my research. Research on what? Why, cryptids of course!",
+        "Shouldn't you already know that? I'm sure it was in the email I sent. ...You are the photographer I hired, right?",
+        "Well, it doesn't matter who you are, as long as you can take pictures. That's your job, to take pictures of cryptids for me.",
+        "I'll be using your photos for my upcoming book, the Cryptid-Nomicon. Not the Cryptonomicon. That's something else.",
+        "You shouldn't have much trouble finding cryptids in the woods nearby. They seem to like it around here.",
+        "When you're ready to head out, just select \"Embark\" or click on the camera. But no rush of course.",
+
+        //not really part of the intro, just a sample line to give approximate max length
+        //"What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over"
     };
 
     //sprites for ted intro - here out of convenience
     public static TedMoods[] IntroMoods =
     {
-        TedMoods.Surprised, TedMoods.LookUp, TedMoods.Satisfied, TedMoods.Uncertain, TedMoods.Pleased, TedMoods.Default
+        TedMoods.Surprised, TedMoods.LookUp, TedMoods.Satisfied, TedMoods.LeanForward, TedMoods.Default, TedMoods.Uncertain, TedMoods.Pleased, TedMoods.Default
     };
 
     //player pref keys - used for saving data
@@ -79,7 +84,7 @@ public static class Constants {
     {
         {"Tsuchinoko","Tsuchinoko, the fat snake cryptid, is identifiable by his distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
         {"Loch Ness Monster","Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
-        {"Loveland Frogman","These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they weild magic wands, but that's just silly." },
+        {"Loveland Frogman","These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands, but that's just silly." },
         {"Fresno Nightcrawler", "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
         {"Jackalope", "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
     };

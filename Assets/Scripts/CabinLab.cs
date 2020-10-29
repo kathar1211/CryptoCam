@@ -35,9 +35,15 @@ public class CabinLab : MonoBehaviour {
     AudioSource moveCursorSFX;
     [SerializeField]
     AudioSource selectSFX;
+    [SerializeField]
+    AudioSource doorKnockSFX;
+    [SerializeField]
+    AudioSource doorOpenSFX;
 
     [SerializeField]
     GameObject loadingAnim;
+
+    public GameObject blackScreen;
 
 	// Use this for initialization
 	void Start () {
@@ -84,15 +90,43 @@ public class CabinLab : MonoBehaviour {
         //if it's the first time starting the game, set up the intro sequence
         if ((!PlayerPrefs.HasKey(Constants.FirstPlay) || PlayerPrefs.GetInt(Constants.FirstPlay) == 0) && currentState != MenuState.Grading)
         {
-            currentState = MenuState.Talking;
-            PlayerPrefs.SetInt(Constants.FirstPlay, 1);
-            textBox.SetActive(true);
-            textBox.GetComponent<TextBox>().ClearTextQueue();
-            textBox.GetComponent<TextBox>().FeedText(Constants.TedIntro, Constants.IntroMoods);
-            textBox.GetComponent<TextBox>().DisplayText();
-            
+            StartCoroutine(StartIntro());      
         }
         
+    }
+
+    //intro sequence
+    IEnumerator StartIntro()
+    {
+        if (blackScreen != null)
+        {
+            blackScreen.SetActive(true);
+        }
+        if (doorKnockSFX != null)
+        {
+            doorKnockSFX.Play();
+            //StartCoroutine(WaitForSound(doorKnockSFX));
+            yield return WaitForSound(doorKnockSFX);
+        }
+        if (doorOpenSFX != null)
+        {
+            doorOpenSFX.Play();
+            //StartCoroutine(WaitForSound(doorOpenSFX));
+            yield return WaitForSound(doorOpenSFX);
+        }
+        if (blackScreen != null)
+        {
+            blackScreen.SetActive(false);
+        }
+
+        currentState = MenuState.Talking;
+        PlayerPrefs.SetInt(Constants.FirstPlay, 1);
+        textBox.SetActive(true);
+        textBox.GetComponent<TextBox>().ClearTextQueue();
+        textBox.GetComponent<TextBox>().FeedText(Constants.TedIntro, Constants.IntroMoods);
+        textBox.GetComponent<TextBox>().DisplayText();
+
+        yield return null;
     }
 
     // Update is called once per frame
@@ -454,5 +488,12 @@ public class CabinLab : MonoBehaviour {
     }
 
     #endregion
+
+    //https://gamedev.stackexchange.com/questions/134002/how-can-i-do-something-after-an-audio-has-finished
+    //wait for audiosource to finish
+    public IEnumerator WaitForSound(AudioSource audiosource)
+    {
+        yield return new WaitUntil(() => audiosource.isPlaying == false);
+    }
 }
 

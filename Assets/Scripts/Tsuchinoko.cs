@@ -72,7 +72,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
                 
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                //if (!AvoidObstacles(seeAhead, rotateSpeed))
                 {
                     Flee(target, fleespeed, rotateSpeed);
                 }

@@ -226,7 +226,7 @@ public class Photography : MonoBehaviour {
 
         //todo: check for cool animation
         pic.coolPose = mainSubject.GetComponent<Cryptid>().SpecialPose();
-       
+
         //store distance from center and distance from camera
         Vector3 cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.transform.position);
         pic.distanceFromCamera = cameraPos.z;

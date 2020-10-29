@@ -55,7 +55,6 @@ public class LovelandFrogman : Cryptid {
 	void Start () {
         StartUp();
         cryptidType = "Loveland Frogman";
-        baseScore = 300;
         animator = GetComponent<Animator>();
         ripples = GetComponentInChildren<ParticleSystem>();
 

@@ -213,7 +213,7 @@ public class GradeManager : MonoBehaviour {
                     img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
                 }
             }
-            else
+            else if (photo.finalScore > 0)
             {
                 finalSelection.Add(photo.subjectName, photo);
                 img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
