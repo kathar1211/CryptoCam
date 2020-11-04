@@ -147,6 +147,7 @@ public class Jackalope : Cryptid {
             //move toward a specific object
             case MoveState.runtoward:
                 MoveToward(moveToTarget, runSpeed, rotateSpeed);
+                Move(runSpeed);
                 //switch to eating within a certain range
                 if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
                 {
@@ -167,7 +168,7 @@ public class Jackalope : Cryptid {
         }
 	}
 
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
         if (other.tag == "Player")
@@ -193,6 +194,7 @@ public class Jackalope : Cryptid {
             moveToTarget = other.transform;
         }
 
+        base.OnTriggerEnter(other);
     }
 
     //transition from sleep state

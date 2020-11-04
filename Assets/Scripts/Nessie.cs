@@ -142,4 +142,13 @@ public class Nessie : Cryptid {
 
         return true;
     }
+
+    public override bool IsVisible()
+    {
+        if (currentState == MoveState.underWaterSwim && (transform.position.y < surfacePos))
+        {
+            return false;
+        }
+        return base.IsVisible();
+    }
 }

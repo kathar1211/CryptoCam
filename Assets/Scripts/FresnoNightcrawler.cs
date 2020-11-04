@@ -134,7 +134,7 @@ public class FresnoNightcrawler : Cryptid {
         timeChasing = 0;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
         if (other.tag == "Player")
@@ -152,6 +152,8 @@ public class FresnoNightcrawler : Cryptid {
                 renderer.material.SetTexture("_MainTex", shutdownTxt);
             }
         }
+
+        base.OnTriggerEnter(other);
     }
 
     //restore gravity when recede animation is finished

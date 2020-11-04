@@ -221,20 +221,25 @@ public class CabinLab : MonoBehaviour {
     //buttons have achild object drop shadow that should appear when hovering
     public void ToggleImageButtonHover(GameObject button)
     {
-        
-        button.transform.GetChild(0).gameObject.SetActive(!button.transform.GetChild(0).gameObject.activeSelf);
+        if (currentState == MenuState.Main)
+        {
+            button.transform.GetChild(0).gameObject.SetActive(!button.transform.GetChild(0).gameObject.activeSelf);
+        }
     }
 
     public void MoveSelector(GameObject button)
     {
-        Vector2 pos = textMarker.GetComponent<RectTransform>().anchoredPosition;
-        textMarker.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, button.GetComponent<RectTransform>().anchoredPosition.y);
+        if (currentState == MenuState.Main)
+        {
+            Vector2 pos = textMarker.GetComponent<RectTransform>().anchoredPosition;
+            textMarker.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, button.GetComponent<RectTransform>().anchoredPosition.y);
 
-        //currentButton = textButtons.
-        //todo: update the selected button
-        currentButton = System.Array.IndexOf(textButtons, button);
+            //currentButton = textButtons.
+            //todo: update the selected button
+            currentButton = System.Array.IndexOf(textButtons, button);
 
-        if (moveCursorSFX != null) moveCursorSFX.Play();
+            if (moveCursorSFX != null) moveCursorSFX.Play();
+        }
     }
 
     //methods for clicking on various things

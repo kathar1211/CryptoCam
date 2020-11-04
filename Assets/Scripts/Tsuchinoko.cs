@@ -104,7 +104,7 @@ public class Tsuchinoko : Cryptid {
         animator.SetBool("Upright", state);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
         if (other.tag == "Player")
@@ -114,6 +114,8 @@ public class Tsuchinoko : Cryptid {
             SetUpright(false);
             animator.SetFloat("Speed", fleespeed/speed);
         }
+
+        base.OnTriggerEnter(other);
     }
 
     //triggers tsuchinokos decision to move to new location

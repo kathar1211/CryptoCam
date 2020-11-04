@@ -11,6 +11,8 @@ public class TitleScreen : MonoBehaviour {
     public GameObject[] buttons;
     public GameObject selector;
 
+    public GameObject loader;
+
     //options handling
     public GameObject options;
     bool optionsActive = false;
@@ -78,6 +80,7 @@ public class TitleScreen : MonoBehaviour {
     //todo: if player selects continue, load sava data
     public void Continue()
     {
+        loader.SetActive(true);
         if (selectSFX != null) { selectSFX.Play(); }
     }
 
@@ -85,8 +88,9 @@ public class TitleScreen : MonoBehaviour {
     public void NewGame()
     {
         //PlayerPrefs.DeleteAll();
+        loader.SetActive(true);
         PlayerPrefs.SetInt(Constants.FirstPlay,0);
-        SceneManager.LoadScene("Lab");
+        SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
 
     }

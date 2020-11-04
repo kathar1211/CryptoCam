@@ -66,7 +66,7 @@ public class Options : MonoBehaviour {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
         }
 
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
         {
             if (selectedButton != null) { selectedButton.GetComponent<Button>().onClick.Invoke(); }
         }

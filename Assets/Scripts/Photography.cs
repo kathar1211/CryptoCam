@@ -104,12 +104,6 @@ public class Photography : MonoBehaviour {
     //rendertexture (photo) is saved. this is also where some grading happens
     void TakePicture()
     {
-        //check if we're allowed to take any more photos
-        if (picIndex >= allPics.Length)
-        {
-            this.GetComponent<GameManager>().EndPrompt();
-            return;
-        }
 
         //take the photo
         //https://answers.unity.com/questions/22954/how-to-save-a-picture-take-screenshot-from-a-camer.html
@@ -229,6 +223,9 @@ public class Photography : MonoBehaviour {
 
         //store distance from center and distance from camera
         Vector3 cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.transform.position);
+        //if cryptid has a head bone use that as the center instead
+        if (cryptidHead != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidHead.transform.position); }
+
         pic.distanceFromCamera = cameraPos.z;
         Vector2 dfc = new Vector2(.5f, .5f) - new Vector2(cameraPos.x, cameraPos.y);
         pic.distanceFromCenter = dfc.magnitude;
@@ -257,6 +254,13 @@ public class Photography : MonoBehaviour {
 
         //move up index
         picIndex++;
+
+        //check if we're allowed to take any more photos
+        if (picIndex >= allPics.Length)
+        {
+            this.GetComponent<GameManager>().EndPrompt();
+            return;
+        }
     }
 
 
@@ -329,6 +333,7 @@ public class Photography : MonoBehaviour {
         {
             Vector3 direction = check.transform.position - cryptoCam.transform.position;
             Ray ray = new Ray(cryptoCam.transform.position, direction);
+           
             RaycastHit hit;
 
             // Bit shift the index of the layer (1 - transparent fx) to get a bit mask
@@ -347,8 +352,17 @@ public class Photography : MonoBehaviour {
                 {
                     hitCounter++;
                 }
-            }
-        
+                else if (check.transform.tag == "Optional")
+                {
+                    hitCounter++;
+                }
+                else
+                {
+                    Debug.Log("obstacle hit: " + hit.transform.ToString());
+                    Debug.Log("attempting to hit: " + check.transform.ToString());
+                    Debug.DrawRay(cryptoCam.transform.position, direction, Color.yellow, 10);
+                }
+            }      
         }
         if (hitboxes.Length != 0) { return (float)hitCounter / (float)hitboxes.Length; }
 

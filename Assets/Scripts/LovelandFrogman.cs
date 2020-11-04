@@ -162,10 +162,11 @@ public class LovelandFrogman : Cryptid {
         needToAdjustPosition = true;
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
         rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
+    public override void OnTriggerEnter(Collider other)
+    { 
         
         //frogman leaves shore, returns to water
         if (other.tag == "Water" && currentState != MoveState.swim)
@@ -186,6 +187,7 @@ public class LovelandFrogman : Cryptid {
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
+            rb.useGravity = true;
             //rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
         //flee from player on land
@@ -194,6 +196,8 @@ public class LovelandFrogman : Cryptid {
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
         }
+
+        base.OnTriggerEnter(other);
     }
 
     public override void AvoidCollision(Collider other, float avoidSpeed)

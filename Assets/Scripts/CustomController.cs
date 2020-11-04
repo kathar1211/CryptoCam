@@ -92,7 +92,16 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(name))
         {
-            return buttons[name].ToString();
+            //convert mouse0 mouse1 etc to names humans understand better
+            switch (buttons[name])
+            {
+                case KeyCode.Mouse0:
+                    return "Left Click";
+                case KeyCode.Mouse1:
+                    return "Right Click";
+                default:
+                    return buttons[name].ToString();
+            }
         }
         return null;
     }
