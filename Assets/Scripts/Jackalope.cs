@@ -52,7 +52,7 @@ public class Jackalope : Cryptid {
         currentState = MoveState.sleep;
         nextState = MoveState.run;
         animator = GetComponent<Animator>();
-        cryptidType = "Jackalope";
+        cryptidType = Constants.Jackalope;
         baseScore = 50;
 
         if (startAwake)

@@ -54,7 +54,7 @@ public class LovelandFrogman : Cryptid {
 	// Use this for initialization
 	void Start () {
         StartUp();
-        cryptidType = "Loveland Frogman";
+        cryptidType = Constants.Frogman;
         animator = GetComponent<Animator>();
         ripples = GetComponentInChildren<ParticleSystem>();
 

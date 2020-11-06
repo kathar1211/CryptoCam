@@ -23,7 +23,7 @@ public class Nessie : Cryptid {
     // Use this for initialization
     void Start () {
         StartUp();
-        cryptidType = "Loch Ness Monster";
+        cryptidType = Constants.Nessie;
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
         animator = GetComponent<Animator>();

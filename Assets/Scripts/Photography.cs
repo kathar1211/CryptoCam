@@ -158,6 +158,12 @@ public class Photography : MonoBehaviour {
 
             //move up index
             picIndex++;
+
+            if (picIndex >= allPics.Length)
+            {
+                this.GetComponent<GameManager>().EndPrompt();
+            }
+
             return;
         }
 

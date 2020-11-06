@@ -26,6 +26,17 @@ public class GradeManager : MonoBehaviour {
     enum GradeState { allThumbs, bigThumb, tedGrading};
     GradeState currentState;
 
+    //data structure for cryptid thumbnails with an image and a star highlight
+    struct CryptidIcon
+    {
+        public GameObject icon;
+        public GameObject highlight;
+    }
+    //initialize cryptid icons in editor
+    public GameObject[] icons;
+    //keep track of our icons by dictionary
+    Dictionary<string, CryptidIcon> cryptidIcons = new Dictionary<string, CryptidIcon>();
+
     //photos selected for grading, sorted by subject name
     //only one of each cryptid type is allowed
     public Dictionary<string, Photograph> finalSelection = new Dictionary<string, Photograph>();
@@ -69,6 +80,8 @@ public class GradeManager : MonoBehaviour {
         textbox.DisplayText();
 
         bigThumbnail.gameObject.SetActive(false);
+
+        CreateIconDictionary();
 	}
 	
 	// Update is called once per frame
@@ -89,15 +102,18 @@ public class GradeManager : MonoBehaviour {
     //bring up image on click
     public void Enlarge(Image src)
     {
-        //play sfx if applicable
-        if (ClickSFX != null) { ClickSFX.Play(); }
+        if (!bigThumbnail.IsActive())
+        {
+            //play sfx if applicable
+            if (ClickSFX != null) { ClickSFX.Play(); }
 
-        selectedImage = src;
-        bigThumbnail.sprite = src.sprite;
-        bigThumbnail.gameObject.SetActive(true);
-        textbox.FeedText(Constants.ConfirmSelectPhoto);
-        textbox.DisplayText();
-        ToggleInputButtons();
+            selectedImage = src;
+            bigThumbnail.sprite = src.sprite;
+            bigThumbnail.gameObject.SetActive(true);
+            textbox.FeedText(Constants.ConfirmSelectPhoto);
+            textbox.DisplayText();
+            ToggleInputButtons();
+        }
     }
 
     //selected photo is added to dictionary, return to view of all photos 
@@ -123,6 +139,9 @@ public class GradeManager : MonoBehaviour {
                 UpdatePhoto(picToAdd);
             }
         }
+
+        //reflect selection in icons
+        if (cryptidIcons.ContainsKey(picToAdd.subjectName)){ cryptidIcons[picToAdd.subjectName].highlight.SetActive(true); }
 
         //hide buttons and return to photo view
         ToggleInputButtons();
@@ -163,6 +182,7 @@ public class GradeManager : MonoBehaviour {
         Photograph picToRemove = allPhotos[selectedImage];
         if (finalSelection.ContainsKey(picToRemove.subjectName) && finalSelection[picToRemove.subjectName].Equals(picToRemove)){
             finalSelection.Remove(picToRemove.subjectName);
+            if (cryptidIcons.ContainsKey(picToRemove.subjectName)) { cryptidIcons[picToRemove.subjectName].highlight.SetActive(false); }
         }
 
         ToggleInputButtons();
@@ -218,6 +238,9 @@ public class GradeManager : MonoBehaviour {
                 finalSelection.Add(photo.subjectName, photo);
                 img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
             }
+
+            //reflect selection in icons
+            if (cryptidIcons.ContainsKey(photo.subjectName)) { cryptidIcons[photo.subjectName].highlight.SetActive(true); }
         }
     }
 
@@ -256,5 +279,28 @@ public class GradeManager : MonoBehaviour {
         ConfirmScreen.SetActive(false);
         AutoButton.SetActive(true);
         DoneButton.SetActive(true);
+    }
+
+    //convert game objects assigned in editor to cryptid icon data structures and set them up for use
+    void CreateIconDictionary()
+    {
+        foreach (GameObject go in icons)
+        {
+            CryptidIcon cryptoIcon = new CryptidIcon();
+            cryptoIcon.icon = go.transform.GetChild(1).gameObject;
+            cryptoIcon.highlight = go.transform.GetChild(0).gameObject;
+
+            //unhide the icon if a picture of the cryptid exists in the photos
+            foreach(Photograph photo in gameManager.GetComponent<Photography>().GetPhotographs())
+            {
+                if (photo.subjectName == go.name)
+                {
+                    cryptoIcon.icon.GetComponent<Image>().color = Color.white;
+                    break;
+                }
+            }
+
+            cryptidIcons.Add(go.name, cryptoIcon);
+        }
     }
 }

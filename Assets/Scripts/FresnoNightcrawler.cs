@@ -32,7 +32,7 @@ public class FresnoNightcrawler : Cryptid {
     void Start () {
         StartUp();
         baseScore = 100;
-        cryptidType = "Fresno Nightcrawler";
+        cryptidType = Constants.Fresno;
         animator = this.GetComponent<Animator>();
 
 

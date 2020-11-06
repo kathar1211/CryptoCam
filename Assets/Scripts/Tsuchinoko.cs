@@ -30,7 +30,7 @@ public class Tsuchinoko : Cryptid {
     // Use this for initialization
     void Start () {
         baseScore = 75;
-        cryptidType = "Tsuchinoko";
+        cryptidType = Constants.Tsuchinoko;
         animator = this.GetComponent<Animator>();
         animator.SetFloat("Speed", 1);
         target = secondLocation;

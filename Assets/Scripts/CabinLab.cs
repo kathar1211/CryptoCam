@@ -157,6 +157,7 @@ public class CabinLab : MonoBehaviour {
                 {
                     if (selectSFX != null) selectSFX.Play();
                     textButtons[currentButton].GetComponent<Button>().onClick.Invoke();
+                    HideAllHovers();
                 }
                 break;
 
@@ -218,7 +219,7 @@ public class CabinLab : MonoBehaviour {
 
     
 
-    //buttons have achild object drop shadow that should appear when hovering
+    //buttons have a child object drop shadow that should appear when hovering
     public void ToggleImageButtonHover(GameObject button)
     {
         if (currentState == MenuState.Main)
@@ -499,6 +500,16 @@ public class CabinLab : MonoBehaviour {
     public IEnumerator WaitForSound(AudioSource audiosource)
     {
         yield return new WaitUntil(() => audiosource.isPlaying == false);
+    }
+
+    //when something in the background is selected all hover drop shadows should hide
+    void HideAllHovers()
+    {
+        GameObject[] shadows = GameObject.FindGameObjectsWithTag("DropShadow");
+        foreach (GameObject shadow in shadows)
+        {
+            shadow.SetActive(false);
+        }
     }
 }
 

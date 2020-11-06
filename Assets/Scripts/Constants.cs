@@ -89,8 +89,11 @@ public static class Constants {
         {"Jackalope", "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
     };
 
-
-
-
+    //cryptid names
+    public static string Tsuchinoko = "Tsuchinoko";
+    public static string Nessie = "Loch Ness Monster";
+    public static string Frogman = "Loveland Frogman";
+    public static string Jackalope = "Jackalope";
+    public static string Fresno = "Fresno Nightcrawler";
 
 }
