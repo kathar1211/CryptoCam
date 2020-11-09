@@ -277,7 +277,7 @@ public class Cryptid : MonoBehaviour {
         {
             if (particles != null && disappearSFX != null)
             {
-                GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, this.transform.rotation);
+                GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, particles.transform.rotation);
                 newParticles.transform.localScale = this.transform.localScale * 2;
                 newParticles.transform.Translate(0, 1, 0);//move it up a lil
                 disappearSFX.enabled = true;

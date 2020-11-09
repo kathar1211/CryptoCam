@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\CustomController.cs" />
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Firefly.cs" />
+    <Compile Include="Assets\Scripts\Float.cs" />
     <Compile Include="Assets\Scripts\FresnoNightcrawler.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\GradeManager.cs" />
