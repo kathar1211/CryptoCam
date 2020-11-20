@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class Jackalope : Cryptid {
 
@@ -171,19 +172,18 @@ public class Jackalope : Cryptid {
     public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
-        if (other.tag == "Player")
+        if (other.tag == Constants.PlayerTag)
         {
-            fleeFromTarget = other.gameObject.transform;
-            if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.flee; }
-            else { currentState = MoveState.flee; }
-            animator.SetBool(StandUp, false);
-            animator.SetBool(Run, true);
-            animator.SetBool(Sniff, false);
-            animator.SetBool(Eat, false);
-            targetPos = Vector3.zero;
-            animator.SetFloat(Speed, 2);
+            if (!other.gameObject.GetComponent<FirstPersonController>().IsCrouching)
+            {
+                PrepareToFlee(other.gameObject.transform);
+            }
         }
-        else if (other.tag == "Carrot")
+        else if (other.tag == Constants.AvoidTag)
+        {
+            PrepareToFlee(other.gameObject.transform);
+        }
+        else if (other.tag == Constants.CarrotTag)
         {
             if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
             else { currentState = MoveState.runtoward; }
@@ -195,6 +195,19 @@ public class Jackalope : Cryptid {
         }
 
         base.OnTriggerEnter(other);
+    }
+
+    private void PrepareToFlee(Transform target)
+    {
+        fleeFromTarget = target;
+        if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.flee; }
+        else { currentState = MoveState.flee; }
+        animator.SetBool(StandUp, false);
+        animator.SetBool(Run, true);
+        animator.SetBool(Sniff, false);
+        animator.SetBool(Eat, false);
+        targetPos = Vector3.zero;
+        animator.SetFloat(Speed, 2);
     }
 
     //transition from sleep state

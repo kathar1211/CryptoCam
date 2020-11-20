@@ -18,12 +18,25 @@ public static class Constants {
     public const string Submit = "Submit";
     public const string Horizontal = "Horizontal";
     public const string Vertical = "Vertical";
+    public const string CrouchButton = "CrouchButton";
+
+    //tags
+    public const string PlayerTag = "Player";
+    public const string CryptidTag = "Cryptid";
+    public const string ShoreTag = "Shore";
+    public const string WaterTag = "Water";
+    public const string AvoidTag = "AvoidanceZone";
+    public const string DestroyTag = "DestroyZone";
+    public const string CarrotTag = "Carrot";
+    public const string TerrainTag = "lvl";
+    public const string OptionalTag = "Optional";
+    public const string DropShadowTag = "DropShadow";
+
 
     //grading page text
     public static string ShowTed = "Select pictures to show to Ted";
     public static string ConfirmSelectPhoto = "Select this picture?";
     public static string ProceedPhotos = "Proceed with {0} photos selected?";
-    // public static string ProceedPart2 = " photos selected?";
 
     //used for insterting values into strings
     public static string ParameterSTR = "{0}";

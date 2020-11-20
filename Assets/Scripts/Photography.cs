@@ -341,6 +341,14 @@ public class Photography : MonoBehaviour {
         //pic.visibility is hitboxes successfully hit by raycast/total hitboxes
         Collider[] hitboxes = mainSubject.GetComponentsInChildren<Collider>();
         int hitCounter = 0;
+
+        // Bit shift the index of the layer (1 - transparent fx) to get a bit mask
+        int layerMask = 1 << 1;
+
+        // This would cast rays only against colliders in layer 1.
+        // But instead we want to collide against everything except layer 1. The ~ operator does this, it inverts a bitmask.
+        layerMask = ~layerMask;
+
         foreach (Collider check in hitboxes)
         {
             Vector3 direction = check.transform.position - cryptoCam.transform.position;
@@ -348,12 +356,6 @@ public class Photography : MonoBehaviour {
            
             RaycastHit hit;
 
-            // Bit shift the index of the layer (1 - transparent fx) to get a bit mask
-            int layerMask = 1 << 1;
-
-            // This would cast rays only against colliders in layer 1.
-            // But instead we want to collide against everything except layer 1. The ~ operator does this, it inverts a bitmask.
-            layerMask = ~layerMask;
 
             if (Physics.Raycast(ray, out hit, 1000, layerMask))
             {
@@ -364,7 +366,7 @@ public class Photography : MonoBehaviour {
                 {
                     hitCounter++;
                 }
-                else if (check.transform.tag == "Optional")
+                else if (check.transform.tag == Constants.OptionalTag)
                 {
                     hitCounter++;
                 }

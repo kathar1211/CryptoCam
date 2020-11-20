@@ -83,12 +83,7 @@ public class Tsuchinoko : Cryptid {
                     animator.SetFloat("Speed", 1);
                 }
                 break;
-
         }
-
-
-
-        
 	}
 
     //tsuchinoko switches between upright and lurking
@@ -107,12 +102,22 @@ public class Tsuchinoko : Cryptid {
     public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
-        if (other.tag == "Player")
+        if (other.tag == Constants.PlayerTag)
+        {
+            if (!other.gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().IsCrouching)
+            {
+                target = other.gameObject.transform;
+                currentMovestate = MoveState.Fleeing;
+                SetUpright(false);
+                animator.SetFloat("Speed", fleespeed / speed);
+            }
+        }
+        else if (other.tag == Constants.AvoidTag)
         {
             target = other.gameObject.transform;
             currentMovestate = MoveState.Fleeing;
             SetUpright(false);
-            animator.SetFloat("Speed", fleespeed/speed);
+            animator.SetFloat("Speed", fleespeed / speed);
         }
 
         base.OnTriggerEnter(other);

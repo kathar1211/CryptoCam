@@ -14,7 +14,8 @@ public class CustomController : MonoBehaviour {
         {Constants.ReadyCamera, KeyCode.Mouse1 },
         {Constants.TakePicture, KeyCode.Mouse0 },
         {Constants.ThrowObject, KeyCode.Q },
-        {Constants.Pause, KeyCode.Escape }
+        {Constants.Pause, KeyCode.Escape },
+        {Constants.CrouchButton, KeyCode.LeftControl }
     };
 
 	// Use this for initialization

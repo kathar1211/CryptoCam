@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class LovelandFrogman : Cryptid {
 
@@ -169,7 +170,7 @@ public class LovelandFrogman : Cryptid {
     { 
         
         //frogman leaves shore, returns to water
-        if (other.tag == "Water" && currentState != MoveState.swim)
+        if (other.tag == Constants.WaterTag && currentState != MoveState.swim)
         {
             currentState = MoveState.swim;
             animator.Play("swim", 0);
@@ -178,7 +179,7 @@ public class LovelandFrogman : Cryptid {
             rb.useGravity = false;
         }
         //frogman approaches shore
-        else if (other.tag == "Shore" && currentState == MoveState.swim)
+        else if (other.tag == Constants.ShoreTag && currentState == MoveState.swim)
         {
             transform.Translate(preleapOffset);
             rb.useGravity = true;
@@ -190,8 +191,18 @@ public class LovelandFrogman : Cryptid {
             rb.useGravity = true;
             //rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+
+
         //flee from player on land
-        else if (other.tag == "Player" && currentState == MoveState.walk)
+        if (other.tag == Constants.PlayerTag && currentState == MoveState.walk)
+        {
+            if (!other.gameObject.GetComponent<FirstPersonController>().IsCrouching)
+            {
+                currentState = MoveState.flee;
+                fleeFromTarget = other.gameObject.transform;
+            }
+        }
+        else if (other.tag == Constants.AvoidTag)
         {
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;

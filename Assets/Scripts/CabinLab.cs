@@ -505,7 +505,7 @@ public class CabinLab : MonoBehaviour {
     //when something in the background is selected all hover drop shadows should hide
     void HideAllHovers()
     {
-        GameObject[] shadows = GameObject.FindGameObjectsWithTag("DropShadow");
+        GameObject[] shadows = GameObject.FindGameObjectsWithTag(Constants.DropShadowTag);
         foreach (GameObject shadow in shadows)
         {
             shadow.SetActive(false);

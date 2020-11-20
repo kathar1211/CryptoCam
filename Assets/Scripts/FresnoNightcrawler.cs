@@ -137,7 +137,8 @@ public class FresnoNightcrawler : Cryptid {
     public override void OnTriggerEnter(Collider other)
     {
         //flee from player if they come in range
-        if (other.tag == "Player")
+        if ((other.tag == Constants.PlayerTag && !other.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().IsCrouching)
+            || other.tag == Constants.AvoidTag)
         {
             /* fleeFromTarget = other.gameObject.transform;
              currentState = MoveState.Flee;

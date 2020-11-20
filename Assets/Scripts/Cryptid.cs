@@ -100,7 +100,12 @@ public class Cryptid : MonoBehaviour {
     {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         if (fleeFromTarget == null) { return; }
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTarget.position), rotateSpeed * Time.deltaTime, 0);
+
+        //make y not a factor so cryptids dont rotate down to get away from player
+        Vector3 fleeFromTargetPos = fleeFromTarget.position;
+        fleeFromTargetPos.y = transform.position.y;
+
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTargetPos), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script

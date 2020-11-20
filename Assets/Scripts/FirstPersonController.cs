@@ -42,6 +42,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jumping;
         private AudioSource m_AudioSource;
 
+        //allow other classes to tell if player is crouched
+        public bool IsCrouching = false;
+
         // Use this for initialization
         private void Start()
         {
@@ -81,6 +84,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+            HandleCrouch();
         }
 
 
@@ -212,7 +217,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
 #if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+            //only allow running if player is not crouching
+            if (!IsCrouching)
+            {
+                m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+            }
+            else
+            {
+                m_IsWalking = true;
+            }
 #endif
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
@@ -254,6 +267,27 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
+        }
+
+        //add on method to support crouching
+        //reduce height if player pressed crouch button, return to normal on release
+        private void HandleCrouch()
+        {
+            if (CustomController.GetButtonDown(Constants.CrouchButton) && !IsCrouching)
+            {
+                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y / 2.0f, transform.localScale.z);
+                IsCrouching = true;
+                //reduce speed while crouching
+                m_WalkSpeed /= 2.0f;
+            }
+
+            if (CustomController.GetButtonUp(Constants.CrouchButton) && IsCrouching)
+            {
+                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 2.0f, transform.localScale.z);
+                IsCrouching = false;
+                //return to normal speed
+                m_WalkSpeed *= 2.0f;
+            }
         }
     }
 }
