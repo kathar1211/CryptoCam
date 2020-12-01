@@ -145,7 +145,7 @@ public class Nessie : Cryptid {
 
     public override bool IsVisible()
     {
-        if (currentState == MoveState.underWaterSwim && (transform.position.y < surfacePos))
+        if (currentState == MoveState.underWaterSwim && (transform.position.y < surfacePos) && animator.GetCurrentAnimatorStateInfo(0).IsName("underwater swim"))
         {
             return false;
         }

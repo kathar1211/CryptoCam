@@ -52,6 +52,18 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     AudioSource CancelSFX;
 
+    //cryptid icons for selected photos
+    [SerializeField]
+    Sprite jackalopeHead;
+    [SerializeField]
+    Sprite nessieHead;
+    [SerializeField]
+    Sprite fresnoHead;
+    [SerializeField]
+    Sprite frogmanHead;
+    [SerializeField]
+    Sprite tsuchinokoHead;
+
     // Use this for initialization
     void Start () {
 
@@ -66,11 +78,7 @@ public class GradeManager : MonoBehaviour {
         YesButton.SetActive(false);
         NoButton.SetActive(false);
 
-        //hide the symbol that represents a selected photo bc none of them are selected yet
-        foreach(Image img in thumbnails)
-        {
-            img.gameObject.transform.Find("Selected").gameObject.SetActive(false);
-        }
+        
 
         //display the pictures from the game manager
         ShowThumbnails(gameManager.GetComponent<Photography>().GetPhotographs());
@@ -207,6 +215,41 @@ public class GradeManager : MonoBehaviour {
             //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
             thumbnails[i].sprite = Sprite.Create(pics[i].pic, new Rect(0f, 0f, pics[i].pic.width, pics[i].pic.height), new Vector2(.5f, .5f));
             allPhotos.Add(thumbnails[i], pics[i]);
+
+            //set icon to appropriate cryptid
+            GameObject selector = thumbnails[i].transform.Find("Selected").gameObject;
+            Image icon = selector.transform.Find("icon").GetComponent<Image>();
+            switch (pics[i].subjectName)
+            {
+                case Constants.Jackalope:
+                    icon.sprite = jackalopeHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Fresno:
+                    icon.sprite = fresnoHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Frogman:
+                    icon.sprite = frogmanHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Nessie:
+                    icon.sprite = nessieHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Tsuchinoko:
+                    icon.sprite = tsuchinokoHead;
+                    icon.SetNativeSize();
+                    break;
+                default:
+                    icon.sprite = null;
+                    icon.gameObject.SetActive(false);
+                    break;
+
+            }
+
+            //hide the symbol that represents a selected photo bc none of them are selected yet
+            selector.SetActive(false);
         }
     }
 

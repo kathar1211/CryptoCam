@@ -10,17 +10,40 @@ using System;
 
 public class Options : MonoBehaviour {
 
-    //buttons
+    //buttons screen 1
     public GameObject ReadyCameraControl;
     public GameObject TakePictureControl;
     public GameObject ThrowObjectControl;
     public GameObject PauseControl;
-    public GameObject Exit;
+    public GameObject CrouchControl;
+    public GameObject RunControl;    
     public GameObject RestoreDefaultsControl;
+
+    //buttons screen 2
     public GameObject IncreaseText;
     public GameObject DecreaseText;
     public GameObject FullScreenOn;
     public GameObject FullScreenOff;
+    public GameObject IncreaseBGM;
+    public GameObject DecreaseBGM;
+    public GameObject IncreaseSFX;
+    public GameObject DecreaseSFX;
+
+    //buttons on all screens
+    public GameObject Exit;
+    public GameObject More;
+    //sprites for more button
+    [SerializeField]
+    Sprite triangle;
+    [SerializeField]
+    Sprite triangleFlipped;
+
+    //screen handling
+    bool isScrolling = false;
+    public float scrollSpeed;
+    float moreButtonPos;
+    public enum ScreenState { Controls, Settings};
+    public ScreenState currentScreen = ScreenState.Controls;
 
     //display the current text speed
     public Text textSpeed;
@@ -29,10 +52,16 @@ public class Options : MonoBehaviour {
     public float minSpeed;
     public float increment;
 
+    //audio
+    public Text bgmVol;
+    public Text sfxVol;
+    AudioManager audioManager;
+
     //select buttons with arrow keys/controller and highlight selected
     public GameObject buttonHighlight;
     //hold buttons in an array that represents the order theyre in on screen
-    private GameObject[] buttonArray;
+    private GameObject[] controlbuttonArray;
+    private GameObject[] settingsButtonArray;
     private GameObject selectedButton;
     private int selectedButtonIndex;
 
@@ -48,19 +77,56 @@ public class Options : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        buttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
-            ThrowObjectControl, PauseControl, RestoreDefaultsControl, DecreaseText,
-            IncreaseText, FullScreenOn, FullScreenOff, Exit };
+        controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
+            ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, Exit };
+
+        settingsButtonArray = new GameObject[] { DecreaseText,
+            IncreaseText, FullScreenOn, FullScreenOff, IncreaseBGM, DecreaseBGM, IncreaseSFX, DecreaseSFX, Exit };
 
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
         LoadTextSpeed();
+        audioManager = FindObjectOfType<AudioManager>();
 
         UpdateButtonText();
+        UpdateSettingsText();
+
+
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (isScrolling)
+        {
+            switch (currentScreen)
+            {
+                case ScreenState.Controls:
+                    More.transform.Translate(-1 * scrollSpeed * Time.deltaTime, 0, 0);
+                    if (More.transform.localPosition.x <= moreButtonPos * -1)
+                    {
+                        isScrolling = false;
+                        currentScreen = ScreenState.Settings;
+                        More.GetComponent<Image>().sprite = triangleFlipped;
+                        //snap to position
+                        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
+                    }
+                    break;
+                case ScreenState.Settings:
+                    More.transform.Translate(1 * scrollSpeed * Time.deltaTime, 0, 0);
+                    if (More.transform.localPosition.x >= moreButtonPos * -1)
+                    {
+                        isScrolling = false;
+                        currentScreen = ScreenState.Controls;
+                        More.GetComponent<Image>().sprite = triangle;
+                        //snap to position
+                        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
+                    }
+                    break;
+            }
+            
+            return;// dont handle input or do anything else while scrolling
+        }
+
 		if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical))
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
@@ -74,6 +140,17 @@ public class Options : MonoBehaviour {
 
     void ChangeSelectButton(float input)
     {
+        GameObject[] buttonArray = new GameObject[] { };
+        //scroll through approproate buttons depending on which screen is active
+        switch (currentScreen)
+        {
+            case ScreenState.Controls:
+                buttonArray = controlbuttonArray;
+                break;
+            case ScreenState.Settings:
+                buttonArray = settingsButtonArray;
+                break;
+        }
         //start at index 0 if nothing is selected yet
         if (selectedButton == null)
         {
@@ -167,11 +244,15 @@ public class Options : MonoBehaviour {
 
     //method called by buttons- send which control is being updated and start the process of waiting for input
     public void ChangeInputButtonClicked(string controlKey)
-    {            
-        if (!waitingForKeyPress) {
-            StartCoroutine(AssignKey(controlKey));
-            KeyPressSubMenu.SetActive(true);
-            EventSystem.current.SetSelectedGameObject(null);
+    {
+        if (!isScrolling)
+        {
+            if (!waitingForKeyPress)
+            {
+                StartCoroutine(AssignKey(controlKey));
+                KeyPressSubMenu.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
     }
 
@@ -197,7 +278,17 @@ public class Options : MonoBehaviour {
         TakePictureControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.TakePicture);
         ThrowObjectControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.ThrowObject);
         PauseControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.Pause);
+        RunControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.RunButton);
+        CrouchControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.CrouchButton);
+    }
+
+    void UpdateSettingsText()
+    {
         textSpeed.text = speed.ToString("0.0");
+        int bgm = audioManager.getBGMVolume();
+        string bgmString = bgm.ToString("0");
+        bgmVol.text = bgmString;
+        sfxVol.text = audioManager.getSFXVolume().ToString("0");
     }
 
     public void RestoreDefaults()
@@ -210,17 +301,58 @@ public class Options : MonoBehaviour {
     //method to change the speed at which dialogue appears. true to increase false to decrease
     public void AdjustTextSpeed (bool increase)
     {
-        if (increase && speed < maxSpeed)
+        if (!isScrolling)
         {
-            speed += increment;
+            if (increase && speed < maxSpeed)
+            {
+                speed += increment;
+            }
+            else if (!increase && speed > minSpeed)
+            {
+                speed -= increment;
+            }
+            //save value and update ui
+            SaveTextSpeed();
+            UpdateSettingsText();
         }
-        else if (!increase && speed > minSpeed)
+    }
+
+    //adjust the audio settings for background music
+    public void AdjustBGMVolume(bool increase)
+    {
+        if (!isScrolling)
         {
-            speed -= increment;
+            int bgm = audioManager.getBGMVolume();
+            if (increase && bgm < 10)
+            {
+                bgm += 1;
+            }
+            else if (!increase && bgm > 0)
+            {
+                bgm -= 1;
+            }
+            audioManager.UpdateBGMVolume(bgm);
+            UpdateSettingsText();
         }
-        //save value and update ui
-        SaveTextSpeed();
-        UpdateButtonText();
+    }
+
+    //adjust the audio settings for sound effects
+    public void AdjustSFXVolume(bool increase)
+    {
+        if (!isScrolling)
+        {
+            int sfx = audioManager.getSFXVolume();
+            if (increase && sfx < 10)
+            {
+                sfx += 1;
+            }
+            else if (!increase && sfx > 0)
+            {
+                sfx -= 1;
+            }
+            audioManager.UpdateSFXVolume(sfx);
+            UpdateSettingsText();
+        }
     }
 
     //load text speed from playerprefs
@@ -245,13 +377,38 @@ public class Options : MonoBehaviour {
     //if selector is activated it still needs to reflect mouseover options
     public void MoveSelector(GameObject button)
     {
-        selectedButton = button;
-        //selectedButtonIndex = ArrayUtility.IndexOf<GameObject>(buttonArray, button);
-        selectedButtonIndex = Array.IndexOf(buttonArray, button);
-        buttonHighlight.transform.position = selectedButton.transform.position;
-        float width = selectedButton.GetComponent<RectTransform>().rect.width;
-        float height = selectedButton.GetComponent<RectTransform>().rect.height;
-        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width + 5);
-        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height + 5);
+        if (!isScrolling)
+        {
+            selectedButton = button;
+            //selectedButtonIndex = ArrayUtility.IndexOf<GameObject>(buttonArray, button);
+            GameObject[] buttonArray = new GameObject[] { };
+            //scroll through approproate buttons depending on which screen is active
+            switch (currentScreen)
+            {
+                case ScreenState.Controls:
+                    buttonArray = controlbuttonArray;
+                    break;
+                case ScreenState.Settings:
+                    buttonArray = settingsButtonArray;
+                    break;
+            }
+            selectedButtonIndex = Array.IndexOf(buttonArray, button);
+            //set hover to match dimensions of selected button
+            buttonHighlight.transform.position = selectedButton.transform.position;
+            float width = selectedButton.GetComponent<RectTransform>().rect.width;
+            float height = selectedButton.GetComponent<RectTransform>().rect.height;
+            buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width + 5);
+            buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height + 5);
+        }
+    }
+
+    public void ShowMore()
+    {
+        if (!isScrolling)
+        {
+            moreButtonPos = More.transform.localPosition.x;
+            isScrolling = true;
+            
+        }
     }
 }

@@ -220,7 +220,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             //only allow running if player is not crouching
             if (!IsCrouching)
             {
-                m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+                // m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+                m_IsWalking = !CustomController.GetButton(Constants.RunButton);
             }
             else
             {

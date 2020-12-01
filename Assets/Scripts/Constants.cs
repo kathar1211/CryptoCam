@@ -19,6 +19,7 @@ public static class Constants {
     public const string Horizontal = "Horizontal";
     public const string Vertical = "Vertical";
     public const string CrouchButton = "CrouchButton";
+    public const string RunButton = "RunButton";
 
     //tags
     public const string PlayerTag = "Player";
@@ -31,6 +32,7 @@ public static class Constants {
     public const string TerrainTag = "lvl";
     public const string OptionalTag = "Optional";
     public const string DropShadowTag = "DropShadow";
+    public const string BGMTag = "BGM";
 
 
     //grading page text
@@ -91,22 +93,26 @@ public static class Constants {
     //player pref keys - used for saving data
     public static string FirstPlay = "FirstPlay"; //false if this is not the first time booting up the game
     public static string TextSpeed = "TextSpeed";
+    public static string SFXVolume = "SFXVolume";
+    public static string BGMVolume = "BGMVolume";
+
+    //cryptid names
+    public const string Tsuchinoko = "Tsuchinoko";
+    public const string Nessie = "Loch Ness Monster";
+    public const string Frogman = "Loveland Frogman";
+    public const string Jackalope = "Jackalope";
+    public const string Fresno = "Fresno Nightcrawler";
 
     //holds description text for cryptids in the cryptid-nomicon
     public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()
     {
-        {"Tsuchinoko","Tsuchinoko, the fat snake cryptid, is identifiable by his distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
-        {"Loch Ness Monster","Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
-        {"Loveland Frogman","These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands, but that's just silly." },
-        {"Fresno Nightcrawler", "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
-        {"Jackalope", "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
+        {Tsuchinoko,"Tsuchinoko, the fat snake cryptid, is identifiable by his distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
+        {Nessie,"Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
+        {Frogman,"These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands, but that's just silly." },
+        {Fresno, "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
+        {Jackalope, "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." }
     };
 
-    //cryptid names
-    public static string Tsuchinoko = "Tsuchinoko";
-    public static string Nessie = "Loch Ness Monster";
-    public static string Frogman = "Loveland Frogman";
-    public static string Jackalope = "Jackalope";
-    public static string Fresno = "Fresno Nightcrawler";
+    
 
 }

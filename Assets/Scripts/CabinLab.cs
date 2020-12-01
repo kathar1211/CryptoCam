@@ -153,6 +153,7 @@ public class CabinLab : MonoBehaviour {
                         MoveSelector(textButtons[currentButton]);
                     }
                 }
+                //don't count clicks unless user is clicking directly on something
                 if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
                 {
                     if (selectSFX != null) selectSFX.Play();
