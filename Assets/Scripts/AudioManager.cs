@@ -11,14 +11,9 @@ public class AudioManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //get prefab values for audio settings, if they exist
-        if (PlayerPrefs.HasKey(Constants.BGMVolume)){
-            BGMVol = PlayerPrefs.GetInt(Constants.BGMVolume) / 10.0f;
-        }
-        if (PlayerPrefs.HasKey(Constants.SFXVolume))
-        {
-            SFXVol = PlayerPrefs.GetInt(Constants.SFXVolume) / 10.0f;
-        }
+
+        LoadBGMVolume();
+        LoadSFXVolume();
 
         //grab all sounds
         AudioSource[] AllSounds = FindObjectsOfType<AudioSource>();
@@ -37,6 +32,24 @@ public class AudioManager : MonoBehaviour {
             }
         }
 	}
+
+    //get player pref values for bgm settings, if they exist
+    void LoadBGMVolume()
+    {
+        if (PlayerPrefs.HasKey(Constants.BGMVolume))
+        {
+            BGMVol = PlayerPrefs.GetInt(Constants.BGMVolume) / 10.0f;
+        }
+    }
+
+    //load saved player pref value for sfx volume, if it exists
+    void LoadSFXVolume()
+    {
+        if (PlayerPrefs.HasKey(Constants.SFXVolume))
+        {
+            SFXVol = PlayerPrefs.GetInt(Constants.SFXVolume) / 10.0f;
+        }
+    }
 
     //set volume for sound effects and save to playerprefs
     //takes an int 0 to 10, maps to float from 0 to 1
@@ -60,6 +73,7 @@ public class AudioManager : MonoBehaviour {
     //return the current setting for sfx volume
     public int getSFXVolume()
     {
+        LoadSFXVolume();
         int value = (int)((SFXVol * 10)+.5f);
         return value;
     }
@@ -67,6 +81,7 @@ public class AudioManager : MonoBehaviour {
     //return the current setting for bgm volume
     public int getBGMVolume()
     {
+        LoadBGMVolume();
         int value = (int)((BGMVol * 10f)+.5f);
         return value;
     }

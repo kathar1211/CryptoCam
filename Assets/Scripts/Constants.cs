@@ -6,9 +6,11 @@ public static class Constants {
 
     //main gameplay ui text
     public static string LeaveCoursePrompt = "Return to the lab with your photos and end the course?";
+    public static string OutOfFilmPrompt = "You've run out of film. End course?";
     public static string PhotosRemaining = "Photos Remaining: ";
-    public static string PhotoHelpPrompt = "Hold right click to ready the camera; press left click to take a picture";
-    public static string ObjectHelpPrompt = "Press Q to throw a carrot";
+    public static string PhotoHelpPrompt1 = "Hold {0} to ready the camera; ";
+    public static string PhotoHelpPrompt2 = "press {0} to take a picture";
+    public static string ObjectHelpPrompt = "Press {0} to throw a carrot";
 
     //inputs (button names)
     public const string TakePicture = "TakePicture";

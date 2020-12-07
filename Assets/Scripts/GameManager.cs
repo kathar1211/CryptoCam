@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviour {
     //when scene is loaded and level begins start with some panning shots of the level before transitioning into gameplay
     public bool transitionsEnabled;
 
+    public bool DontAllowPause = false;
+
     bool paused = false;
 
     [SerializeField]
@@ -58,19 +60,23 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 
 		//toggle pause
-        if (CustomController.GetButtonDown(Constants.Pause))
+        if (CustomController.GetButtonDown(Constants.Pause) && !DontAllowPause)
         {
             if (paused)
             {
                 paused = false;
                 Time.timeScale = 1;
                 pauseText.SetActive(false);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
             }
             else if (!paused)
             {
                 paused = true;
                 Time.timeScale = 0;
                 pauseText.SetActive(true);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
             }
            // SceneManager.LoadScene("Lab");
         }
@@ -89,6 +95,15 @@ public class GameManager : MonoBehaviour {
         }
 	}
 
+    public void Unpause()
+    {
+        paused = false;
+        Time.timeScale = 1;
+        pauseText.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     //ask the user if they would like to end the course
     public void EndPrompt()
     {
@@ -101,7 +116,6 @@ public class GameManager : MonoBehaviour {
             Cursor.lockState = CursorLockMode.None;
             endprompt.gameObject.SetActive(true);
 
-            
         }
     }
 
@@ -112,6 +126,7 @@ public class GameManager : MonoBehaviour {
         if (!endprompt.gameObject.activeSelf)
         {
             Time.timeScale = 0;
+            txt = System.Text.RegularExpressions.Regex.Unescape(txt);
             endprompt.transform.GetChild(0).GetComponent<Text>().text = txt;
             endprompt.gameObject.SetActive(true);
 
@@ -137,11 +152,12 @@ public class GameManager : MonoBehaviour {
     //if user clicks no and returns to the course
     public void CloseEndPrompt()
     {
-        Time.timeScale = 1;
         endprompt.gameObject.SetActive(false);
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        if (!paused)
+        {
+            Unpause();
+        }
     }
 
     public void ReturnToLab(List<Photograph> finalPhotos)

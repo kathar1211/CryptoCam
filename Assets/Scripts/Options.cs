@@ -75,6 +75,13 @@ public class Options : MonoBehaviour {
     //store event here
     Event keyEvent;
 
+    //gameManager
+    public GameManager gameManager;
+
+    //SFX
+    [SerializeField] AudioSource NormalButtonSFX;
+    [SerializeField] AudioSource MoreButtonSFX;
+
 	// Use this for initialization
 	void Start () {
         controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
@@ -101,7 +108,7 @@ public class Options : MonoBehaviour {
             switch (currentScreen)
             {
                 case ScreenState.Controls:
-                    More.transform.Translate(-1 * scrollSpeed * Time.deltaTime, 0, 0);
+                    More.transform.Translate(-1 * scrollSpeed * Time.unscaledDeltaTime, 0, 0);
                     if (More.transform.localPosition.x <= moreButtonPos * -1)
                     {
                         isScrolling = false;
@@ -112,7 +119,7 @@ public class Options : MonoBehaviour {
                     }
                     break;
                 case ScreenState.Settings:
-                    More.transform.Translate(1 * scrollSpeed * Time.deltaTime, 0, 0);
+                    More.transform.Translate(1 * scrollSpeed * Time.unscaledDeltaTime, 0, 0);
                     if (More.transform.localPosition.x >= moreButtonPos * -1)
                     {
                         isScrolling = false;
@@ -183,6 +190,7 @@ public class Options : MonoBehaviour {
     //turn full screen on and off
     public void ToggleFullScreen(bool tf)
     {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         Screen.fullScreen = tf;
     }
 
@@ -247,8 +255,11 @@ public class Options : MonoBehaviour {
     {
         if (!isScrolling)
         {
+            if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
             if (!waitingForKeyPress)
             {
+                //dont allow user to unpause by inputting the current pause key
+                if (gameManager != null) { gameManager.DontAllowPause = true; }
                 StartCoroutine(AssignKey(controlKey));
                 KeyPressSubMenu.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(null);
@@ -267,6 +278,7 @@ public class Options : MonoBehaviour {
         CustomController.SaveAllKeys();
         UpdateButtonText();
         KeyPressSubMenu.SetActive(false);
+        if (gameManager != null) { gameManager.DontAllowPause = false; }
 
         yield return null;
     }
@@ -293,6 +305,7 @@ public class Options : MonoBehaviour {
 
     public void RestoreDefaults()
     {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         CustomController.RestoreDefaults();
         UpdateButtonText();
         CustomController.SaveAllKeys();
@@ -303,6 +316,7 @@ public class Options : MonoBehaviour {
     {
         if (!isScrolling)
         {
+            if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
             if (increase && speed < maxSpeed)
             {
                 speed += increment;
@@ -320,6 +334,7 @@ public class Options : MonoBehaviour {
     //adjust the audio settings for background music
     public void AdjustBGMVolume(bool increase)
     {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         if (!isScrolling)
         {
             int bgm = audioManager.getBGMVolume();
@@ -339,6 +354,7 @@ public class Options : MonoBehaviour {
     //adjust the audio settings for sound effects
     public void AdjustSFXVolume(bool increase)
     {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         if (!isScrolling)
         {
             int sfx = audioManager.getSFXVolume();
@@ -404,6 +420,7 @@ public class Options : MonoBehaviour {
 
     public void ShowMore()
     {
+        if (MoreButtonSFX != null) { MoreButtonSFX.Play(); }
         if (!isScrolling)
         {
             moreButtonPos = More.transform.localPosition.x;

@@ -23,7 +23,7 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     GameObject ConfirmScreen;
 
-    enum GradeState { allThumbs, bigThumb, tedGrading};
+    enum GradeState { allThumbs, bigThumb, doneConfirm};
     GradeState currentState;
 
     //data structure for cryptid thumbnails with an image and a star highlight
@@ -90,6 +90,8 @@ public class GradeManager : MonoBehaviour {
         bigThumbnail.gameObject.SetActive(false);
 
         CreateIconDictionary();
+
+        currentState = GradeState.allThumbs;
 	}
 	
 	// Update is called once per frame
@@ -98,19 +100,19 @@ public class GradeManager : MonoBehaviour {
 	}
 
     //yes/no buttons show up when user needs to enter input, disappear after
-    void ToggleInputButtons()
+    void ToggleInputButtons(bool showYesNo)
     {
-        YesButton.SetActive(!YesButton.activeSelf);
-        NoButton.SetActive(!NoButton.activeSelf);
+        YesButton.SetActive(showYesNo);
+        NoButton.SetActive(showYesNo);
 
-        DoneButton.SetActive(!DoneButton.activeSelf);
-        AutoButton.SetActive(!AutoButton.activeSelf);
+        DoneButton.SetActive(!showYesNo);
+        AutoButton.SetActive(!showYesNo);
     }
 
     //bring up image on click
     public void Enlarge(Image src)
     {
-        if (!bigThumbnail.IsActive())
+        if (!bigThumbnail.IsActive() && currentState == GradeState.allThumbs)
         {
             //play sfx if applicable
             if (ClickSFX != null) { ClickSFX.Play(); }
@@ -120,40 +122,43 @@ public class GradeManager : MonoBehaviour {
             bigThumbnail.gameObject.SetActive(true);
             textbox.FeedText(Constants.ConfirmSelectPhoto);
             textbox.DisplayText();
-            ToggleInputButtons();
+            ToggleInputButtons(true);
+            currentState = GradeState.bigThumb;
         }
     }
 
     //selected photo is added to dictionary, return to view of all photos 
     public void YesButtonClick()
     {
-        //play sfx if applicable
-        if (ConfirmSFX !=null){ ConfirmSFX.Play(); }
-
-        //indicate selection
-        selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(true);
-
-        //add photo to dictionary
-        Photograph picToAdd = allPhotos[selectedImage];
-        if (!finalSelection.ContainsKey(picToAdd.subjectName))
+        if (currentState == GradeState.bigThumb)
         {
-            finalSelection.Add(picToAdd.subjectName, picToAdd);
-        }
-        //if a photo of that cryptid has already been added, deselect and replace
-        else
-        {
-            if (!picToAdd.Equals(finalSelection[picToAdd.subjectName]))
+            //play sfx if applicable
+            if (ConfirmSFX != null) { ConfirmSFX.Play(); }
+
+            //indicate selection
+            selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+
+            //add photo to dictionary
+            Photograph picToAdd = allPhotos[selectedImage];
+            if (!finalSelection.ContainsKey(picToAdd.subjectName))
             {
-                UpdatePhoto(picToAdd);
+                finalSelection.Add(picToAdd.subjectName, picToAdd);
             }
+            //if a photo of that cryptid has already been added, deselect and replace
+            else
+            {
+                if (!picToAdd.Equals(finalSelection[picToAdd.subjectName]))
+                {
+                    UpdatePhoto(picToAdd);
+                }
+            }
+
+            //reflect selection in icons
+            if (cryptidIcons.ContainsKey(picToAdd.subjectName)) { cryptidIcons[picToAdd.subjectName].highlight.SetActive(true); }
+
+            //hide buttons and return to photo view
+            Delarge();
         }
-
-        //reflect selection in icons
-        if (cryptidIcons.ContainsKey(picToAdd.subjectName)){ cryptidIcons[picToAdd.subjectName].highlight.SetActive(true); }
-
-        //hide buttons and return to photo view
-        ToggleInputButtons();
-        Delarge();
     }
 
     //for when an entry in the dictionary of final selected photos needs to be replaced
@@ -192,8 +197,7 @@ public class GradeManager : MonoBehaviour {
             finalSelection.Remove(picToRemove.subjectName);
             if (cryptidIcons.ContainsKey(picToRemove.subjectName)) { cryptidIcons[picToRemove.subjectName].highlight.SetActive(false); }
         }
-
-        ToggleInputButtons();
+        
         Delarge();
     }
 
@@ -202,6 +206,8 @@ public class GradeManager : MonoBehaviour {
         bigThumbnail.gameObject.SetActive(false);
         textbox.FeedText(Constants.ShowTed);
         textbox.DisplayText();
+        currentState = GradeState.allThumbs;
+        ToggleInputButtons(false);
     }
 
     //method to show all saved pics at the end of the level
@@ -290,13 +296,18 @@ public class GradeManager : MonoBehaviour {
     //prompt the user to confirm that they want to exit the selection screen
     public void DoneButtonClick()
     {
-        //play sfx if applicable
-        if (ClickSFX != null) { ClickSFX.Play(); }
+        if (currentState == GradeState.allThumbs)
+        {
+            //play sfx if applicable
+            if (ClickSFX != null) { ClickSFX.Play(); }
 
-        ConfirmScreen.SetActive(true);
-        ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
-        AutoButton.SetActive(false);
-        DoneButton.SetActive(false);
+            ConfirmScreen.SetActive(true);
+            ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
+            AutoButton.SetActive(false);
+            DoneButton.SetActive(false);
+            currentState = GradeState.doneConfirm;
+        }
+        
     }
 
     //if user confirms they want to proceed to grading
@@ -322,6 +333,7 @@ public class GradeManager : MonoBehaviour {
         ConfirmScreen.SetActive(false);
         AutoButton.SetActive(true);
         DoneButton.SetActive(true);
+        currentState = GradeState.allThumbs;
     }
 
     //convert game objects assigned in editor to cryptid icon data structures and set them up for use

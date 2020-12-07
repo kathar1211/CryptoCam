@@ -56,12 +56,14 @@ public class HelpPrompt : MonoBehaviour {
             //prioritize - show picture prompt first
             if (needsPhotoHelp)
             {
-                helpPrompt.text = Constants.PhotoHelpPrompt;
+                string display = Constants.PhotoHelpPrompt1.Replace(Constants.ParameterSTR, CustomController.GetButtonInput(Constants.ReadyCamera))
+                    + Constants.PhotoHelpPrompt2.Replace(Constants.ParameterSTR, CustomController.GetButtonInput(Constants.TakePicture));
+                helpPrompt.text = display;
                 needsPhotoHelp = false;
             }
             else if (needsObjectHelp)
             {
-                helpPrompt.text = Constants.ObjectHelpPrompt;
+                helpPrompt.text = Constants.ObjectHelpPrompt.Replace(Constants.ParameterSTR, CustomController.GetButtonInput(Constants.ThrowObject));
                 needsObjectHelp = false;
             }
             else

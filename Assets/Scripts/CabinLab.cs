@@ -45,6 +45,8 @@ public class CabinLab : MonoBehaviour {
 
     public GameObject blackScreen;
 
+    bool introPlaying = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -90,7 +92,8 @@ public class CabinLab : MonoBehaviour {
         //if it's the first time starting the game, set up the intro sequence
         if ((!PlayerPrefs.HasKey(Constants.FirstPlay) || PlayerPrefs.GetInt(Constants.FirstPlay) == 0) && currentState != MenuState.Grading)
         {
-            StartCoroutine(StartIntro());      
+            StartCoroutine(StartIntro());
+            introPlaying = true;
         }
         
     }
@@ -126,6 +129,7 @@ public class CabinLab : MonoBehaviour {
         textBox.GetComponent<TextBox>().FeedText(Constants.TedIntro, Constants.IntroMoods);
         textBox.GetComponent<TextBox>().DisplayText();
 
+        introPlaying = false;
         yield return null;
     }
 
@@ -135,6 +139,9 @@ public class CabinLab : MonoBehaviour {
         switch (currentState) {
 
             case MenuState.Main:
+                //no input allowed during intro
+                if (introPlaying) { return; }
+
                 if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical)){
                     float Ymov = CrossPlatformInputManager.GetAxis(Constants.Vertical);
                     //if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -156,9 +163,13 @@ public class CabinLab : MonoBehaviour {
                 //don't count clicks unless user is clicking directly on something
                 if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
                 {
-                    if (selectSFX != null) selectSFX.Play();
-                    textButtons[currentButton].GetComponent<Button>().onClick.Invoke();
-                    HideAllHovers();
+                    if (currentButton >= 0 && currentButton < textButtons.Length)
+                    {
+                        if (selectSFX != null) selectSFX.Play();
+
+                        textButtons[currentButton].GetComponent<Button>().onClick.Invoke();
+                        HideAllHovers();
+                    }
                 }
                 break;
 
