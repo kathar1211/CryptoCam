@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoCam", "Assembly-CSharp.csproj", "{5B8A791D-A801-026D-C11D-4305C6343B23}"
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{5B8A791D-A801-026D-C11D-4305C6343B23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoCam", "Assembly-CSharp-firstpass.csproj", "{6B54FD9E-1BB5-6C5F-0B2E-A88FEC0918D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{6B54FD9E-1BB5-6C5F-0B2E-A88FEC0918D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoCam", "Assembly-CSharp-Editor-firstpass.csproj", "{5C078F17-6162-F3F0-D7D3-4E6F1B6F0B23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{5C078F17-6162-F3F0-D7D3-4E6F1B6F0B23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
