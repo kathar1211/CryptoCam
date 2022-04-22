@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -30,7 +31,7 @@ public class CryptidNomicon : MonoBehaviour {
     public Image largeThumbnail;
     public Image largeThumbnailOverlay;
 
-    List<PageContent> pageContents;
+    Dictionary<string, PageContent> pageContents;
 
     //"state" for when a photo is clicked and enlarged for viewing
     bool viewing = false;
@@ -44,8 +45,14 @@ public class CryptidNomicon : MonoBehaviour {
     void Start () {
         page = this.transform.GetChild(0).gameObject;
         currentPage = 0;
-        pageContents = new List<PageContent>();
+        pageContents = new Dictionary<string, PageContent>();
         aboutTheAuthor.gameObject.SetActive(false);
+
+        //if we have save data, load it up on creating the cryptidnomicon
+        if (Save.SaveFileExists())
+        {
+            pageContents = Save.LoadCryptidNomicon();
+        }
     }
 	
 	// Update is called once per frame
@@ -123,7 +130,7 @@ public class CryptidNomicon : MonoBehaviour {
             scoreDesc.gameObject.SetActive(true);
             imageDesc.gameObject.SetActive(true);
             nameDesc.gameObject.SetActive(true);
-            PageContent content = pageContents[currentPage-1];
+            PageContent content = pageContents.ElementAt(currentPage - 1).Value;
 
             thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
             //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
@@ -159,9 +166,23 @@ public class CryptidNomicon : MonoBehaviour {
     {
         foreach (Photograph photo in finalPhotos)
         {
-            if (photo.finalScore > 0)
-            pageContents.Add(PhotoToPage(photo));
+            if (photo.finalScore <= 0) { continue; }
+
+            if (!pageContents.ContainsKey(photo.subjectName))
+            {
+                pageContents.Add(photo.subjectName, PhotoToPage(photo));
+            }
+            else
+            {
+                pageContents[photo.subjectName] = PhotoToPage(photo);
+            }
+
         }
+
+        //autosave after updating photos
+        Save savedata = new Save();
+        savedata.CreateSaveFromCryptidNomicon(pageContents);
+        savedata.SaveGame();
     }
 
     //select a photo to view it up close
@@ -177,5 +198,11 @@ public class CryptidNomicon : MonoBehaviour {
     {
         largeThumbnailOverlay.gameObject.SetActive(false);
         viewing = false;
+    }
+
+    //write photos from the current cryptidnomicon to file
+    public void SavePhotos()
+    {
+        
     }
 }

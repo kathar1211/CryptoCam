@@ -503,6 +503,8 @@ public class CabinLab : MonoBehaviour {
         textBox.GetComponent<TextBox>().ClearTextQueue();
         textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, scoreUpdates);
         textBox.GetComponent<TextBox>().DisplayText();
+
+        //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
     }
 
     #endregion

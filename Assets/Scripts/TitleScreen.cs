@@ -8,10 +8,13 @@ using UnityStandardAssets.CrossPlatformInput;
 public class TitleScreen : MonoBehaviour {
 
     //handles button clicks and selections for title screen
-    public GameObject[] buttons;
+    public List<GameObject> buttons;
     public GameObject selector;
 
     public GameObject loader;
+
+    //clickable continue button - hidden if there's no save to load
+    public GameObject continueButton;
 
     //options handling
     public GameObject options;
@@ -35,6 +38,15 @@ public class TitleScreen : MonoBehaviour {
         MoveSelector(buttons[0]);
         animationDone = false;
         animationDonePevFrame = false;
+
+        //check if continue is allowed- diable it if not
+        if (!Save.SaveFileExists())
+        {
+            currentButton = 1;
+            MoveSelector(buttons[1]);
+            continueButton.SetActive(false);
+            buttons.Remove(continueButton);
+        }
 	}
 	
 	// Update is called once per frame
@@ -44,7 +56,7 @@ public class TitleScreen : MonoBehaviour {
         if (!optionsActive)
         {
             //only accept input once buttons have appeared on screen
-            if (buttons[buttons.Length - 1].activeInHierarchy)
+            if (buttons[buttons.Count - 1].activeInHierarchy)
             {
                 animationDone = true;
             }
@@ -57,15 +69,15 @@ public class TitleScreen : MonoBehaviour {
                 }
                 if (dir > 0)
                 {
-                    currentButton += buttons.Length;
+                    currentButton += buttons.Count;
                     currentButton--;
-                    currentButton %= buttons.Length;
+                    currentButton %= buttons.Count;
                     MoveSelector(buttons[currentButton]);
                 }
                 if (dir < 0)
                 {
                     currentButton++;
-                    currentButton %= buttons.Length;
+                    currentButton %= buttons.Count;
                     MoveSelector(buttons[currentButton]);
                 }
 
@@ -81,6 +93,7 @@ public class TitleScreen : MonoBehaviour {
     public void Continue()
     {
         loader.SetActive(true);
+        SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
     }
 
@@ -122,7 +135,8 @@ public class TitleScreen : MonoBehaviour {
         selector.GetComponent<RectTransform>().anchoredPosition = new Vector2(-button.GetComponent<RectTransform>().rect.width/2 -xmargin, button.GetComponent<RectTransform>().anchoredPosition.y + ymargin);
         selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition = new Vector2(button.GetComponent<RectTransform>().rect.width + xmargin*2, selector.transform.GetChild(0).GetComponent<RectTransform>().anchoredPosition.y);
 
-        currentButton = System.Array.IndexOf(buttons, button);
+        currentButton = buttons.IndexOf(button);
+        
 
         if (moveSFX != null) { moveSFX.Play(); }
     }

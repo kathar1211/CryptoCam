@@ -27,21 +27,24 @@ public class Photography : MonoBehaviour {
     int picIndex; //where we are in our photo taking
     public Camera cryptoCam; // camera being used to take pictures
 
-
+    //debug stuff for displaying results
     public Image displayIm;
     public Texture2D test;
     public Text testtxt;
 
+    //displays how many more pictures the player can take
     [SerializeField]
     Text picText;
 
+    //screen effect that makes it look like you're looking through a camera (sights, bounding box, etc)
     [SerializeField]
     GameObject cameraOverlay;
 
+    //handles the camera shutter animation on screen
     [SerializeField]
     CameraSnap cameraSnap;
 
-    //tentative method for subject- et list of all cryptids and check if visible in frame
+    //tentative method for subject- get list of all cryptids and check if visible in frame
     GameObject[] allCryptids;
 
     //save field of view for non zoom;
@@ -60,7 +63,8 @@ public class Photography : MonoBehaviour {
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = (allPics.Length - picIndex).ToString();
         defaultFOV = cryptoCam.fieldOfView;
-
+        PlayerPrefs.SetInt(Constants.CameraHeight, cryptoCam.pixelHeight);
+        PlayerPrefs.SetInt(Constants.CameraWidth, cryptoCam.pixelWidth);
     }
 	
 	// Update is called once per frame
@@ -174,7 +178,7 @@ public class Photography : MonoBehaviour {
         }
 
         //else if(subjects.Count == 1)
-        //treatin this as default case to avoid issue of mainsubject being unnasigned
+        //treating this as default case to avoid issue of mainsubject being unnasigned
         //{
 
             //allScores[picIndex] = ScoreSubject(subjects[0]);
@@ -199,7 +203,7 @@ public class Photography : MonoBehaviour {
                 Vector2 distanceFromCenter = new Vector2(.5f, .5f) - new Vector2(viewPos.x, viewPos.y);
                 float currentScore = viewPos.z + (100 * distanceFromCenter.magnitude);
 
-                //lowest scorin cryptid becomes the main subject: lower score means less distance from ideal placement
+                //lowest scoring cryptid becomes the main subject: lower score means less distance from ideal placement
                 if (currentScore < subjectScore)
                 {
                     mainSubject = cryptid;
@@ -230,7 +234,7 @@ public class Photography : MonoBehaviour {
             pic.facinForward = true;
         }
 
-        //todo: check for cool animation
+        //check for cool animation
         pic.coolPose = mainSubject.GetComponent<Cryptid>().SpecialPose();
 
         //store distance from center and distance from camera
@@ -295,11 +299,11 @@ public class Photography : MonoBehaviour {
             testtxt.text += " (-" + (pic.baseScore - 10) + ")";
         }
 
-        //todo: visibility
+        //visibility
         finalScore = (int)(finalScore*pic.visibility);
         testtxt.text += '\n' + "Visibility: " + (int)(pic.visibility * 100) + "% (x" + pic.visibility + ")";
 
-        //todo: coolpose
+        //coolpose
         if (pic.coolPose)
         {
             int coolPoseBonus = 200;
@@ -311,7 +315,7 @@ public class Photography : MonoBehaviour {
         testtxt.text += "\n" + "Distance from Center of Frame: \n" + pic.distanceFromCenter + " (+" + (int)(200 * (.7f - pic.distanceFromCenter)) + ")";
 
         //distance from camera is in world units, with 0 on top of camera
-        //not sure what ideal distance is, for now well just say the closer the better
+        //not sure what ideal distance is, for now we'll just say the closer the better
         //distance from camera should never be 0, but just in case
         if (pic.distanceFromCamera == 0) { pic.distanceFromCamera = .000001f; }
         finalScore += (int)Mathf.Ceil(5000 * (1 / pic.distanceFromCamera));
@@ -330,14 +334,13 @@ public class Photography : MonoBehaviour {
         return finalScore;
     }
 
+    //calculates roughly how much of the cryptid is visible vs how much is obscured by obstacles
     float checkVisibility(GameObject mainSubject)
     {
-        //todo: check for visibility
-
         //if cryptid has set itself to invisible use that
         if (!mainSubject.GetComponent<Cryptid>().IsVisible()) { return 0; }
 
-        //cycle throuh hitboxes on cryptid, raycastin to each one
+        //cycle throuh hitboxes on cryptid, raycasting to each one
         //pic.visibility is hitboxes successfully hit by raycast/total hitboxes
         Collider[] hitboxes = mainSubject.GetComponentsInChildren<Collider>();
         int hitCounter = 0;
@@ -360,7 +363,7 @@ public class Photography : MonoBehaviour {
             if (Physics.Raycast(ray, out hit, 1000, layerMask))
             {
                 //if (hit.collider == check)
-                //rather than checkin if its the exact same collider, check if they have the same parent
+                //rather than checking if its the exact same collider, check if they have the same parent
                 //this avoids issues where the cryptids head blocks other parts of its body
                 if (hit.collider.transform.root == check.transform.root)
                 {
