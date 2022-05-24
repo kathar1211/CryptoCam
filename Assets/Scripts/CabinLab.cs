@@ -500,11 +500,18 @@ public class CabinLab : MonoBehaviour {
         dialogue.Add(Constants.EndGrading.Replace(Constants.ParameterSTR, photo.finalScore.ToString()));
         sprites.Add(TedMoods.Satisfied);
         scoreUpdates.Add(Constants.FinalScore + score);
+        
+
+        //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
+        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        if (cryptidData != null && cryptidData.HasEntry(photo.subjectName)){
+
+        }
+
+        //send off the text and sprites
         textBox.GetComponent<TextBox>().ClearTextQueue();
         textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, scoreUpdates);
         textBox.GetComponent<TextBox>().DisplayText();
-
-        //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
     }
 
     #endregion

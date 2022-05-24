@@ -65,6 +65,8 @@ public static class Constants {
     public static string SpecialPose = "Ah, and a very nice pose, too. That's {0} bonus points.";
     public static string DoubleCryptid = "Oh! And there's more than one cryptid in the shot! Excellent work, that's worth double.";
     public static string EndGrading = "Let's see, overall I give this photo... {0} points.";
+    public static string ExistingEntry = "Oh, it looks like you already have an entry for this cryptid. Your last photo was worth {0} points.";
+    public static string OverwritePrompt = "Which photo would you like to keep for the CryptidNomicon?";
 
     //cabin ui
     public static string Score = "Score: ";

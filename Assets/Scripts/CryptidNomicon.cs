@@ -180,9 +180,7 @@ public class CryptidNomicon : MonoBehaviour {
         }
 
         //autosave after updating photos
-        Save savedata = new Save();
-        savedata.CreateSaveFromCryptidNomicon(pageContents);
-        savedata.SaveGame();
+        SavePhotos();
     }
 
     //select a photo to view it up close
@@ -203,6 +201,26 @@ public class CryptidNomicon : MonoBehaviour {
     //write photos from the current cryptidnomicon to file
     public void SavePhotos()
     {
-        
+        Save savedata = new Save();
+        savedata.CreateSaveFromCryptidNomicon(pageContents);
+        savedata.SaveGame();
+    }
+
+    //returns true if this cryptidnomicon has an entry for a given cryptid
+    public bool HasEntry(string key)
+    {
+        return pageContents.ContainsKey(key);
+    }
+
+    //returns the entry for a given cryptid. returns an empty pagecontent object if no entry is found
+    public PageContent GetEntry(string key)
+    {
+        if (HasEntry(key))
+        {
+            return pageContents[key];
+        }
+
+        PageContent empty = new PageContent();
+        return empty;
     }
 }
