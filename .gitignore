@@ -22,7 +22,6 @@ Library/metadata/**
 Library/ShaderCache/**
 Library/PlayerDataCache/**
 Temp/**
-*.meta
 *.bin
 
 #Files that are too large to be allowed
