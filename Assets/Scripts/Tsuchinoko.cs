@@ -7,7 +7,6 @@ public class Tsuchinoko : Cryptid {
     public float speed;
     public float rotateSpeed;
     public float fleespeed;
-    Animator animator;
     //percent chance that tsuchinoko will switch between being upright or not any given frame
     public float chanceUpDown;
     enum MoveState { Circling, Seeking, Fleeing};
@@ -29,16 +28,18 @@ public class Tsuchinoko : Cryptid {
 
     // Use this for initialization
     void Start () {
+        StartUp();
         baseScore = 75;
         cryptidType = Constants.Tsuchinoko;
-        animator = this.GetComponent<Animator>();
         animator.SetFloat("Speed", 1);
         target = secondLocation;
-        StartUp();
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        base.Update();
+        if (lockMovementSuper) { return; }
 
         //lock rotation: tsuchinoko is top heavy and has some trouble staying upright
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);

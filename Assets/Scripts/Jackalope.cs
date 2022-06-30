@@ -24,7 +24,6 @@ public class Jackalope : Cryptid {
     //obstacle avoidance distance
     public float seeAhead;
 
-    Animator animator;
     float animationDuration;
     float timeElapsed;
 
@@ -52,7 +51,6 @@ public class Jackalope : Cryptid {
         targetPos.y = transform.position.y;
         currentState = MoveState.sleep;
         nextState = MoveState.run;
-        animator = GetComponent<Animator>();
         cryptidType = Constants.Jackalope;
         baseScore = 50;
 
@@ -65,7 +63,10 @@ public class Jackalope : Cryptid {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () {
+
+        base.Update();
+        if (lockMovementSuper) { return; }
 
         timeElapsed += Time.deltaTime;
         timeChasing += Time.deltaTime;
@@ -147,7 +148,7 @@ public class Jackalope : Cryptid {
                 break;
             //move toward a specific object
             case MoveState.runtoward:
-                MoveToward(moveToTarget, runSpeed, rotateSpeed);
+                MoveTowardXZOnly(moveToTarget.position, runSpeed, rotateSpeed);
                 Move(runSpeed);
                 //switch to eating within a certain range
                 if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
@@ -185,13 +186,18 @@ public class Jackalope : Cryptid {
         }
         else if (other.tag == Constants.CarrotTag)
         {
-            if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
-            else { currentState = MoveState.runtoward; }
-            animator.SetBool(StandUp, false);
-            animator.SetBool(Run, true);
-            animator.SetBool(Sniff, false);
-            animator.SetBool(Eat, false);
-            moveToTarget = other.transform;
+            //we don't need to chase after the new carrot if we've already got our eyes on one
+            if (currentState != MoveState.runtoward)
+            {
+                if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
+                else { currentState = MoveState.runtoward; }
+                animator.SetBool(StandUp, false);
+                animator.SetBool(Run, true);
+                animator.SetBool(Sniff, false);
+                animator.SetBool(Eat, false);
+                moveToTarget = other.transform;
+            }
+
         }
 
         base.OnTriggerEnter(other);
@@ -229,5 +235,17 @@ public class Jackalope : Cryptid {
         return false;
     }
 
+    public override void GetBonked(bool leftImpact)
+    {
+        if (currentState == MoveState.stand)
+        {
+            animator.Play("bonk_stand");
+        }
+        else
+        {
+            base.GetBonked(leftImpact);
+        }
+        
+    }
 
 }

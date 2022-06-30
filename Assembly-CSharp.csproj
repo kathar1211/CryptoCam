@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\BonkableObject.cs" />
     <Compile Include="Assets\Scripts\CabinLab.cs" />
     <Compile Include="Assets\Scripts\CabinOpen.cs" />
     <Compile Include="Assets\Scripts\CameraSnap.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Assets\Scripts\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Firefly.cs" />
     <Compile Include="Assets\Scripts\FirstPersonController.cs" />
+    <Compile Include="Assets\Scripts\FlatwoodsMonster.cs" />
     <Compile Include="Assets\Scripts\Float.cs" />
     <Compile Include="Assets\Scripts\FresnoNightcrawler.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />

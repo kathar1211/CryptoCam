@@ -14,7 +14,6 @@ public class FresnoNightcrawler : Cryptid {
     // public float frequency;
     // public float shift;
     // public float forwardShift;
-    Animator animator;
     string Speed = "Speed";
 
     private Transform fleeFromTarget;
@@ -33,8 +32,6 @@ public class FresnoNightcrawler : Cryptid {
         StartUp();
         baseScore = 100;
         cryptidType = Constants.Fresno;
-        animator = this.GetComponent<Animator>();
-
 
         //inital target position is directly in front, 100 units away
         targetPos = transform.position + transform.forward.normalized * 100;
@@ -42,8 +39,11 @@ public class FresnoNightcrawler : Cryptid {
 	}
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+        if (lockMovementSuper) { return; }
+
         //lock rotation: for top heavy cryptids prone to falling over
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 

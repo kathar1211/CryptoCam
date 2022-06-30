@@ -21,14 +21,20 @@ public class Cryptid : MonoBehaviour {
 
     new public Renderer renderer;
 
+    protected Animator animator;
+
+    //allows base class to override child class and stop movement
+    public bool lockMovementSuper = false;
+
     //disappear when touched
-     AudioSource disappearSFX;
+    AudioSource disappearSFX;
     [SerializeField] GameObject particles;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
         renderer = this.gameObject.GetComponentInChildren<Renderer>();
+        animator = GetComponent<Animator>();
         GameObject fleeOBJ = GameObject.Find("FleeSFX");
         if (fleeOBJ != null) {
             disappearSFX = fleeOBJ.GetComponent<AudioSource>();
@@ -36,8 +42,13 @@ public class Cryptid : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+    protected virtual void Update () {
+        //don't move while getting bonked
+		if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name.Contains("bonk"))
+        {
+            lockMovementSuper = true;
+        }
+        else { lockMovementSuper = false; }
 	}
 
     //standard method to move forward some amount and to turn some amount
@@ -128,6 +139,12 @@ public class Cryptid : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(newDir);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
+    }
+
+    public void MoveTowardXZOnly(Vector3 target, float forwardSpeed, float rotateSpeed)
+    {
+        target.y = transform.position.y;
+        MoveToward(target, forwardSpeed, rotateSpeed);
     }
 
     //move away from a given obstacle
@@ -291,6 +308,40 @@ public class Cryptid : MonoBehaviour {
             }
         }
     }
-   
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        BonkableObject bonked = collision.gameObject.GetComponent<BonkableObject>();
+        if (bonked != null && bonked.CanDoBonk())
+        {
+            //determine which direction the bonk is coming from
+
+            //line from cryptid to carrot
+            Vector3 bonkDistance = this.gameObject.transform.position - collision.gameObject.transform.position;
+
+            //if the line from the cryptid to the carrot is in the same direction as the cryptid's right vector,
+            //then the carrot is on the cryptid's right
+            bool leftImpact = true;
+            if (Vector3.Dot(this.transform.right, bonkDistance) < 0)
+            {
+                leftImpact = false;
+            }
+            GetBonked(leftImpact);
+        }
+    }
+
+    public virtual void GetBonked(bool leftImpact)
+    {
+
+        if (leftImpact && animator.HasState(0, Animator.StringToHash("bonk_left")))
+        {
+            animator.Play("bonk_left");
+        }
+        else if (!leftImpact && animator.HasState(0, Animator.StringToHash("bonk_right")))
+        {
+            animator.Play("bonk_right");
+        }
+    }
+
 
 }

@@ -5,7 +5,6 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class LovelandFrogman : Cryptid {
 
-    Animator animator;
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
@@ -56,7 +55,6 @@ public class LovelandFrogman : Cryptid {
 	void Start () {
         StartUp();
         cryptidType = Constants.Frogman;
-        animator = GetComponent<Animator>();
         ripples = GetComponentInChildren<ParticleSystem>();
 
         //convert offset to be relative to forgmans direction
@@ -79,7 +77,10 @@ public class LovelandFrogman : Cryptid {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () {
+        base.Update();
+        if (lockMovementSuper) { return; }
+
         timer += Time.deltaTime;
 
         switch (currentState)

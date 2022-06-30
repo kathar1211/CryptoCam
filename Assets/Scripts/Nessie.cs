@@ -7,7 +7,6 @@ public class Nessie : Cryptid {
     public float speed;
     public float rotateSpeed;
 
-    Animator animator;
     float timeElapsed;
     public float timeUntilBreach; //in seconds
 
@@ -26,12 +25,14 @@ public class Nessie : Cryptid {
         cryptidType = Constants.Nessie;
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
-        animator = GetComponent<Animator>();
         ripples = GetComponentInChildren<ParticleSystem>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        base.Update();
+        if (lockMovementSuper) { return; }
+
         timeElapsed += Time.deltaTime;
 
         switch (currentState)
