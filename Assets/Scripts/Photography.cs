@@ -198,6 +198,9 @@ public class Photography : MonoBehaviour {
                 //(.5,.5) is the center of the screen: |(x,y)-(.5,.5)| represents distance from center
                 Vector3 viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position);
 
+                //don't include cryptids behind the camera 
+                if (viewPos.z < 0) { continue; }
+
                 //calculate a "score" for each cryptid based on placement and visibility
                 //distance from center should have more "weight" in score than distance from camera which is why its bein multipied
                 Vector2 distanceFromCenter = new Vector2(.5f, .5f) - new Vector2(viewPos.x, viewPos.y);

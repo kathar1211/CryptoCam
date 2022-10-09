@@ -32,6 +32,7 @@ public class CryptidNomicon : MonoBehaviour {
     public Image largeThumbnailOverlay;
 
     Dictionary<string, PageContent> pageContents;
+    bool isInitialized = false;
 
     //"state" for when a photo is clicked and enlarged for viewing
     bool viewing = false;
@@ -43,15 +44,20 @@ public class CryptidNomicon : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        page = this.transform.GetChild(0).gameObject;
-        currentPage = 0;
-        pageContents = new Dictionary<string, PageContent>();
-        aboutTheAuthor.gameObject.SetActive(false);
-
-        //if we have save data, load it up on creating the cryptidnomicon
-        if (Save.SaveFileExists())
+        if (!isInitialized)
         {
-            pageContents = Save.LoadCryptidNomicon();
+            page = this.transform.GetChild(0).gameObject;
+            currentPage = 0;
+            pageContents = new Dictionary<string, PageContent>();
+            aboutTheAuthor.gameObject.SetActive(false);
+
+            //if we have save data, load it up on creating the cryptidnomicon
+            if (Save.SaveFileExists())
+            {
+                pageContents = Save.LoadCryptidNomicon();
+            }
+
+            isInitialized = true;
         }
     }
 	
@@ -161,9 +167,19 @@ public class CryptidNomicon : MonoBehaviour {
         return content;
     }
 
+    public Photograph PageToPhoto(PageContent content)
+    {
+        Photograph photo = new Photograph();
+        photo.pic = content.image;
+        photo.subjectName = content.name;
+        photo.finalScore = content.photoScore;
+        return photo;
+    }
+
     //accept photos from grading to display in the crytpidnomicon
     public void RecievePhotos(List<Photograph> finalPhotos)
     {
+        if (!isInitialized) { Start(); }
         foreach (Photograph photo in finalPhotos)
         {
             if (photo.finalScore <= 0) { continue; }
@@ -209,12 +225,14 @@ public class CryptidNomicon : MonoBehaviour {
     //returns true if this cryptidnomicon has an entry for a given cryptid
     public bool HasEntry(string key)
     {
+        if (!isInitialized) { Start(); }
         return pageContents.ContainsKey(key);
     }
 
     //returns the entry for a given cryptid. returns an empty pagecontent object if no entry is found
     public PageContent GetEntry(string key)
     {
+        if (!isInitialized) { Start(); }
         if (HasEntry(key))
         {
             return pageContents[key];

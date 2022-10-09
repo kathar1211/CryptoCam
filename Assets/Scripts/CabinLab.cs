@@ -28,8 +28,11 @@ public class CabinLab : MonoBehaviour {
     MenuState currentState;
 
     List<Photograph> gradeablePhotos = new List<Photograph>();
-    int gradingIndex = 0;
-    public Image gradingThumbnail;
+    int gradingIndex = -1;
+    public Animator gradingThumbnailHolder;
+    public Image newThumbnail;
+    public Image prevThumbnail;
+    public Text prevScoreText;
 
     [SerializeField]
     AudioSource moveCursorSFX;
@@ -64,6 +67,7 @@ public class CabinLab : MonoBehaviour {
         options.SetActive(false);
 
         textBox.SetActive(false);
+        gradingThumbnailHolder.gameObject.SetActive(false);
 
         //if the gamemanager object is found and it has a non empty list of photos, jump right into grading mode
         GameObject gameManager = GameObject.Find("GameManager");
@@ -191,23 +195,24 @@ public class CabinLab : MonoBehaviour {
             case MenuState.Grading:
                 //if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
                 {
-                    if (!textBox.activeInHierarchy && gradingIndex < gradeablePhotos.Count)
+                    if (!textBox.activeInHierarchy && gradingIndex < gradeablePhotos.Count - 1)
                     {
+                        Debug.Log("queued grading for photo " + gradingIndex + ". increasing to " + gradingIndex + 1);
+                        gradingIndex++;
                         //if textbox is not active it means its finished with the current photo 
                         //set it active again and queue up the next photo
                         textBox.GetComponent<TextBox>().ClearTextQueue();
                         textBox.SetActive(true);
                         GradePhoto(gradeablePhotos[gradingIndex]);
-                        gradingIndex++;
                     }
                 }
                 if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
                 {
                     //outro
-                    textBox.GetComponent<TextBox>().FeedText(new List<string>{Constants.DoneGrading }, new List<TedMoods>{TedMoods.Default });
+                    textBox.GetComponent<TextBox>().FeedText(Constants.DoneGrading,TedMoods.Default);
                     textBox.GetComponent<TextBox>().DisplayText();
                     currentState = MenuState.GradingDone;
-                    gradingThumbnail.gameObject.SetActive(false);
+                    gradingThumbnailHolder.gameObject.SetActive(false);
                     //send over the photos to the cyrptidnomicon
                     cryptidNomicon.GetComponent<CryptidNomicon>().RecievePhotos(gradeablePhotos);
                 }
@@ -216,7 +221,7 @@ public class CabinLab : MonoBehaviour {
                 if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
                 {
                     currentState = MenuState.Main;
-                    gradingThumbnail.gameObject.SetActive(false);
+                    gradingThumbnailHolder.gameObject.SetActive(false);
                 }
                 break;
             case MenuState.Credits:
@@ -352,11 +357,15 @@ public class CabinLab : MonoBehaviour {
         currentState = MenuState.Main;
     }
 
+
+    #endregion
+
     //iterate through the different attributes of the photo and queue up dialogue and sprites for ted that go with them
     void GradePhoto(Photograph photo)
     {
-        gradingThumbnail.gameObject.SetActive(true);
-        gradingThumbnail.sprite = Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
+        gradingThumbnailHolder.gameObject.SetActive(true);
+        gradingThumbnailHolder.Play("PopIn");
+        newThumbnail.sprite = Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
         List<string> dialogue = new List<string>();
         List<TedMoods> sprites = new List<TedMoods>();
         List<string> scoreUpdates = new List<string>();
@@ -500,21 +509,36 @@ public class CabinLab : MonoBehaviour {
         dialogue.Add(Constants.EndGrading.Replace(Constants.ParameterSTR, photo.finalScore.ToString()));
         sprites.Add(TedMoods.Satisfied);
         scoreUpdates.Add(Constants.FinalScore + score);
+
+        //send off the text and sprites
+        TextBox actualTextBox = textBox.GetComponent<TextBox>();
+        actualTextBox.ClearTextQueue();
+        actualTextBox.FeedText(dialogue, sprites, scoreUpdates);
         
 
         //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
         CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
         if (cryptidData != null && cryptidData.HasEntry(photo.subjectName)){
 
+            PageContent content = cryptidData.GetEntry(photo.subjectName);
+            Texture2D pic = content.image;
+            prevThumbnail.sprite = Sprite.Create(pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
+            Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
+
+            actualTextBox.FeedText(Constants.ExistingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
+            actualTextBox.FeedTed(TedMoods.Surprised);
+
+            actualTextBox.FeedText(Constants.OverwritePrompt, PromptPhotoChoice);
+            actualTextBox.FeedTed(TedMoods.LookDownHandUp);
+
+            actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
+            actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
         }
 
-        //send off the text and sprites
-        textBox.GetComponent<TextBox>().ClearTextQueue();
-        textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, scoreUpdates);
-        textBox.GetComponent<TextBox>().DisplayText();
+        actualTextBox.DisplayText();
     }
 
-    #endregion
+    
 
     //https://gamedev.stackexchange.com/questions/134002/how-can-i-do-something-after-an-audio-has-finished
     //wait for audiosource to finish
@@ -532,5 +556,47 @@ public class CabinLab : MonoBehaviour {
             shadow.SetActive(false);
         }
     }
+
+    #region Branching Photo Choice Helpers
+    //animate in the thumbnail of the previous photo if the user has a choice to make
+    public void ShowPreviousPhoto()
+    {
+        gradingThumbnailHolder.Play("SlideOver");
+
+        Debug.Log("grabbing existing photo at index " + gradingIndex);
+        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
+        prevScoreText.text = Constants.Score + content.photoScore;
+    }
+
+    //show buttons that give players the choice to keep an old photo vs a new one
+    public void PromptPhotoChoice()
+    {
+        textBox.GetComponent<TextBox>().ButtonsIn();
+    }
+
+    //if the player chooses to use the new photo
+    public void ChoseNewPhoto()
+    {
+        gradingThumbnailHolder.Play("NewSelected");
+        textBox.GetComponent<TextBox>().ButtonsOut();
+        textBox.GetComponent<TextBox>().FeedText(Constants.NewPhotoSelected, TedMoods.Satisfied);
+
+        //new photo is already in the list of photos that will be processed, so no need to do anything there
+    }
+
+    //if the player chooses to keep their old photo
+    public void ChoseOldPhoto()
+    {
+        gradingThumbnailHolder.Play("PreviousSelected");
+        textBox.GetComponent<TextBox>().ButtonsOut();
+        textBox.GetComponent<TextBox>().FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
+
+        //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
+        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
+        gradeablePhotos[gradingIndex] = cryptidData.PageToPhoto(content);
+    }
+    #endregion
 }
 

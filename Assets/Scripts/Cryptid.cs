@@ -6,10 +6,11 @@ public class Cryptid : MonoBehaviour {
 
     //thins all cryptids need:
     //base score for photoraphin
+    [HideInInspector]
     public int baseScore;
-    //multiple hitboxes to check visibility
-    //variable to keep track of current animation, or at least whether or not its special
+
     //a name for scorin pruposes(?)
+    [HideInInspector]
     public string cryptidType;
 
     //wandering variables
@@ -19,12 +20,13 @@ public class Cryptid : MonoBehaviour {
     //quick access
     protected Rigidbody rb;
 
+    [HideInInspector]
     new public Renderer renderer;
 
     protected Animator animator;
 
     //allows base class to override child class and stop movement
-    public bool lockMovementSuper = false;
+    protected bool lockMovementSuper = false;
 
     //disappear when touched
     AudioSource disappearSFX;

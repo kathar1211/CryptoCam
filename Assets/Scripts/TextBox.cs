@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +24,21 @@ public class TextBox : MonoBehaviour {
     [SerializeField]
     AudioSource textSFX;
 
+    [SerializeField]
+    Animator ButtonHolder;
+    [SerializeField]
+    Button LeftOptionButton;
+    [SerializeField]
+    Button RightOptionButton;
+
     //decide whether or not text box disappears when finished scrolling through text
     public bool CloseOnTextComplete { get; set; }
+
+    //if something should happen when this line is displayed, store it here
+    private Dictionary<string, Action> linesThatDoThings;
+
+    //if we need to stop dialogue from progressing until something happens, use this
+    private bool progressLocked = false;
 
 	// Use this for initialization
 	void Awake () {
@@ -35,6 +49,7 @@ public class TextBox : MonoBehaviour {
         allText = new Queue<string>();
         allTeds = new Queue<TedMoods>();
         allScores = new Queue<string>();
+        linesThatDoThings = new Dictionary<string, Action>();
         //this.gameObject.SetActive(false);
 	}
 	
@@ -42,7 +57,7 @@ public class TextBox : MonoBehaviour {
 	void Update () {
 		
         //scroll through text if there is text in the queue
-        if (allText!= null && allText.Count != 0)
+        if (allText!= null && allText.Count != 0 && !progressLocked)
         {
             if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
             {
@@ -69,7 +84,7 @@ public class TextBox : MonoBehaviour {
                 }
             }
         }
-        else
+        else if (!progressLocked)
         {
             //if theres no text in the queue we're done talking or on the last line
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
@@ -93,10 +108,14 @@ public class TextBox : MonoBehaviour {
     public void DisplayText()
     {
         this.gameObject.SetActive(true);
-        if(allText.Count!=0)
-        DisplayText(allText.Dequeue());
+        if (allText.Count != 0)
+        {
+            DisplayText(allText.Dequeue());
+        }
         if (allTeds.Count != 0)
+        {
             ted.SetTedSprite(allTeds.Dequeue());
+        }
     }
 
     void DisplayText(string text)
@@ -142,6 +161,15 @@ public class TextBox : MonoBehaviour {
 
         //get current text speed value by multiplying the delay by the saved modifier
         float modifiedDelay = textDelay / LoadTextSpeed();
+
+        //if there's an action associated with this text, start it now
+        if (linesThatDoThings.ContainsKey(text))
+        {
+            linesThatDoThings[text].Invoke();
+
+            //remove it from our dictionary now that it's no longer needed
+            linesThatDoThings.Remove(text);
+        }
 
         while (textIndex < text.Length)
         {
@@ -228,6 +256,21 @@ public class TextBox : MonoBehaviour {
     {
         allText.Enqueue(line); 
     }
+
+    //allow adding single lines with a single sprite
+    public void FeedText(string line, TedMoods sprite)
+    {
+        allText.Enqueue(line);
+        allTeds.Enqueue(sprite);
+    }
+
+    //add a single line of text with an accompanying action
+    public void FeedText(string line, Action lineAction)
+    {
+        linesThatDoThings.Add(line, lineAction);
+        FeedText(line);
+    }
+
     //add sprites to ted queue
     public void FeedTed(TedMoods ted)
     {
@@ -259,5 +302,48 @@ public class TextBox : MonoBehaviour {
 
         //if nothing is saved return 1 (no modifier)
         return 1;
+    }
+
+    public void ButtonsIn()
+    {
+        if (ButtonHolder != null)
+        {
+            ButtonHolder.gameObject.SetActive(true);
+            ButtonHolder.Play("ButtonsIn");
+
+            //lock progress while we wait for input
+            progressLocked = true;
+        }
+    }
+
+    public void ButtonsOut()
+    {
+        if (ButtonHolder != null)
+        {
+            ButtonHolder.Play("ButtonsOut");
+        }
+        progressLocked = false;
+    }
+
+    public void SetLeftButton(string buttonText, Action buttonAction)
+    {
+        if (LeftOptionButton != null)
+        {
+            LeftOptionButton.onClick.RemoveAllListeners();
+            LeftOptionButton.onClick.AddListener(() => buttonAction.Invoke());
+            Text buttonLabel = LeftOptionButton.GetComponentInChildren<Text>();
+            if (buttonLabel != null) { buttonLabel.text = buttonText; }
+        }
+    }
+
+    public void SetRightButton(string buttonText, Action buttonAction)
+    {
+        if (RightOptionButton != null)
+        {
+            RightOptionButton.onClick.RemoveAllListeners();
+            RightOptionButton.onClick.AddListener(() => buttonAction.Invoke());
+            Text buttonLabel = RightOptionButton.GetComponentInChildren<Text>();
+            if (buttonLabel != null) { buttonLabel.text = buttonText; }
+        }
     }
 }

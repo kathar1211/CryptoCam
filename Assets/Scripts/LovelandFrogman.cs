@@ -55,6 +55,7 @@ public class LovelandFrogman : Cryptid {
 	void Start () {
         StartUp();
         cryptidType = Constants.Frogman;
+        baseScore = 35;
         ripples = GetComponentInChildren<ParticleSystem>();
 
         //convert offset to be relative to forgmans direction

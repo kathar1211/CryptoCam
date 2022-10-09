@@ -67,6 +67,12 @@ public static class Constants {
     public static string EndGrading = "Let's see, overall I give this photo... {0} points.";
     public static string ExistingEntry = "Oh, it looks like you already have an entry for this cryptid. Your last photo was worth {0} points.";
     public static string OverwritePrompt = "Which photo would you like to keep for the CryptidNomicon?";
+    public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
+    public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
+
+    //button options during grading
+    public static string KeepPreviousText = "Keep Previous Photo";
+    public static string UseNewText = "Use New Photo";
 
     //cabin ui
     public static string Score = "Score: ";
