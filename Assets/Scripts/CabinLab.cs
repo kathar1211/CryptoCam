@@ -206,7 +206,7 @@ public class CabinLab : MonoBehaviour {
                         GradePhoto(gradeablePhotos[gradingIndex]);
                     }
                 }
-                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
+                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count - 1)
                 {
                     //outro
                     textBox.GetComponent<TextBox>().FeedText(Constants.DoneGrading,TedMoods.Default);
@@ -218,7 +218,7 @@ public class CabinLab : MonoBehaviour {
                 }
                 break;
             case MenuState.GradingDone:
-                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count)
+                if (!textBox.activeInHierarchy)
                 {
                     currentState = MenuState.Main;
                     gradingThumbnailHolder.gameObject.SetActive(false);
