@@ -345,5 +345,30 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
+    //used for behaviors that have a random chance of changing
+    //if checking in update make sure to use VERY low chance values (ie less than 1)
+    //there must be a better way to do this
+    protected bool RandomChance(float percentChanceofSuccess)
+    {
+        //returns true or false, based on parameter for success
+        //percent chance of success should be a float between 0 and 100 
+        if (percentChanceofSuccess >= 100)
+        {
+            return true;
+        }
+
+        if (percentChanceofSuccess <= 0)
+        {
+            return false;
+        }
+
+        float r = Random.Range(0.0f, 100.0f);
+        if (r > percentChanceofSuccess)
+        {
+            return false;
+        }
+
+        return true;
+    }
 
 }

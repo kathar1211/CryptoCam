@@ -127,7 +127,7 @@ public static class Constants {
         {Frogman,"These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands, but that's just silly." },
         {Fresno, "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
         {Jackalope, "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." },
-        {Bigfoot, "bigfoot text" },
+        {Bigfoot, "The man, the myth, the legend, Bigfoot himself." },
         {Flatwoods, "flatwoods text" },
         {Mothman, "mothman text" }
     };

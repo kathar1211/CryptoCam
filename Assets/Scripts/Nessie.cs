@@ -121,29 +121,6 @@ public class Nessie : Cryptid {
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
     }
 
-    bool RandomChance(float percentChanceofSuccess)
-    {
-        //returns true or false, based on parameter for success
-        //percent chance of success should be a float between 0 and 100 
-        if (percentChanceofSuccess >= 100)
-        {
-            return true;
-        }
-
-        if (percentChanceofSuccess <= 0)
-        {
-            return false;
-        }
-
-        float r = Random.Range(0.0f, 100.0f);
-        if ( r > percentChanceofSuccess)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     public override bool IsVisible()
     {
         if (currentState == MoveState.underWaterSwim && (transform.position.y < surfacePos) && animator.GetCurrentAnimatorStateInfo(0).IsName("underwater swim"))

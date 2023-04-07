@@ -56,8 +56,20 @@ public class Photography : MonoBehaviour {
     [SerializeField]
     AudioSource cameraSFX;
 
-	// Use this for initialization
-	void Start () {
+    public static Photography Instance = null;
+
+    // Use this for initialization
+    void Start () {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogError("Only one photography component allowed per scene");
+        }
+
         picIndex = 0;
         allPics = new Photograph[maxPics];
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
