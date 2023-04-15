@@ -52,6 +52,7 @@ public class FlatwoodsMonster : Cryptid
             && currentState != MoveState.turnToward && currentState != MoveState.pose)
         {
             avoidTarget = Photography.Instance.gameObject.transform;
+            animator.SetBool(MoveBool, false);
             currentState = MoveState.turnAway;
             poseTimer = 0;
         }
@@ -59,13 +60,19 @@ public class FlatwoodsMonster : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
                 {
                     Wander(distance, minDistance, runSpeed, rotateSpeed);
                 }
+                else
+                {
+                    //still increment time spent chasing this wander point while avoiding obstacles to avoid getting stuck
+                    timeChasing += Time.deltaTime;
+                }
+                Move(runSpeed);
 
                 //random chance to hover ominously
-                if (RandomChance(.2f)){
+                if (RandomChance(.3f)) {
                     animator.SetBool(MoveBool, false);
                     currentState = MoveState.hover;
                 }
@@ -119,7 +126,11 @@ public class FlatwoodsMonster : Cryptid
 
                 break;
             case MoveState.flee:
-                Flee(avoidTarget, runSpeed, rotateSpeed);
+                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
+                { 
+                    Flee(avoidTarget, runSpeed, rotateSpeed);
+                }
+                Move(runSpeed);
 
                 //stop fleeing once we get far enough away
                 if ((avoidTarget.position - transform.position).magnitude > fleeDistance)
@@ -144,7 +155,7 @@ public class FlatwoodsMonster : Cryptid
                 }
 
                 //chance to return to wandering
-                else if (RandomChance(.3f))
+                else if (RandomChance(.5f))
                 {
                     animator.SetBool(MoveBool, true);
                     currentState = MoveState.wander;
