@@ -123,7 +123,7 @@ public class Photography : MonoBehaviour {
 
         if (picIndex >= allPics.Length)
         {
-            this.GetComponent<GameManager>().EndPrompt(Constants.OutOfFilmPrompt);
+            GameManager.Instance.EndPrompt(Constants.OutOfFilmPrompt);
             return;
         }
 
@@ -183,7 +183,7 @@ public class Photography : MonoBehaviour {
 
             if (picIndex >= allPics.Length)
             {
-                this.GetComponent<GameManager>().EndPrompt(Constants.OutOfFilmPrompt);
+                GameManager.Instance.EndPrompt(Constants.OutOfFilmPrompt);
             }
 
             return;
@@ -289,7 +289,7 @@ public class Photography : MonoBehaviour {
         //check if we're allowed to take any more photos
         if (picIndex >= allPics.Length)
         {
-            this.GetComponent<GameManager>().EndPrompt(Constants.OutOfFilmPrompt);
+            GameManager.Instance.EndPrompt(Constants.OutOfFilmPrompt);
             return;
         }
     }

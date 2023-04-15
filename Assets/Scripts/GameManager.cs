@@ -42,9 +42,22 @@ public class GameManager : MonoBehaviour {
     //ui indicating game is paused
     [SerializeField]
     GameObject pauseText;
+
+    public static GameManager Instance;
    
 	// Use this for initialization
 	void Start () {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Debug.LogError("Only one photography component allowed per scene");
+        }
+
+
         Time.timeScale = 1;
         Object.DontDestroyOnLoad(this.gameObject);
         endprompt.gameObject.SetActive(false);

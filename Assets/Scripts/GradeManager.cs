@@ -81,7 +81,7 @@ public class GradeManager : MonoBehaviour {
         
 
         //display the pictures from the game manager
-        ShowThumbnails(gameManager.GetComponent<Photography>().GetPhotographs());
+        ShowThumbnails(Photography.Instance.GetPhotographs());
 
         textbox.CloseOnTextComplete = false;
         textbox.FeedText(Constants.ShowTed);
@@ -318,7 +318,7 @@ public class GradeManager : MonoBehaviour {
 
         List<Photograph> photos = new List<Photograph>();
         photos.AddRange(finalSelection.Values);
-        gameManager.GetComponent<GameManager>().ReturnToLab(photos);
+        GameManager.Instance.ReturnToLab(photos);
         //currentState = GradeState.tedGrading;
        // Selectioncanvas.enabled = false;
        // GradingCanvas.enabled = true;
@@ -346,7 +346,7 @@ public class GradeManager : MonoBehaviour {
             cryptoIcon.highlight = go.transform.GetChild(0).gameObject;
 
             //unhide the icon if a picture of the cryptid exists in the photos
-            foreach(Photograph photo in gameManager.GetComponent<Photography>().GetPhotographs())
+            foreach(Photograph photo in Photography.Instance.GetPhotographs())
             {
                 if (photo.subjectName == go.name)
                 {

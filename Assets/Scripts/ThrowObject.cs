@@ -36,7 +36,7 @@ public class ThrowObject : MonoBehaviour {
         
         timer = coolDownTime;
         currentObjects = 0;
-        photographer = gameManager.GetComponent<Photography>();
+        photographer = Photography.Instance;
         objText.text = (objectLimit - currentObjects).ToString();
     }
 	

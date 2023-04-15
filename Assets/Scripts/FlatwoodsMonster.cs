@@ -96,18 +96,25 @@ public class FlatwoodsMonster : Cryptid
                 {
                     poseTimer = 0;
                     currentState = MoveState.turnToward;
+
+                    //rotate slightly to the right
+                    //this way, next frame when we start the 180 degree rotation, Vector3.RotateTowards will know which way to go
+                    Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right, rotateSpeed * Time.deltaTime, 0);
+                    transform.rotation = Quaternion.LookRotation(newDir, transform.up);
                 }
 
                 break;
             case MoveState.turnToward:
                 //movetoward with a movespeed of 0 is the same as rotating toward
-                MoveToward(avoidTarget, 0, rotateSpeed);
+                MoveTowardXZOnly(avoidTarget.position, 0, rotateSpeed);
 
                 //once we're within an error margin of facing the player, start the pose timer
                 Vector3 flatwoodToPlayerDirection = avoidTarget.transform.position - transform.position;
                 flatwoodToPlayerDirection = flatwoodToPlayerDirection.normalized;
+                //ignore y position differences
+                flatwoodToPlayerDirection.y = 0;
 
-                if ((flatwoodToPlayerDirection - transform.forward).magnitude < 1)
+                if ((flatwoodToPlayerDirection - transform.forward).magnitude < .1)
                 {
                     animator.SetBool(PoseBool, true);
                     currentState = MoveState.pose;

@@ -5,10 +5,8 @@ using UnityEngine;
 //prompt user to end the course when they reach the end
 public class LeaveCourse : MonoBehaviour {
 
-    GameManager gm;
 	// Use this for initialization
 	void Start () {
-        gm = FindObjectOfType<GameManager>();
 	}
 	
 	// Update is called once per frame
@@ -18,8 +16,7 @@ public class LeaveCourse : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (gm != null)
-        gm.EndPrompt(Constants.LeaveCoursePrompt);
+        GameManager.Instance.EndPrompt(Constants.LeaveCoursePrompt);
     }
 
 

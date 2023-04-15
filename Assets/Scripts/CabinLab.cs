@@ -70,15 +70,15 @@ public class CabinLab : MonoBehaviour {
         gradingThumbnailHolder.gameObject.SetActive(false);
 
         //if the gamemanager object is found and it has a non empty list of photos, jump right into grading mode
-        GameObject gameManager = GameObject.Find("GameManager");
+        GameManager gameManager = GameManager.Instance;
         if (gameManager != null)
         {
-            List<Photograph> p = gameManager.GetComponent<GameManager>().pics4grading;
+            List<Photograph> p = gameManager.pics4grading;
             //move the images from the gamemanager script to the cabin lab script
             if (p != null && p.Count > 0)
             {
                 gradeablePhotos.AddRange(p);
-                gameManager.GetComponent<GameManager>().pics4grading.Clear();
+                gameManager.pics4grading.Clear();
                 //gradingThumbnail.gameObject.SetActive(true);
                 currentState = MenuState.Grading;
 

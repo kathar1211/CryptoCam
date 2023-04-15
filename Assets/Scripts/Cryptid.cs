@@ -138,7 +138,7 @@ public class Cryptid : MonoBehaviour {
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
-        transform.rotation = Quaternion.LookRotation(newDir);
+        transform.rotation = Quaternion.LookRotation(newDir, transform.up);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
     }
