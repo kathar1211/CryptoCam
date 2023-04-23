@@ -16,7 +16,10 @@ public class AudioManager : MonoBehaviour {
         LoadSFXVolume();
 
         //grab all sounds
-        AudioSource[] AllSounds = FindObjectsOfType<AudioSource>();
+
+        //i dont think this will work- if we set sfx volume in one scene does it actually carry over?
+        //consider switching to mixer groups
+        AudioSource[] AllSounds = FindObjectsOfType<AudioSource>(); 
         //sort sounds into bgm and non bgm
         foreach (AudioSource sound in AllSounds)
         {

@@ -14,14 +14,12 @@ public class PlaySoundOnAnimationState : StateMachineBehaviour
         Source = animator.GetComponent<AudioSource>();
         if (Source == null) { return; }
 
+        Source.Stop();
+
         Source.loop = ShouldLoop;
 
         Source.clip = Sound;
         Source.Play();
     }
 
-    public override void OnStateExit(Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
-    {
-        if (Source != null) { Source.Stop(); }
-    }
 }
