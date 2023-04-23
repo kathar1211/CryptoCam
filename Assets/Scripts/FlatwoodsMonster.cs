@@ -24,6 +24,10 @@ public class FlatwoodsMonster : Cryptid
     public float poseDuration;
     private float poseTimer;
 
+    //cooldown after doing the peace sign- during this period we'll ignore the camera completely
+    public float poseCooldown;
+    private float poseCooldownTimer;
+
     //transform of whatever we're avoiding, if we're avoiding something
     private Transform avoidTarget;
     public float fleeDistance; //how far from the target do we need to get before we stop fleeing
@@ -49,12 +53,18 @@ public class FlatwoodsMonster : Cryptid
 
         if (Photography.Instance.CameraReady
             && currentState != MoveState.flee && currentState != MoveState.turnAway 
-            && currentState != MoveState.turnToward && currentState != MoveState.pose)
+            && currentState != MoveState.turnToward && currentState != MoveState.pose
+            && poseCooldownTimer <= 0)
         {
             avoidTarget = Photography.Instance.gameObject.transform;
             animator.SetBool(MoveBool, false);
             currentState = MoveState.turnAway;
             poseTimer = 0;
+        }
+
+        if (poseCooldownTimer >= 0)
+        {
+            poseCooldownTimer -= Time.deltaTime;
         }
 
         switch (currentState)
@@ -88,6 +98,7 @@ public class FlatwoodsMonster : Cryptid
                 {
                     animator.SetBool(MoveBool, true);
                     currentState = MoveState.wander;
+                    poseTimer = 0;
                 }
 
                 //after a certain amount of time we can turn around and do a pose
@@ -129,6 +140,7 @@ public class FlatwoodsMonster : Cryptid
                     animator.SetBool(PoseBool, false);
                     currentState = MoveState.hover;
                     poseTimer = 0;
+                    poseCooldownTimer = poseCooldown;
                 }
 
                 break;
@@ -142,9 +154,16 @@ public class FlatwoodsMonster : Cryptid
                 //stop fleeing once we get far enough away
                 if ((avoidTarget.position - transform.position).magnitude > fleeDistance)
                 {
-                    poseTimer = 0;
-                    animator.SetBool(MoveBool, false);
-                    currentState = MoveState.turnAway;
+                    if (poseCooldownTimer <= 0)
+                    {
+                        poseTimer = 0;
+                        animator.SetBool(MoveBool, false);
+                        currentState = MoveState.turnAway;
+                    }
+                    else
+                    {
+                        currentState = MoveState.wander;
+                    }
                 }
                 break;
             case MoveState.hover:
@@ -183,5 +202,13 @@ public class FlatwoodsMonster : Cryptid
 
 
         base.OnTriggerEnter(other);
+    }
+
+    public override bool SpecialPose()
+    {
+        //not enough to be in the pose state- i want the specific animation where shes holding the peace sign
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("peace_hold")) { return true; }
+
+        return base.SpecialPose();
     }
 }
