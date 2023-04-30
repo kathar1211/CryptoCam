@@ -19,6 +19,12 @@ public class Nessie : Cryptid {
 
     ParticleSystem ripples;
 
+    AudioSource AudioSource;
+
+    public AudioClip SwimSound; //looping sfx while nessie swims above water
+    public AudioClip BreachSound; //single instance sfx when nessie breaches
+    public AudioClip SubmergeSound; //sfx when nessie dips below the surface
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -26,6 +32,7 @@ public class Nessie : Cryptid {
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
         ripples = GetComponentInChildren<ParticleSystem>();
+        AudioSource = this.GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
