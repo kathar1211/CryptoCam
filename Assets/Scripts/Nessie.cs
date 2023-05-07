@@ -21,10 +21,6 @@ public class Nessie : Cryptid {
 
     AudioSource AudioSource;
 
-    public AudioClip SwimSound; //looping sfx while nessie swims above water
-    public AudioClip BreachSound; //single instance sfx when nessie breaches
-    public AudioClip SubmergeSound; //sfx when nessie dips below the surface
-
     // Use this for initialization
     void Start () {
         StartUp();
