@@ -76,7 +76,7 @@ public class Nessie : Cryptid {
                 break;
             case MoveState.aboveWaterSwim:
                 MoveinCircle(speed / 2, rotateSpeed / 2); //move half as fast above water
-                if (RandomChance(.1f) || (lookedOnce && RandomChance(.4f)))
+                if (RandomChance(.1f) || (lookedOnce && RandomChance(.2f)))
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", false);
@@ -84,7 +84,7 @@ public class Nessie : Cryptid {
                     currentState = MoveState.underWaterSwim;
                     lookedOnce = false; //reset value when nessie descends
                 }
-                else if(RandomChance(.4f))
+                else if(RandomChance(.2f))
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", true);

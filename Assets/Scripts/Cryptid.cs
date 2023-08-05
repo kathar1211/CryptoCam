@@ -29,7 +29,7 @@ public class Cryptid : MonoBehaviour {
     protected bool lockMovementSuper = false;
 
     //disappear when touched
-    AudioSource disappearSFX;
+    [SerializeField] AudioSource disappearSFX;
     [SerializeField] GameObject particles;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
@@ -37,10 +37,6 @@ public class Cryptid : MonoBehaviour {
         rb = this.gameObject.GetComponent<Rigidbody>();
         renderer = this.gameObject.GetComponentInChildren<Renderer>();
         animator = GetComponent<Animator>();
-        GameObject fleeOBJ = GameObject.Find("FleeSFX");
-        if (fleeOBJ != null) {
-            disappearSFX = fleeOBJ.GetComponent<AudioSource>();
-        }
 	}
 	
 	// Update is called once per frame
@@ -298,16 +294,23 @@ public class Cryptid : MonoBehaviour {
     public virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag == "DestroyZone")
-        {
-            if (particles != null && disappearSFX != null)
+        { 
+            //we're instantiating the particles and the sfx bc both these references are expected to be to prefabs
+            if (particles != null)
             {
                 GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, particles.transform.rotation);
                 newParticles.transform.localScale = this.transform.localScale * 2;
                 newParticles.transform.Translate(0, 1, 0);//move it up a lil
-                disappearSFX.enabled = true;
-                disappearSFX.Play();
-                this.gameObject.SetActive(false);
             }
+
+            if (disappearSFX != null)
+            {
+                AudioSource newSound = GameObject.Instantiate(disappearSFX, this.transform.position, this.transform.rotation);
+                newSound.enabled = true;
+                newSound.Play();
+            }
+
+            Destroy(this.gameObject);
         }
     }
 
