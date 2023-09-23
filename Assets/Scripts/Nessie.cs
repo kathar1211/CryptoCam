@@ -45,10 +45,11 @@ public class Nessie : Cryptid {
                 if (transform.position.y > belowPos) //the point at which nessies goes deepest
                 {
                     
-                    transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move down until breach
-                    ripples.Stop();
+                    transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move down until we're fully below water
+                    
                 }
                 else if (RandomChance(.05f))
+               //else if (RandomChance(1))
                 {
                     //animator.SetBool("Breach", true);
                     //animator.SetBool("Look", false);
@@ -77,11 +78,13 @@ public class Nessie : Cryptid {
             case MoveState.aboveWaterSwim:
                 MoveinCircle(speed / 2, rotateSpeed / 2); //move half as fast above water
                 if (RandomChance(.1f) || (lookedOnce && RandomChance(.2f)))
+                //if (RandomChance(0))
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", false);
                     animator.SetBool("Dive", true);
                     currentState = MoveState.underWaterSwim;
+                    ripples.Stop();
                     lookedOnce = false; //reset value when nessie descends
                 }
                 else if(RandomChance(.2f))

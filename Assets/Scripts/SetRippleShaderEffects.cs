@@ -23,6 +23,7 @@ public class SetRippleShaderEffects : MonoBehaviour
     private void Update()
     {
         transform.position = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+       // transform.rotation = target.rotation;
         Shader.SetGlobalVector("_Position", new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z));
         Shader.SetGlobalFloat("_RippleYPos", target.transform.position.y);
         // Debug.Log(target.transform.position.y);
