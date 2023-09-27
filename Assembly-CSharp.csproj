@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\SetRippleShaderEffects.cs" />
     <Compile Include="Assets\Scripts\ShowLevelIntro.cs" />
     <Compile Include="Assets\Scripts\spin2d.cs" />
+    <Compile Include="Assets\Scripts\Splash.cs" />
     <Compile Include="Assets\Scripts\SpriteFaceForward.cs" />
     <Compile Include="Assets\Scripts\Ted.cs" />
     <Compile Include="Assets\Scripts\TedConvos.cs" />
