@@ -9,8 +9,10 @@ public class Tsuchinoko : Cryptid {
     public float fleespeed;
     //percent chance that tsuchinoko will switch between being upright or not any given frame
     public float chanceUpDown;
-    enum MoveState { Circling, Seeking, Fleeing};
-    MoveState currentMovestate = MoveState.Circling;
+    public enum MoveState { Circling, Seeking, Fleeing, Sleeping, Awake};
+    public MoveState currentMovestate = MoveState.Circling;
+
+    private MoveState nextState; //queue a movestate for after tsuchinoko wakes up
 
     //used when moving to/away from a particular thing
     Transform target;
@@ -36,7 +38,7 @@ public class Tsuchinoko : Cryptid {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () {
 
         base.Update();
         if (lockMovementSuper) { return; }
@@ -59,7 +61,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
-                //if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
                 {
                     MoveToward(target, fleespeed, rotateSpeed);
                 }
@@ -73,7 +75,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
                 
-                //if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(seeAhead, rotateSpeed))
                 {
                     Flee(target, fleespeed, rotateSpeed);
                 }
@@ -82,6 +84,16 @@ public class Tsuchinoko : Cryptid {
                 {
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
+                }
+                break;
+            case MoveState.Sleeping:
+                //do nothing
+                break;
+            case MoveState.Awake:
+                //check for the wake up animation to end before moving again
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("downSlither"))
+                {
+                    currentMovestate = nextState;
                 }
                 break;
         }
@@ -140,5 +152,20 @@ public class Tsuchinoko : Cryptid {
         if (isUpright) { return true; }
 
         return base.SpecialPose();
+    }
+
+    //tsuchinoko is only bonkable when upright
+    public override void GetBonked(bool leftImpact)
+    {
+        bool isUpright = animator.GetBool("Upright");
+        if (isUpright) { animator.Play("bonk"); }
+    }
+
+    //wake up tsuchinoko, and specify what he should do after he's awake
+    public void WakeTsuchinoko(MoveState postWakeAction, Transform postWakeTarget = null)
+    {
+        currentMovestate = MoveState.Awake;
+        nextState = postWakeAction;
+        if (postWakeTarget != null) { target = postWakeTarget; }
     }
 }

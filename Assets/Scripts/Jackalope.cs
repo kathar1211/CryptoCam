@@ -132,11 +132,7 @@ public class Jackalope : Cryptid {
 
             //dont move in these states
             case MoveState.sleep:
-                //temp: sleep for set amount of time then awake
-                if (Time.time > 6)
-                {
-
-                }
+               //do nothing
                 break;
             case MoveState.wake:
                 //check for run animation to start moving again
