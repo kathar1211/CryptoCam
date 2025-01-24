@@ -35,6 +35,12 @@ public class Tsuchinoko : Cryptid {
         cryptidType = Constants.Tsuchinoko;
         animator.SetFloat("Speed", 1);
         target = secondLocation;
+
+        //if tsuchinoko starts asleep make sure to coordingate animations
+        if (currentMovestate == MoveState.Sleeping)
+        {
+            animator.SetBool("Awake", false);
+        }
     }
 	
 	// Update is called once per frame

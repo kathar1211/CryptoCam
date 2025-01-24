@@ -121,4 +121,11 @@ public class CustomController : MonoBehaviour {
         }
     }
 
+    public bool IsControllerConnected()
+    {
+        string[] controllerNames = Input.GetJoystickNames();
+        if (controllerNames.Length == 0) { return false; }
+        return true;
+    }
+
 }
