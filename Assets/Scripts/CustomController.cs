@@ -19,8 +19,18 @@ public class CustomController : MonoBehaviour {
         {Constants.RunButton, KeyCode.LeftShift }
     };
 
-	// Use this for initialization
-	void Start () {
+    static Dictionary<string, KeyCode> defaultGamepadButtons = new Dictionary<string, KeyCode>
+    {
+        {Constants.ReadyCamera, KeyCode.Joystick1Button11 },
+        {Constants.TakePicture, KeyCode.Joystick1Button14 },
+        {Constants.ThrowObject, KeyCode.Joystick1Button10 },
+        {Constants.Pause, KeyCode.Joystick1Button0 },
+        {Constants.CrouchButton, KeyCode.LeftControl },
+        {Constants.RunButton, KeyCode.LeftShift }
+    };
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	

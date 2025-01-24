@@ -63,6 +63,12 @@ public class GradeManager : MonoBehaviour {
     Sprite frogmanHead;
     [SerializeField]
     Sprite tsuchinokoHead;
+    [SerializeField]
+    Sprite flatwoodsHead;
+    [SerializeField]
+    Sprite bigfootHead;
+    [SerializeField]
+    Sprite mothmanHead;
 
     // Use this for initialization
     void Start () {
@@ -245,6 +251,18 @@ public class GradeManager : MonoBehaviour {
                     break;
                 case Constants.Tsuchinoko:
                     icon.sprite = tsuchinokoHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Flatwoods:
+                    icon.sprite = flatwoodsHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Bigfoot:
+                    icon.sprite = bigfootHead;
+                    icon.SetNativeSize();
+                    break;
+                case Constants.Mothman:
+                    icon.sprite = mothmanHead;
                     icon.SetNativeSize();
                     break;
                 default:
