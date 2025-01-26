@@ -31,7 +31,7 @@ public class CameraSnap : MonoBehaviour {
             //grow the shutters until they take up the full screen
             case ShutterState.Closing:
                 topBar.sizeDelta = new Vector2(canvas.pixelRect.width, topBar.rect.height + shutterSpeed);
-                bottomBar.sizeDelta = new Vector2(canvas.pixelRect.width, topBar.rect.height + shutterSpeed);
+                bottomBar.sizeDelta = new Vector2(canvas.pixelRect.width, bottomBar.rect.height + shutterSpeed);
                 if (topBar.rect.height >= canvas.pixelRect.height || bottomBar.rect.height >= canvas.pixelRect.height)
                 {
                     snapState = ShutterState.Opening;
@@ -40,7 +40,7 @@ public class CameraSnap : MonoBehaviour {
             //shrink the shutters until they are no longer visible
             case ShutterState.Opening:
                 topBar.sizeDelta = new Vector2(canvas.pixelRect.width, topBar.rect.height - shutterSpeed);
-                bottomBar.sizeDelta = new Vector2(canvas.pixelRect.width, topBar.rect.height - shutterSpeed);
+                bottomBar.sizeDelta = new Vector2(canvas.pixelRect.width, bottomBar.rect.height - shutterSpeed);
                 if (topBar.rect.height <= 0 || bottomBar.rect.height <= 0)
                 {
                     snapState = ShutterState.Still;

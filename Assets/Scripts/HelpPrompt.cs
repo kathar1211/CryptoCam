@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -9,7 +10,7 @@ public class HelpPrompt : MonoBehaviour {
 
     //text to help people with controls
     [SerializeField]
-    Text helpPrompt;
+    TextMeshProUGUI helpPrompt;
     //time in seconds of no input before showing the help prompt
     public int helpDelay;
     //fade in by incrementing opcaity by this amount

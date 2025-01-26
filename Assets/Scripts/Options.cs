@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using System;
-
+using DG.Tweening;
 
 public class Options : MonoBehaviour {
 
@@ -32,11 +32,6 @@ public class Options : MonoBehaviour {
     //buttons on all screens
     public GameObject Exit;
     public GameObject More;
-    //sprites for more button
-    [SerializeField]
-    Sprite triangle;
-    [SerializeField]
-    Sprite triangleFlipped;
 
     //screen handling
     bool isScrolling = false;
@@ -113,7 +108,9 @@ public class Options : MonoBehaviour {
                     {
                         isScrolling = false;
                         currentScreen = ScreenState.Settings;
-                        More.GetComponent<Image>().sprite = triangleFlipped;
+                        //More.GetComponent<Image>().sprite = triangleFlipped;
+                        Vector3 localScale = More.transform.localScale;
+                        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
                         //snap to position
                         More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
                     }
@@ -124,7 +121,10 @@ public class Options : MonoBehaviour {
                     {
                         isScrolling = false;
                         currentScreen = ScreenState.Controls;
-                        More.GetComponent<Image>().sprite = triangle;
+                        //More.GetComponent<Image>().sprite = triangle;
+                        //flip sprite
+                        Vector3 localScale = More.transform.localScale;
+                        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
                         //snap to position
                         More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
                     }

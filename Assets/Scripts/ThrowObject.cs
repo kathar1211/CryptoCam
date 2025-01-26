@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -14,7 +15,7 @@ public class ThrowObject : MonoBehaviour {
     Photography photographer;
 
     [SerializeField]
-    Text objText;
+    TextMeshProUGUI objText;
 
     ///forward force applied to the thrown object
     public float throwForce;

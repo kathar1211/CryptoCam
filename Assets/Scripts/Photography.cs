@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -34,7 +35,7 @@ public class Photography : MonoBehaviour {
 
     //displays how many more pictures the player can take
     [SerializeField]
-    Text picText;
+    TextMeshProUGUI picText;
 
     //screen effect that makes it look like you're looking through a camera (sights, bounding box, etc)
     [SerializeField]
