@@ -20,14 +20,10 @@ public class Options : MonoBehaviour {
     public GameObject RestoreDefaultsControl;
 
     //buttons screen 2
-    public GameObject IncreaseText;
-    public GameObject DecreaseText;
-    public GameObject FullScreenOn;
-    public GameObject FullScreenOff;
-    public GameObject IncreaseBGM;
-    public GameObject DecreaseBGM;
-    public GameObject IncreaseSFX;
-    public GameObject DecreaseSFX;
+    public Slider TextSpeedSlider;
+    public Toggle FullScreenToggle;
+    public Slider BGMSlider;
+    public Slider SFXSlider;
 
     //buttons on all screens
     public GameObject Exit;
@@ -41,7 +37,7 @@ public class Options : MonoBehaviour {
     public ScreenState currentScreen = ScreenState.Controls;
 
     //display the current text speed
-    public Text textSpeed;
+    
     private float speed;
     public float maxSpeed;
     public float minSpeed;
@@ -82,8 +78,8 @@ public class Options : MonoBehaviour {
         controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
             ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, Exit };
 
-        settingsButtonArray = new GameObject[] { DecreaseText,
-            IncreaseText, FullScreenOn, FullScreenOff, IncreaseBGM, DecreaseBGM, IncreaseSFX, DecreaseSFX, Exit };
+        settingsButtonArray = new GameObject[] { TextSpeedSlider.gameObject, FullScreenToggle.gameObject,
+            BGMSlider.gameObject, SFXSlider.gameObject, RestoreDefaultsControl, Exit, };
 
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
@@ -142,7 +138,11 @@ public class Options : MonoBehaviour {
         if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
         {
             if (selectedButton != null) { selectedButton.GetComponent<Button>().onClick.Invoke(); }
+
+            //todo: this could be a toggle rather than a button
         }
+
+        //todo: need some logic to adjust sliders if a slider is selected
 	}
 
     void ChangeSelectButton(float input)
@@ -192,6 +192,12 @@ public class Options : MonoBehaviour {
     {
         if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         Screen.fullScreen = tf;
+    }
+
+    public void OnFullScreenToggleChanged()
+    {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
+        Screen.fullScreen = FullScreenToggle.isOn;
     }
 
     //https://www.studica.com/blog/custom-input-manager-unity-tutorial
@@ -296,7 +302,7 @@ public class Options : MonoBehaviour {
 
     void UpdateSettingsText()
     {
-        textSpeed.text = speed.ToString("0.0");
+        TextSpeedSlider.value = speed;
         int bgm = audioManager.getBGMVolume();
         string bgmString = bgm.ToString("0");
         bgmVol.text = bgmString;
@@ -329,6 +335,12 @@ public class Options : MonoBehaviour {
             SaveTextSpeed();
             UpdateSettingsText();
         }
+    }
+
+    public void OnTextSpeedSliderChanged()
+    {
+        speed = TextSpeedSlider.value;
+        SaveTextSpeed();
     }
 
     //adjust the audio settings for background music
