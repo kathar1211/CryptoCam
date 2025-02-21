@@ -57,7 +57,7 @@ public class Jackalope : Cryptid {
         if (startAwake)
         {
             currentState = MoveState.run;
-            this.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", awakeTexture);
+            renderer.material.SetTexture("_MainTex", awakeTexture);
             animator.Play("run", 0);
         }
     }
@@ -216,7 +216,7 @@ public class Jackalope : Cryptid {
     private void WakeUp()
     {
         animator.SetBool(Awake, true);
-        this.GetComponentInChildren<Renderer>().material.SetTexture("_MainTex", awakeTexture);
+        renderer.material.SetTexture("_MainTex", awakeTexture);
         currentState = MoveState.wake;
     }
 

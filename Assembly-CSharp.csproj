@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\Bigfoot.cs" />
     <Compile Include="Assets\Scripts\BonkableObject.cs" />
     <Compile Include="Assets\Scripts\CabinLab.cs" />
     <Compile Include="Assets\Scripts\CabinOpen.cs" />
