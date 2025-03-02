@@ -367,7 +367,7 @@ ModelImporter:
     - serializedVersion: 16
       name: sit_transition
       takeName: metarig|walkcycle_down
-      firstFrame: 371
+      firstFrame: 340
       lastFrame: 445
       wrapMode: 0
       orientationOffsetY: 0
