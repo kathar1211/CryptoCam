@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 using System;
 using DG.Tweening;
+using TMPro;
 
 public class Options : MonoBehaviour {
 
@@ -67,7 +68,7 @@ public class Options : MonoBehaviour {
     Event keyEvent;
 
     //gameManager
-    public GameManager gameManager;
+    private GameManager gameManager;
 
     //SFX
     [SerializeField] AudioSource NormalButtonSFX;
@@ -78,8 +79,8 @@ public class Options : MonoBehaviour {
         controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
             ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, Exit };
 
-        settingsButtonArray = new GameObject[] { TextSpeedSlider.gameObject, FullScreenToggle.gameObject,
-            BGMSlider.gameObject, SFXSlider.gameObject, RestoreDefaultsControl, Exit, };
+        settingsButtonArray = new GameObject[] { TextSpeedSlider.gameObject,
+            BGMSlider.gameObject, SFXSlider.gameObject ,FullScreenToggle.gameObject, RestoreDefaultsControl, Exit, };
 
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
@@ -89,7 +90,7 @@ public class Options : MonoBehaviour {
         UpdateButtonText();
         UpdateSettingsText();
 
-
+        gameManager = GameManager.Instance;
     }
 	
 	// Update is called once per frame
@@ -135,14 +136,43 @@ public class Options : MonoBehaviour {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
         }
 
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+        //adjust sliders if a slider is selected
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Horizontal))
         {
-            if (selectedButton != null) { selectedButton.GetComponent<Button>().onClick.Invoke(); }
+            Slider sliderSelect = selectedButton.GetComponent<Slider>();
+            if (sliderSelect != null) {
 
-            //todo: this could be a toggle rather than a button
+                //increment should be a function of the min/max of the slider
+                float increment = (sliderSelect.maxValue - sliderSelect.minValue) / 100f;
+                increment = Mathf.Abs(increment);
+
+                //positive value is right, negative value is left
+                float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+                if (dir < 0) { increment *= -1; }
+
+                AdjustSliderValue(sliderSelect, increment);
+            }
         }
 
-        //todo: need some logic to adjust sliders if a slider is selected
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+        {
+            if (selectedButton != null) {
+                Button buttonSelect = selectedButton.GetComponent<Button>();
+                if (buttonSelect != null) {
+                    buttonSelect.onClick.Invoke(); 
+                }
+                //this could be a toggle rather than a button
+                else
+                {
+                    Toggle toggleSelect = selectedButton.GetComponent<Toggle>();
+                    if (toggleSelect != null)
+                    {
+                        toggleSelect.isOn = !toggleSelect.isOn;
+                    }
+                }
+                //could also be a slider but those dont do anything if you select
+            }
+        }
 	}
 
     void ChangeSelectButton(float input)
@@ -292,29 +322,34 @@ public class Options : MonoBehaviour {
     //set control buttons to display current configuration
     void UpdateButtonText()
     {
-        ReadyCameraControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.ReadyCamera);
-        TakePictureControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.TakePicture);
-        ThrowObjectControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.ThrowObject);
-        PauseControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.Pause);
-        RunControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.RunButton);
-        CrouchControl.GetComponentInChildren<Text>().text = CustomController.GetButtonInput(Constants.CrouchButton);
+        ReadyCameraControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.ReadyCamera);
+        TakePictureControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.TakePicture);
+        ThrowObjectControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.ThrowObject);
+        PauseControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.Pause);
+        RunControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.RunButton);
+        CrouchControl.GetComponentInChildren<TMP_Text>().text = CustomController.GetButtonInput(Constants.CrouchButton);
     }
 
     void UpdateSettingsText()
     {
         TextSpeedSlider.value = speed;
-        int bgm = audioManager.getBGMVolume();
-        string bgmString = bgm.ToString("0");
-        bgmVol.text = bgmString;
-        sfxVol.text = audioManager.getSFXVolume().ToString("0");
+        BGMSlider.value = audioManager.getBGMVolume();
+        SFXSlider.value = audioManager.getSFXVolume();
     }
 
-    public void RestoreDefaults()
+    public void RestoreControlDefaults()
     {
         if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         CustomController.RestoreDefaults();
         UpdateButtonText();
         CustomController.SaveAllKeys();
+    }
+
+    public void RestoreSettingDefaults()
+    {
+        BGMSlider.value = 0;
+        SFXSlider.value = 0;
+        TextSpeedSlider.value = 1;
     }
 
     //method to change the speed at which dialogue appears. true to increase false to decrease
@@ -344,43 +379,23 @@ public class Options : MonoBehaviour {
     }
 
     //adjust the audio settings for background music
-    public void AdjustBGMVolume(bool increase)
+    public void OnBGMSliderChanged()
     {
-        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
-        if (!isScrolling)
-        {
-            int bgm = audioManager.getBGMVolume();
-            if (increase && bgm < 10)
-            {
-                bgm += 1;
-            }
-            else if (!increase && bgm > 0)
-            {
-                bgm -= 1;
-            }
-            audioManager.UpdateBGMVolume(bgm);
-            UpdateSettingsText();
-        }
+        float bgm = BGMSlider.value;
+        audioManager.UpdateBGMVolume(bgm);
     }
 
     //adjust the audio settings for sound effects
-    public void AdjustSFXVolume(bool increase)
+    public void OnSFXSliderChanged()
     {
-        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
-        if (!isScrolling)
-        {
-            int sfx = audioManager.getSFXVolume();
-            if (increase && sfx < 10)
-            {
-                sfx += 1;
-            }
-            else if (!increase && sfx > 0)
-            {
-                sfx -= 1;
-            }
-            audioManager.UpdateSFXVolume(sfx);
-            UpdateSettingsText();
-        }
+        float sfx = SFXSlider.value;
+        audioManager.UpdateSFXVolume(sfx);
+    }
+
+   
+    public void AdjustSliderValue(Slider slider, float increment)
+    {
+        slider.value += increment;
     }
 
     //load text speed from playerprefs
