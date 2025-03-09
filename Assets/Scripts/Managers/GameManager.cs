@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour {
     //[SerializeField] Canvas canvas;
     [SerializeField] Text timeText;
     [SerializeField]
-    Image endprompt;
+    GameObject endprompt;
+    [SerializeField]
+    TMPro.TMP_Text endPromptText;
 
     [SerializeField]
     Image loadingAnim;
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour {
 
         Time.timeScale = 1;
         Object.DontDestroyOnLoad(this.gameObject);
-        endprompt.gameObject.SetActive(false);
+        endprompt.SetActive(false);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -127,7 +129,7 @@ public class GameManager : MonoBehaviour {
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            endprompt.gameObject.SetActive(true);
+            endprompt.SetActive(true);
 
         }
     }
@@ -140,8 +142,8 @@ public class GameManager : MonoBehaviour {
         {
             Time.timeScale = 0;
             txt = System.Text.RegularExpressions.Regex.Unescape(txt);
-            endprompt.transform.GetChild(0).GetComponent<Text>().text = txt;
-            endprompt.gameObject.SetActive(true);
+            endPromptText.text = txt;
+            endprompt.SetActive(true);
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -155,7 +157,7 @@ public class GameManager : MonoBehaviour {
 
         //load async next scene
         LevelOver = true;
-        endprompt.gameObject.SetActive(false);
+        endprompt.SetActive(false);
         SceneManager.LoadSceneAsync("Grading", LoadSceneMode.Single);
 
         //set loading icon to active

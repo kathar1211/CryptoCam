@@ -13,9 +13,10 @@ public class AudioManager : MonoBehaviour {
     public AudioMixer Mixer;
     private const string SFX_MIXER_GROUP = "SFX_VOL";
     private const string BGM_MIXER_GROUP = "BGM_VOL";
+    private const string NON_UI_SFX_PITCH = "INGAME_SFX_PITCH";
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
         LoadBGMVolume();
         LoadSFXVolume();
@@ -74,4 +75,5 @@ public class AudioManager : MonoBehaviour {
         LoadBGMVolume();
         return BGMVol;
     }
+
 }

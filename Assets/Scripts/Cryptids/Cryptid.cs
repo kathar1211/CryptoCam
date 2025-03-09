@@ -332,6 +332,11 @@ public class Cryptid : MonoBehaviour {
                 leftImpact = false;
             }
             GetBonked(leftImpact);
+
+            //calculate where to position bonk vfx and spawn
+            Vector3 impactPosition = collision.GetContact(0).point;
+            Vector3 impactDirection = bonked.transform.position - impactPosition;
+            bonked.SpawnBonkVFX(impactPosition, impactDirection.normalized);
         }
     }
 
