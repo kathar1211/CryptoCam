@@ -121,14 +121,14 @@ public class Cryptid : MonoBehaviour {
     }
 
     //move in the direction of a given target (transform)
-    public void MoveToward(Transform target, float forwardSpeed, float rotateSpeed)
+    public void MoveToward(Transform target, float rotateSpeed)
     {
         rotateSpeed = Mathf.Abs(rotateSpeed);
-        MoveToward(target.position, forwardSpeed, rotateSpeed);
+        MoveToward(target.position, rotateSpeed);
     }
 
     //move in the direction of a given target (vector3)
-    public void MoveToward(Vector3 target, float forwardSpeed, float rotateSpeed)
+    public void MoveToward(Vector3 target, float rotateSpeed)
     {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
@@ -139,10 +139,10 @@ public class Cryptid : MonoBehaviour {
         //update: handle forward movement separate from deciding direction with move() in child script
     }
 
-    public void MoveTowardXZOnly(Vector3 target, float forwardSpeed, float rotateSpeed)
+    public void MoveTowardXZOnly(Vector3 target, float rotateSpeed)
     {
         target.y = transform.position.y;
-        MoveToward(target, forwardSpeed, rotateSpeed);
+        MoveToward(target, rotateSpeed);
     }
 
     //move away from a given obstacle
@@ -331,7 +331,7 @@ public class Cryptid : MonoBehaviour {
             {
                 leftImpact = false;
             }
-            GetBonked(leftImpact);
+            GetBonked(leftImpact, bonked);
 
             //calculate where to position bonk vfx and spawn
             Vector3 impactPosition = collision.GetContact(0).point;
@@ -340,7 +340,7 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
-    public virtual void GetBonked(bool leftImpact)
+    public virtual void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
 
         if (leftImpact && animator.HasState(0, Animator.StringToHash("bonk_left")))

@@ -69,7 +69,7 @@ public class Tsuchinoko : Cryptid {
                 
                 if (!AvoidObstacles(seeAhead, rotateSpeed))
                 {
-                    MoveToward(target, fleespeed, rotateSpeed);
+                    MoveToward(target, fleespeed);
                 }
                 Move(fleespeed);
                 if ((secondLocation.position - transform.position).magnitude < minDistance)
@@ -161,7 +161,7 @@ public class Tsuchinoko : Cryptid {
     }
 
     //tsuchinoko is only bonkable when upright
-    public override void GetBonked(bool leftImpact)
+    public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
         bool isUpright = animator.GetBool("Upright");
         if (isUpright) { animator.Play("bonk"); }

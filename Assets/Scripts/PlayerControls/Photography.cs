@@ -76,8 +76,8 @@ public class Photography : MonoBehaviour {
         allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = (allPics.Length - picIndex).ToString();
         defaultFOV = cryptoCam.fieldOfView;
-        PlayerPrefs.SetInt(Constants.CameraHeight, cryptoCam.pixelHeight);
-        PlayerPrefs.SetInt(Constants.CameraWidth, cryptoCam.pixelWidth);
+        //PlayerPrefs.SetInt(Constants.CameraHeight, cryptoCam.pixelHeight);
+        //PlayerPrefs.SetInt(Constants.CameraWidth, cryptoCam.pixelWidth);
     }
 	
 	// Update is called once per frame
@@ -130,12 +130,12 @@ public class Photography : MonoBehaviour {
 
         //take the photo
         //https://answers.unity.com/questions/22954/how-to-save-a-picture-take-screenshot-from-a-camer.html
-        RenderTexture rt = new RenderTexture(cryptoCam.pixelWidth, cryptoCam.pixelHeight, 24);
+        RenderTexture rt = new RenderTexture(Constants.CameraWidth, Constants.CameraHeight, 24);
         cryptoCam.targetTexture = rt;
-        Texture2D screenshot = new Texture2D(cryptoCam.pixelWidth, cryptoCam.pixelHeight, TextureFormat.RGB24, true);
+        Texture2D screenshot = new Texture2D(Constants.CameraWidth, Constants.CameraHeight, TextureFormat.RGB24, true);
         cryptoCam.Render();
         RenderTexture.active = rt;
-        screenshot.ReadPixels(new Rect(0, 0, cryptoCam.pixelWidth, cryptoCam.pixelHeight), 0, 0);
+        screenshot.ReadPixels(new Rect(0, 0, Constants.CameraWidth, Constants.CameraHeight), 0, 0);
         screenshot.Apply();
         cryptoCam.targetTexture = null;
         RenderTexture.active = null;

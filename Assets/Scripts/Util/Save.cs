@@ -63,18 +63,9 @@ public class Save
         foreach (Photodata photo in loadedSave.photos)
         {
             PageContent content = new PageContent();
-            if (PlayerPrefs.HasKey(Constants.CameraHeight) && PlayerPrefs.HasKey(Constants.CameraWidth))
-            {
-                content.image = new Texture2D(PlayerPrefs.GetInt(Constants.CameraWidth), PlayerPrefs.GetInt(Constants.CameraHeight), TextureFormat.RGB24, true);
-                content.image.LoadRawTextureData(photo.imageData);
-                content.image.Apply();
-            }
-            //fallback case if we don't know what size these images should be
-            else
-            {
-               // content.image = new Texture2D(800, 600, TextureFormat.RGB24, true);
-               // content.image.LoadRawTextureData(photo.imageData);
-            }
+            content.image = new Texture2D(Constants.CameraWidth, Constants.CameraHeight, TextureFormat.RGB24, true);
+            content.image.LoadRawTextureData(photo.imageData);
+            content.image.Apply();
             content.name = photo.name;
             content.photoScore = photo.photoScore;
             if (Constants.tedsWriting.ContainsKey(photo.name)) { content.flavorText = Constants.tedsWriting[photo.name]; }

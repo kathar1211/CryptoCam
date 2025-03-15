@@ -24,6 +24,7 @@ public class Nessie : Cryptid {
     // Use this for initialization
     void Start () {
         StartUp();
+        baseScore = 200;
         cryptidType = Constants.Nessie;
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;

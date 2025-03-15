@@ -58,7 +58,7 @@ public class FresnoNightcrawler : Cryptid {
                 //prioritize obstacle avoidance
                 if (!AvoidObstacles(seeObstacles, rotateSpeed))
                 {
-                    MoveToward(targetPos, speed, rotateSpeed);
+                    MoveToward(targetPos, speed);
                 }
                 Move(speed);
                 timeChasing += Time.deltaTime;

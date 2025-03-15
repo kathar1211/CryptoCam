@@ -52,7 +52,7 @@ public class Jackalope : Cryptid {
         currentState = MoveState.sleep;
         nextState = MoveState.run;
         cryptidType = Constants.Jackalope;
-        baseScore = 50;
+        baseScore = 25;
 
         if (startAwake)
         {
@@ -144,7 +144,7 @@ public class Jackalope : Cryptid {
                 break;
             //move toward a specific object
             case MoveState.runtoward:
-                MoveTowardXZOnly(moveToTarget.position, runSpeed, rotateSpeed);
+                MoveTowardXZOnly(moveToTarget.position, runSpeed);
                 Move(runSpeed);
                 //switch to eating within a certain range
                 if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
@@ -231,7 +231,7 @@ public class Jackalope : Cryptid {
         return false;
     }
 
-    public override void GetBonked(bool leftImpact)
+    public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
         if (currentState == MoveState.stand)
         {

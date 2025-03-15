@@ -106,8 +106,8 @@ public static class Constants {
     public static string SFXVolume = "SFXVolume";
     public static string BGMVolume = "BGMVolume";
     //used for image data- what size are these images
-    public static string CameraWidth = "CamWidth";
-    public static string CameraHeight = "CamHeight";
+    public static int CameraWidth = 1920;
+    public static int CameraHeight = 1080;
 
     //cryptid names
     public const string Tsuchinoko = "Tsuchinoko";

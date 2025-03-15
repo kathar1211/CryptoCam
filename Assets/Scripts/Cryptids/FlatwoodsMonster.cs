@@ -117,7 +117,7 @@ public class FlatwoodsMonster : Cryptid
                 break;
             case MoveState.turnToward:
                 //movetoward with a movespeed of 0 is the same as rotating toward
-                MoveTowardXZOnly(avoidTarget.position, 0, rotateSpeed);
+                MoveTowardXZOnly(avoidTarget.position, rotateSpeed);
 
                 //once we're within an error margin of facing the player, start the pose timer
                 Vector3 flatwoodToPlayerDirection = avoidTarget.transform.position - transform.position;
