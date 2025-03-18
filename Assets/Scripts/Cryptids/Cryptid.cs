@@ -161,6 +161,7 @@ public class Cryptid : MonoBehaviour {
     }
 
     //method to deal with player entering certain trigger zones; implementation varies by cryptid
+    //todo: delete. not being used as far as i can tell
     public virtual void AvoidPlayer(Collider other)
     {
         return;
@@ -299,8 +300,9 @@ public class Cryptid : MonoBehaviour {
             if (particles != null)
             {
                 GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, particles.transform.rotation);
-                newParticles.transform.localScale = this.transform.localScale * 2;
-                newParticles.transform.Translate(0, 1, 0);//move it up a lil
+                newParticles.SetActive(true);
+                //newParticles.transform.localScale = this.transform.localScale * 2;
+                //newParticles.transform.Translate(0, 1, 0);//move it up a lil
             }
 
             if (disappearSFX != null)
