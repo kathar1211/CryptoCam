@@ -39,7 +39,7 @@ public class Tsuchinoko : Cryptid {
         //if tsuchinoko starts asleep make sure to coordingate animations
         if (currentMovestate == MoveState.Sleeping)
         {
-            animator.SetBool("Awake", false);
+            animator.Play("sleep");
         }
     }
 	
