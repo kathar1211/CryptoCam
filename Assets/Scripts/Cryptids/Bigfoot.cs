@@ -93,7 +93,7 @@ public class Bigfoot : Cryptid
                 Move(walkSpeed);
 
                 //chance to do the pose
-                if (RandomChance(.1f) || (lookedOnce && RandomChance(.2f)))
+                if (RandomChance(.1f) || (lookedOnce && RandomChance(.05f)))
                 {
                     animator.SetTrigger(TurnTrigger);
                     lookedOnce = true; //reset value when bigfoot returns to idle

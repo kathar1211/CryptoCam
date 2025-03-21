@@ -29,7 +29,6 @@ public class Cryptid : MonoBehaviour {
     protected bool lockMovementSuper = false;
 
     //disappear when touched
-    [SerializeField] AudioSource disappearSFX;
     [SerializeField] GameObject particles;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
@@ -303,13 +302,6 @@ public class Cryptid : MonoBehaviour {
                 newParticles.SetActive(true);
                 //newParticles.transform.localScale = this.transform.localScale * 2;
                 //newParticles.transform.Translate(0, 1, 0);//move it up a lil
-            }
-
-            if (disappearSFX != null)
-            {
-                AudioSource newSound = GameObject.Instantiate(disappearSFX, this.transform.position, this.transform.rotation);
-                newSound.enabled = true;
-                newSound.Play();
             }
 
             Destroy(this.gameObject);
