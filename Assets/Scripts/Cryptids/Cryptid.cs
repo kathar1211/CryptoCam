@@ -308,7 +308,7 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
         BonkableObject bonked = collision.gameObject.GetComponent<BonkableObject>();
         if (bonked != null && bonked.CanDoBonk())

@@ -32,6 +32,15 @@ ModelImporter:
     100052: Bone_end
     100054: //RootNode
     100056: Sphere
+    100058: Bone.004_end_end
+    100060: Bone.011_end_end
+    100062: Bone.012_end_end
+    100064: Bone.013_end_end
+    100066: Bone.014_end_end
+    100068: Bone.015_end_end
+    100070: Bone.018_end_end
+    100072: Bone.019_end_end
+    100074: Bone_end_end
     400000: Armature
     400002: Bone
     400004: Bone.001
@@ -61,6 +70,15 @@ ModelImporter:
     400052: Bone_end
     400054: //RootNode
     400056: Sphere
+    400058: Bone.004_end_end
+    400060: Bone.011_end_end
+    400062: Bone.012_end_end
+    400064: Bone.013_end_end
+    400066: Bone.014_end_end
+    400068: Bone.015_end_end
+    400070: Bone.018_end_end
+    400072: Bone.019_end_end
+    400074: Bone_end_end
     2100000: No Name
     4300000: Sphere
     7400000: Armature|ArmatureAction
@@ -69,8 +87,13 @@ ModelImporter:
     7400006: breach
     7400008: above water swim
     7400010: look around
+    7400012: Armature|Armature|Armature|ArmatureAction
+    7400014: Armature|Armature|Armature|PoseLib
+    7400016: underwater swim
+    7400018: bonk_left
     9500000: //RootNode
     13700000: Sphere
+    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -100,10 +123,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|ArmatureAction
-      takeName: Armature|ArmatureAction
+      name: Armature|Armature|Armature|ArmatureAction
+      takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 0
-      lastFrame: 99
+      lastFrame: 121
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -128,8 +151,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|PoseLib
-      takeName: Armature|PoseLib
+      name: Armature|Armature|Armature|PoseLib
+      takeName: Armature|Armature|Armature|PoseLib
       firstFrame: 0
       lastFrame: 5
       wrapMode: 0
@@ -157,7 +180,7 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: underwater swim
-      takeName: Armature|ArmatureAction
+      takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 1
       lastFrame: 29
       wrapMode: 0
@@ -185,7 +208,7 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: breach
-      takeName: Armature|ArmatureAction
+      takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 30
       lastFrame: 40
       wrapMode: 0
@@ -213,7 +236,7 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: above water swim
-      takeName: Armature|ArmatureAction
+      takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 40
       lastFrame: 59
       wrapMode: 0
@@ -241,7 +264,7 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: look around
-      takeName: Armature|ArmatureAction
+      takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 60
       lastFrame: 99
       wrapMode: 0
@@ -267,12 +290,41 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: bonk_left
+      takeName: Armature|Armature|Armature|ArmatureAction
+      firstFrame: 100
+      lastFrame: 121
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -297,6 +349,9 @@ ModelImporter:
     normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -311,7 +366,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

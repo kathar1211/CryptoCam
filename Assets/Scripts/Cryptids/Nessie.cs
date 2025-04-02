@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Nessie : Cryptid {
 
-    public float speed;
+    public float forwardSpeed;
+    public float upDownSpeed;
     public float rotateSpeed;
 
     float timeElapsed;
@@ -13,13 +14,14 @@ public class Nessie : Cryptid {
     public float surfacePos = -4;
     public float belowPos = -11;
 
-    enum MoveState { underWaterSwim, aboveWaterSwim, breach, look};
+    enum MoveState { underWaterSwim, aboveWaterSwim, breach, look, waitToSubmerge};
     MoveState currentState;
     bool lookedOnce = true;
 
     ParticleSystem ripples;
 
-    AudioSource AudioSource;
+    HeadBone head;
+    bool headBonk;
 
     // Use this for initialization
     void Start () {
@@ -29,7 +31,7 @@ public class Nessie : Cryptid {
         currentState = MoveState.underWaterSwim;
         timeElapsed = 0;
         ripples = GetComponentInChildren<ParticleSystem>();
-        AudioSource = this.GetComponent<AudioSource>();
+        head = GetComponentInChildren<HeadBone>();
     }
 	
 	// Update is called once per frame
@@ -42,11 +44,11 @@ public class Nessie : Cryptid {
         switch (currentState)
         {
             case MoveState.underWaterSwim:
-                MoveinCircle(speed,rotateSpeed);
+                MoveinCircle(forwardSpeed,rotateSpeed);
                 if (transform.position.y > belowPos) //the point at which nessies goes deepest
                 {
                     
-                    transform.Translate(Vector3.down * Time.deltaTime * speed/2); //move down until we're fully below water
+                    transform.Translate(Vector3.down * Time.deltaTime * upDownSpeed/2); //move down until we're fully below water
                     
                 }
                 else if (RandomChance(.05f))
@@ -62,8 +64,8 @@ public class Nessie : Cryptid {
             case MoveState.breach:
                 if (transform.position.y < surfacePos) //the point at which nessies body peeks out of the water
                 {
-                    MoveinCircle(speed, rotateSpeed);
-                    transform.Translate(Vector3.up * Time.deltaTime * speed); //move up until breach
+                    MoveinCircle(forwardSpeed, rotateSpeed);
+                    transform.Translate(Vector3.up * Time.deltaTime * upDownSpeed); //move up until breach
 
                     animator.SetBool("Breach", true);
                     animator.SetBool("Look", false);
@@ -77,7 +79,7 @@ public class Nessie : Cryptid {
                 }
                 break;
             case MoveState.aboveWaterSwim:
-                MoveinCircle(speed / 2, rotateSpeed / 2); //move half as fast above water
+                MoveinCircle(forwardSpeed / 2, rotateSpeed / 2); //move half as fast above water
                 if (RandomChance(.1f) || (lookedOnce && RandomChance(.2f)))
                 //if (RandomChance(0))
                 {
@@ -102,12 +104,26 @@ public class Nessie : Cryptid {
                 break;
             case MoveState.look:
                 //move wile looking around
-                MoveinCircle(speed / 3, rotateSpeed / 3);
+                MoveinCircle(forwardSpeed / 3, rotateSpeed / 3);
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("above water swim"))
                 {
                     currentState = MoveState.aboveWaterSwim;
                     animator.SetBool("Look", false);
                     animator.SetBool("MirrorLook", false);
+                }
+                break;
+            case MoveState.waitToSubmerge:
+                //hang tight until animations have queued back into above water swim
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("above water swim"))
+                {
+                    //now we return to the depths
+                    animator.SetBool("Breach", false);
+                    animator.SetBool("Look", false);
+                    animator.SetBool("MirrorLook", false);
+                    animator.SetBool("Dive", true);
+                    currentState = MoveState.underWaterSwim;
+                    ripples.Stop();
+                    lookedOnce = false; //reset value when nessie descends
                 }
                 break;
         }
@@ -125,7 +141,7 @@ public class Nessie : Cryptid {
 
     void MoveForward()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
     }
 
     public override bool IsVisible()
@@ -135,5 +151,40 @@ public class Nessie : Cryptid {
             return false;
         }
         return base.IsVisible();
+    }
+
+    protected override void OnCollisionEnter(Collision collision)
+    {
+        //detect if this is a headbonk or not
+        headBonk = false;
+        ContactPoint contact = collision.GetContact(0);
+        Collider headBone = head.GetComponent<Collider>();
+        if (headBone != null)
+        {
+            if (contact.thisCollider == headBone || contact.otherCollider == headBone)
+            {
+                headBonk = true;
+            }
+        }
+
+        base.OnCollisionEnter(collision);
+    }
+
+    public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
+    {
+        //nessie can only be bonked above water
+        if (currentState != MoveState.aboveWaterSwim && currentState != MoveState.look) { return; }
+
+        //if nessie gets bonked on her head, play the bonk animation
+        if (headBonk) { base.GetBonked(leftImpact, bonked); } //bonk transitions into look in animator
+        //if nessie gets bonked anywhere else, skip the bonk animation. just turn to look 
+        else
+        {
+            if (leftImpact) { animator.SetBool("Look", true); }
+            else { animator.SetBool("MirrorLook", true); }
+        }
+        
+        //after look animations finish go back underwater
+        currentState = MoveState.waitToSubmerge;
     }
 }
