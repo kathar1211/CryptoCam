@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\UI\HelpPrompt.cs" />
     <Compile Include="Assets\Scripts\UI\LogoAnimation.cs" />
     <Compile Include="Assets\Scripts\UI\Options.cs" />
+    <Compile Include="Assets\Scripts\UI\SliderWithLabel.cs" />
     <Compile Include="Assets\Scripts\UI\Ted.cs" />
     <Compile Include="Assets\Scripts\UI\TedConvos.cs" />
     <Compile Include="Assets\Scripts\UI\TextBox.cs" />
