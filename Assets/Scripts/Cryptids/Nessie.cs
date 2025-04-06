@@ -8,9 +8,6 @@ public class Nessie : Cryptid {
     public float upDownSpeed;
     public float rotateSpeed;
 
-    float timeElapsed;
-    public float timeUntilBreach; //in seconds
-
     public float surfacePos = -4;
     public float belowPos = -11;
 
@@ -23,13 +20,14 @@ public class Nessie : Cryptid {
     HeadBone head;
     bool headBonk;
 
+    bool justChangedStates;
+
     // Use this for initialization
     void Start () {
         StartUp();
         baseScore = 200;
         cryptidType = Constants.Nessie;
         currentState = MoveState.underWaterSwim;
-        timeElapsed = 0;
         ripples = GetComponentInChildren<ParticleSystem>();
         head = GetComponentInChildren<HeadBone>();
     }
@@ -38,8 +36,6 @@ public class Nessie : Cryptid {
 	void Update () {
         base.Update();
         if (lockMovementSuper) { return; }
-
-        timeElapsed += Time.deltaTime;
 
         switch (currentState)
         {
@@ -113,6 +109,13 @@ public class Nessie : Cryptid {
                 }
                 break;
             case MoveState.waitToSubmerge:
+                //give it a frame for animations to init
+                if (justChangedStates)
+                {
+                    justChangedStates = false;
+                    break;
+                }
+
                 //hang tight until animations have queued back into above water swim
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("above water swim"))
                 {
@@ -153,7 +156,7 @@ public class Nessie : Cryptid {
         return base.IsVisible();
     }
 
-    protected override void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
         //detect if this is a headbonk or not
         headBonk = false;
@@ -173,7 +176,7 @@ public class Nessie : Cryptid {
     public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
         //nessie can only be bonked above water
-        if (currentState != MoveState.aboveWaterSwim && currentState != MoveState.look) { return; }
+        if (currentState != MoveState.aboveWaterSwim && currentState != MoveState.look && currentState != MoveState.breach) { return; }
 
         //if nessie gets bonked on her head, play the bonk animation
         if (headBonk) { base.GetBonked(leftImpact, bonked); } //bonk transitions into look in animator
@@ -183,8 +186,12 @@ public class Nessie : Cryptid {
             if (leftImpact) { animator.SetBool("Look", true); }
             else { animator.SetBool("MirrorLook", true); }
         }
-        
+
         //after look animations finish go back underwater
         currentState = MoveState.waitToSubmerge;
+        justChangedStates = true;
+
+        //it's possible for a carrot to land on nessie's back and stay there; deactivate object to prevent it from triggering bonks forever
+        if (bonked != null) { bonked.Active = false; }
     }
 }
