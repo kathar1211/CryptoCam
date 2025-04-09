@@ -18,6 +18,7 @@ $RECYCLE.BIN/
 *.lnk
 
 #Unity files
+Library/*
 Library/metadata/**
 Library/ShaderCache/**
 Library/PlayerDataCache/**
