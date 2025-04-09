@@ -36,6 +36,9 @@ public class Options : MonoBehaviour {
     float moreButtonPos;
     public enum ScreenState { Controls, Settings};
     public ScreenState currentScreen = ScreenState.Controls;
+    public GameObject ControlScreenHolder;
+    public GameObject SettingsScreenHolder;
+    private float offScreenPos;
 
     //display the current text speed
     
@@ -90,14 +93,21 @@ public class Options : MonoBehaviour {
         UpdateButtonText();
         UpdateSettingsText();
 
+        //assuming we're starting with controls screen on
+        offScreenPos = SettingsScreenHolder.transform.localPosition.x;
+
         gameManager = GameManager.Instance;
+
+        //make sure sliders all show the right initial value
+
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (isScrolling)
         {
-            switch (currentScreen)
+         /*   switch (currentScreen)
             {
                 case ScreenState.Controls:
                     More.transform.Translate(-1 * scrollSpeed * Time.unscaledDeltaTime, 0, 0);
@@ -126,7 +136,7 @@ public class Options : MonoBehaviour {
                         More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
                     }
                     break;
-            }
+            }*/
             
             return;// dont handle input or do anything else while scrolling
         }
@@ -175,6 +185,7 @@ public class Options : MonoBehaviour {
         }
 	}
 
+    public 
     void ChangeSelectButton(float input)
     {
         GameObject[] buttonArray = new GameObject[] { };
@@ -409,6 +420,7 @@ public class Options : MonoBehaviour {
         {
             speed = 1;
         }
+        TextSpeedSlider.value = speed;
     }
     
     //save text speed to playerprefs
@@ -454,5 +466,40 @@ public class Options : MonoBehaviour {
             isScrolling = true;
             
         }
+
+        Sequence transition = DOTween.Sequence();
+        transition.SetUpdate(true);
+        transition.Append(More.transform.DOLocalMoveX(moreButtonPos * -1, .5f).SetEase(Ease.OutSine));
+        
+
+        //update selected screen
+        switch (currentScreen)
+        {
+            case ScreenState.Controls:
+                currentScreen = ScreenState.Settings;
+                transition.Join(SettingsScreenHolder.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
+                transition.Join(ControlScreenHolder.transform.DOLocalMoveX(offScreenPos * -1, .5f).SetEase(Ease.OutSine));
+                break;
+            case ScreenState.Settings:
+                transition.Join(ControlScreenHolder.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
+                transition.Join(SettingsScreenHolder.transform.DOLocalMoveX(offScreenPos * 1, .5f).SetEase(Ease.OutSine));
+                currentScreen = ScreenState.Controls;
+                break;
+        }
+
+        transition.AppendCallback(OnShowMoreComplete);
+        transition.Play();
+    }
+
+    public void OnShowMoreComplete()
+    {
+        isScrolling = false;
+
+        //flip sprite
+        Vector3 localScale = More.transform.localScale;
+        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
+
+        //snap to position
+        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
     }
 }

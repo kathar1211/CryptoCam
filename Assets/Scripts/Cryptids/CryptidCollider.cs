@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//todo: delete. not being used
-//script for an additional collider attached to cryptids to help them avoid obstacles
+//script for external collider that can trigger additional behaviors on cryptids
 public class CryptidCollider : MonoBehaviour {
 
     [SerializeField]

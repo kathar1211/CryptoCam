@@ -228,7 +228,7 @@ public class Jackalope : Cryptid {
             return true;
         }
 
-        return false;
+        return base.SpecialPose();
     }
 
     public override void GetBonked(bool leftImpact, BonkableObject bonked = null)

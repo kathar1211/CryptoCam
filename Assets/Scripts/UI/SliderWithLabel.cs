@@ -13,7 +13,7 @@ public class SliderWithLabel : MonoBehaviour {
     public bool isPercentBased;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         slider.onValueChanged.AddListener(UpdateLabel);
     }

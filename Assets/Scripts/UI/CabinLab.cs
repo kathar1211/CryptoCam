@@ -330,6 +330,12 @@ public class CabinLab : MonoBehaviour {
             options.SetActive(true);
             currentState = MenuState.Options;
         }
+
+        else if (currentState == MenuState.Options)
+        {
+            options.SetActive(false);
+            currentState = MenuState.Main;
+        }
     }
 
     public void Credits()

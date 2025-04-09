@@ -21,6 +21,10 @@ public class Splash : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.isTrigger) { return; }
+
+        //only counts if we're entering the water from above
+        if (other.transform.position.y < this.transform.position.y) { return; }
+
         GameObject.Instantiate(SplashEffectPrefab, other.transform.position, SplashEffectPrefab.transform.rotation);
     }
 }

@@ -173,4 +173,11 @@ public class FresnoNightcrawler : Cryptid {
 
         return base.IsVisible();
     }
+
+    public override bool SpecialPose()
+    {
+       //todo
+
+        return base.SpecialPose();
+    }
 }

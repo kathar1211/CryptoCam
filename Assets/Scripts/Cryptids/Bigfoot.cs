@@ -241,7 +241,12 @@ public class Bigfoot : Cryptid
             timer = 0;
             timeToScratch = Random.Range(MinScratchTime, MaxScratchTime);
         }
+    }
 
-        
+    public override bool SpecialPose()
+    {
+        //todo
+
+        return base.SpecialPose();
     }
 }
