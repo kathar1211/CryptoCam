@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-//conatins only the aspects of a player's photo that need to be saved to file
+//contains only the aspects of a player's photo that need to be saved to file
 //very similar to CryptidNomicon's PageContent struct
 [System.Serializable]
 public struct Photodata
@@ -47,6 +47,11 @@ public class Save
     public static bool SaveFileExists()
     {
         return File.Exists(Application.persistentDataPath + "/photos.save");
+    }
+
+    public static void DeleteSaveData()
+    {
+        File.Delete(Application.persistentDataPath + "/photos.save");
     }
 
     //returns a cryptid nomicon spread created from the save file

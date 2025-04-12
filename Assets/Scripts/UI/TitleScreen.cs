@@ -101,6 +101,7 @@ public class TitleScreen : MonoBehaviour {
     public void NewGame()
     {
         //PlayerPrefs.DeleteAll();
+        if (Save.SaveFileExists()) { Save.DeleteSaveData(); }
         loader.SetActive(true);
         PlayerPrefs.SetInt(Constants.FirstPlay,0);
         SceneManager.LoadSceneAsync("Lab");

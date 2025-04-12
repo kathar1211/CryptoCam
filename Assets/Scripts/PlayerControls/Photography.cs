@@ -152,18 +152,15 @@ public class Photography : MonoBehaviour {
         GameObject mainSubject;
         foreach (GameObject cryptid in allCryptids)
         {
+            if (cryptid == null) { continue; }
+
             //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
-            Renderer renderer = cryptid.GetComponent<Cryptid>().renderer;
+            Cryptid Component = cryptid.GetComponent<Cryptid>();
             //check if cyrptid position is visible by camera
-            if (renderer != null && renderer.isVisible)
+            if (IsInCameraView(Component.renderer, Component.CenterOfMass))
             {
-                Vector3 viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position);
-                if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
-                {
-                    //if x and y are between 1 and 0 ((0,0) is bottom left corner and (1,1) is top riht) and z (distance from camera) is positive then cryptid is in the shot
-                    //dont add cryptids that are in frame but not visible
-                    if (checkVisibility(cryptid) != 0) { subjects.Add(cryptid); }
-                }
+                //dont add cryptids that are in frame but not visible
+                if (checkVisibility(cryptid) != 0) { subjects.Add(cryptid); }
             }
         }
         pic.subjectCount = subjects.Count;
@@ -209,7 +206,10 @@ public class Photography : MonoBehaviour {
             {
                 //viewpos.z represents distance from camera (z=0 is on top of camera)
                 //(.5,.5) is the center of the screen: |(x,y)-(.5,.5)| represents distance from center
-                Vector3 viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position);
+                Vector3 viewPos;
+                Cryptid Component = cryptid.GetComponent<Cryptid>();
+                if (Component == null || Component.CenterOfMass == null) { viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position); }
+                else { viewPos = cryptoCam.WorldToViewportPoint(Component.CenterOfMass.position); }
 
                 //don't include cryptids behind the camera 
                 if (viewPos.z < 0) { continue; }
@@ -251,12 +251,15 @@ public class Photography : MonoBehaviour {
         }
 
         //check for cool animation
-        pic.coolPose = mainSubject.GetComponent<Cryptid>().SpecialPose();
+        Cryptid cryptidComponent = mainSubject.GetComponent<Cryptid>();
+        pic.coolPose = cryptidComponent.SpecialPose();
 
         //store distance from center and distance from camera
         Vector3 cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.transform.position);
+        //if cryptid has center of mass use that
+        if (cryptidComponent.CenterOfMass != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidComponent.CenterOfMass.position); }
         //if cryptid has a head bone use that as the center instead
-        if (cryptidHead != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidHead.transform.position); }
+        else if (cryptidHead != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidHead.transform.position); }
 
         pic.distanceFromCamera = cameraPos.z;
         Vector2 dfc = new Vector2(.5f, .5f) - new Vector2(cameraPos.x, cameraPos.y);
@@ -407,5 +410,22 @@ public class Photography : MonoBehaviour {
         return allPics;
     }
 
+    public bool IsInCameraView(Renderer renderer, Transform centerofMass = null)
+    {
+        //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
+        //check if cyrptid position is visible by camera
+        if (renderer != null && renderer.isVisible)
+        {
+            Vector3 viewPos;
+            if (centerofMass == null) viewPos = cryptoCam.WorldToViewportPoint(renderer.transform.position);
+            else { viewPos = cryptoCam.WorldToViewportPoint(centerofMass.position); }
+            if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
    
 }

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class TextBox : MonoBehaviour {
 
-    Text txt; //where to put text
+    TextMeshProUGUI txt; //where to put text
     public Text scoretxt; //in cases where score is displayed and updated with text
     public float textDelay; //text scroll speed
     int textIndex;
@@ -42,7 +44,7 @@ public class TextBox : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
-        txt = this.transform.GetChild(0).GetComponent<Text>();
+        txt = this.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         CloseOnTextComplete = true; //default setting
         talking = false;
 
@@ -85,7 +87,7 @@ public class TextBox : MonoBehaviour {
 	}
 
     //skip or move on to the next line, called when input to advance is detected
-    void Continue()
+    public void Continue()
     {
         if (talking)
         {
@@ -261,6 +263,7 @@ public class TextBox : MonoBehaviour {
     //allow adding single lines of text
     public void FeedText(string line)
     {
+        line = line.Replace("\\n", "\n"); //eyeroll at TMPro
         allText.Enqueue(line); 
     }
 
@@ -332,27 +335,45 @@ public class TextBox : MonoBehaviour {
         progressLocked = false;
     }
 
-    public void SetLeftButton(string buttonText, Action buttonAction, bool shouldAdvanceDialogue = true)
+    public void SetLeftButton(string buttonText, UnityAction buttonAction)
     {
         if (LeftOptionButton != null)
         {
             LeftOptionButton.onClick.RemoveAllListeners();
-            LeftOptionButton.onClick.AddListener(() => buttonAction.Invoke());
-            if (shouldAdvanceDialogue) { LeftOptionButton.onClick.AddListener(() => Continue()); }
+            LeftOptionButton.onClick.AddListener(buttonAction);
+            //if (shouldAdvanceDialogue) { LeftOptionButton.onClick.AddListener(Continue); }
             Text buttonLabel = LeftOptionButton.GetComponentInChildren<Text>();
             if (buttonLabel != null) { buttonLabel.text = buttonText; }
+            //if (removeAfterInvoke) { LeftOptionButton.onClick.AddListener(ClearLeftButtonAction); }
         }
     }
 
-    public void SetRightButton(string buttonText, Action buttonAction, bool shouldAdvanceDialogue = true)
+    public void ClearLeftButtonAction()
+    {
+        if (LeftOptionButton != null)
+        {
+            LeftOptionButton.onClick.RemoveAllListeners();
+        }
+    }
+
+    public void SetRightButton(string buttonText, Action buttonAction)
     {
         if (RightOptionButton != null)
         {
             RightOptionButton.onClick.RemoveAllListeners();
             RightOptionButton.onClick.AddListener(() => buttonAction.Invoke());
-            if (shouldAdvanceDialogue) { RightOptionButton.onClick.AddListener(() => Continue()); }
+           // if (shouldAdvanceDialogue) { RightOptionButton.onClick.AddListener(Continue); }
             Text buttonLabel = RightOptionButton.GetComponentInChildren<Text>();
             if (buttonLabel != null) { buttonLabel.text = buttonText; }
+            // if (removeAfterInvoke) { RightOptionButton.onClick.AddListener(ClearRightButtonAction); }
+        }
+    }
+
+    public void ClearRightButtonAction()
+    {
+        if (RightOptionButton != null)
+        {
+            RightOptionButton.onClick.RemoveAllListeners();
         }
     }
 }

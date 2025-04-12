@@ -6,6 +6,7 @@ public class Tsuchinoko : Cryptid {
 
     public float speed;
     public float rotateSpeed;
+    public float circlingRotateSpeed;
     public float fleespeed;
     //percent chance that tsuchinoko will switch between being upright or not any given frame
     public float chanceUpDown;
@@ -56,7 +57,7 @@ public class Tsuchinoko : Cryptid {
         {
             //default state: tsuchinoko slithers in a little circle
             case MoveState.Circling:
-                Move(speed, rotateSpeed);
+                Move(speed, circlingRotateSpeed);
                 //AvoidObstacles(seeAhead, rotateSpeed);
                 //tsuchinoko only goes upright in his relaxed state
                 if (Random.Range(0.0f, 100.0f) < chanceUpDown)

@@ -532,9 +532,11 @@ public class CabinLab : MonoBehaviour {
             Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
 
             actualTextBox.FeedText(Constants.ExistingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
+            actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
             actualTextBox.FeedTed(TedMoods.Surprised);
 
             actualTextBox.FeedText(Constants.OverwritePrompt, PromptPhotoChoice);
+            actualTextBox.FeedScore(Constants.Score + score);
             actualTextBox.FeedTed(TedMoods.LookDownHandUp);
 
             actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
@@ -585,8 +587,11 @@ public class CabinLab : MonoBehaviour {
     public void ChoseNewPhoto()
     {
         gradingThumbnailHolder.Play("NewSelected");
-        textBox.GetComponent<TextBox>().ButtonsOut();
-        textBox.GetComponent<TextBox>().FeedText(Constants.NewPhotoSelected, TedMoods.Satisfied);
+        TextBox actualTextbox = textBox.GetComponent<TextBox>();
+        actualTextbox.ButtonsOut();
+        actualTextbox.FeedText(Constants.NewPhotoSelected, TedMoods.Satisfied);
+        actualTextbox.Continue();
+        actualTextbox.ClearRightButtonAction();
 
         //new photo is already in the list of photos that will be processed, so no need to do anything there
     }
@@ -595,8 +600,11 @@ public class CabinLab : MonoBehaviour {
     public void ChoseOldPhoto()
     {
         gradingThumbnailHolder.Play("PreviousSelected");
-        textBox.GetComponent<TextBox>().ButtonsOut();
-        textBox.GetComponent<TextBox>().FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
+        TextBox actualTextbox = textBox.GetComponent<TextBox>();
+        actualTextbox.ButtonsOut();
+        actualTextbox.FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
+        actualTextbox.Continue();
+        actualTextbox.ClearLeftButtonAction();
 
         //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
         CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();

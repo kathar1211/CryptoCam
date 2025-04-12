@@ -46,27 +46,27 @@ public static class Constants {
     public static string ParameterSTR = "{0}";
 
     //ted dialogue
-    public static string WelcomeBack = "Oh, welcome back! Shall we take a look at those photos? I'm excited to see what you've got.";
-    public static string DoneGrading = "Well done, thank you as always for sharing your photos with me.";
+    public static string WelcomeBack = "Oh, welcome back! Shall we take a look at those \nphotos? I'm excited to see what you've got.";
+    public static string DoneGrading = "Well done, thank you as always for sharing your \nphotos with me.";
     public static string NoSubject = "Oh, it's, uh... what is this supposed to be?";
     public static string NoPoints = "...Sorry, that's worth 0 points.";
     public static string FoundSubject = "Oh, it's {0}!";
     public static string FoundPoints = "That's worth {0} points.";
-    public static string FacingAway = "Oh, but it's facing away from the camera. I'm afraid that's minus {0} points.";
-    public static string GoodVisibility = "And you can see it perfectly clearly! 100% visibility, well done.";
-    public static string OKVisibility = "You can see most of it clearly, but overall it's only about {0}% visible.";
-    public static string PoorVisibility = "You can't see it very clearly at all. Only about {0}% of it isn't blocked by obstacles in the shot.";
-    public static string GoodCenter = "Very nice! It's perfectly centered in the shot. That's plus {0} points!";
-    public static string OKCenter = "It's a little off center, but not too bad. That's plus {0} points.";
-    public static string PoorCenter = "The cryptid is nowhere near the center of the shot. Try to frame it better next time. {0} points.";
-    public static string GoodDistance = "Oho! This is a pretty close up shot! Well done, that's plus {0} points.";
-    public static string OKDistance = "It's a pretty good distance away. That's plus {0} points.";
-    public static string PoorDistance = "Hmm... it's pretty far away. I know it's asking a lot, but see if you can get closer next time. {0} points.";
-    public static string SpecialPose = "Ah, and a very nice pose, too. That's {0} bonus points.";
-    public static string DoubleCryptid = "Oh! And there's more than one cryptid in the shot! Excellent work, that's worth double.";
+    public static string FacingAway = "Oh, but it's facing away from the camera. \nI'm afraid that's minus {0} points.";
+    public static string GoodVisibility = "And you can see it perfectly clearly! \n100% visibility, well done.";
+    public static string OKVisibility = "You can see most of it clearly, but some of it is blocked \nby obstacles in the shot.";
+    public static string PoorVisibility = "You can't see it very clearly at all. A lot of it is blocked \nby obstacles in the shot.";
+    public static string GoodCenter = "Very nice! It's perfectly centered in the shot. \nThat's plus {0} points!";
+    public static string OKCenter = "It's a little off center, but not too bad. \nThat's plus {0} points.";
+    public static string PoorCenter = "The cryptid is nowhere near the center of the shot. \nTry to frame it better next time. {0} points.";
+    public static string GoodDistance = "Oho! This is a pretty close up shot! Well done, \nthat's plus {0} points.";
+    public static string OKDistance = "It's a pretty good distance away. \nThat's plus {0} points.";
+    public static string PoorDistance = "Hmm... it's pretty far away. I know it's asking a lot, but \nsee if you can get closer next time. {0} points.";
+    public static string SpecialPose = "Ah, and a very nice pose, too. \nThat's {0} bonus points.";
+    public static string DoubleCryptid = "Oh! And there's more than one cryptid in the shot! \nExcellent work, that's worth double.";
     public static string EndGrading = "Let's see, overall I give this photo... {0} points.";
-    public static string ExistingEntry = "Oh, it looks like you already have an entry for this cryptid. Your last photo was worth {0} points.";
-    public static string OverwritePrompt = "Which photo would you like to keep for the CryptidNomicon?";
+    public static string ExistingEntry = "Oh, it looks like you already have an entry for this \ncryptid. Your last photo was worth {0} points.";
+    public static string OverwritePrompt = "Which photo would you like to keep for the \nCryptidNomicon?";
     public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
     public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
 
@@ -81,14 +81,14 @@ public static class Constants {
     //ted intro
     public static string[] TedIntro =
     {
-        "Ah, you must be that photographer I hired! Welcome, welcome, do come in.",
-        "I'm Dr. Ted Krupp, Ph.D. But you can just call me Ted. Or Dr. Ted, if you're feeling fancy.",
-        "This cabin is my base for conducting my research. Research on what? Why, cryptids of course!",
-        "Shouldn't you already know that? I'm sure it was in the email I sent. ...You are the photographer I hired, right?",
-        "Well, it doesn't matter who you are, as long as you can take pictures. That's your job, to take pictures of cryptids for me.",
-        "I'll be using your photos for my upcoming book, the Cryptid-Nomicon. Not the Cryptonomicon. That's something else.",
-        "You shouldn't have much trouble finding cryptids in the woods nearby. They seem to like it around here.",
-        "When you're ready to head out, just select \"Embark\" or click on the camera. But no rush of course.",
+        "Ah, you must be that photographer I hired! Welcome, \nwelcome, do come in.",
+        "I'm Dr. Ted Krupp, Ph.D. But you can just call me Ted. \nOr Dr. Ted, if you're feeling fancy.",
+        "This cabin is my base for conducting my research. \nResearch on what? Why, cryptids of course!",
+        "Shouldn't you already know that? I'm sure it was in the \nemail I sent. ...You are the photographer I hired, right?",
+        "Well, it doesn't matter who you are, as long as you can \ntake pictures. That's your job, to take pictures of \ncryptids for me.",
+        "I'll be using your photos for my upcoming book, the \nCryptid-Nomicon. Not the Cryptonomicon. That's \nsomething else.",
+        "You shouldn't have much trouble finding cryptids in the \nwoods nearby. They seem to like it around here.",
+        "When you're ready to head out, just select \"Embark\" \nor click on the camera. But no rush of course.",
 
         //not really part of the intro, just a sample line to give approximate max length
         //"What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over"
@@ -123,13 +123,13 @@ public static class Constants {
     public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()
     {
         {Tsuchinoko,"Tsuchinoko, the fat snake cryptid, is identifiable by his distinct round belly. He is Japanese in origin and rumoured to have a propensity for telling lies and drinking alcohol." },
-        {Nessie,"Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a popular and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
-        {Frogman,"These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands, but that's just silly." },
+        {Nessie,"Affectionately dubbed \"Nessie\" by her fans, the Loch Ness Monster is a famous and beloved aquatic creature. In 1933 she was put under an order of protection by the Scottish Government; serious legal consequences await anyone who would do her harm." },
+        {Frogman,"These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands that shoot lightning, but that's just silly." },
         {Fresno, "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
         {Jackalope, "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." },
         {Bigfoot, "The man, the myth, the legend, Bigfoot himself." },
-        {Flatwoods, "flatwoods text" },
-        {Mothman, "mothman text" }
+        {Flatwoods, "Known for her signature skirt and hood, this stylish creature was first spotted in the town of Flatwoods in 1952 after a mysterious bright light crossed the night sky. Though there were several additional reports shortly after her first appearance, there have been no new sightings since the 50s." },
+        {Mothman, "Alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law" }
     };
 
     

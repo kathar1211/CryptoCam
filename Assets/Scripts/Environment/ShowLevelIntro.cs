@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class ShowLevelIntro : MonoBehaviour
@@ -10,6 +11,8 @@ public class ShowLevelIntro : MonoBehaviour
     IntroCameraBehavior[] introCameras; //cut between these cameras
     [SerializeField]
     Camera mainCamera; //for when the intro is done
+    [SerializeField]
+    FirstPersonController fps;
 
     //turn intro on and off in editor
     [SerializeField]
@@ -70,6 +73,7 @@ public class ShowLevelIntro : MonoBehaviour
         mainCamera.gameObject.SetActive(true);
         introFinished = true;
         canvas.SetActive(true);
+        fps.enabled = true;
     }
 
     //iterate through cameras, setting them active for their active duration
@@ -101,5 +105,8 @@ public class ShowLevelIntro : MonoBehaviour
         timer = 0;
         activeCameraIndex = 0;
         introCameras[activeCameraIndex].ActivateCamera();
+
+        //pause controls until intro is done
+        fps.enabled = false;
     }
 }

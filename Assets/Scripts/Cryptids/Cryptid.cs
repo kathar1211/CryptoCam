@@ -31,6 +31,9 @@ public class Cryptid : MonoBehaviour {
     //disappear when touched
     [SerializeField] GameObject particles;
 
+    //used for determining if cryptid is visible/centered in shot
+    public Transform CenterOfMass; 
+
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();

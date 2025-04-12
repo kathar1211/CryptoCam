@@ -51,9 +51,8 @@ public class FlatwoodsMonster : Cryptid
         base.Update();
         if (lockMovementSuper) { return; }
 
-        if (Photography.Instance.CameraReady
-            && currentState != MoveState.flee && currentState != MoveState.turnAway 
-            && currentState != MoveState.turnToward && currentState != MoveState.pose
+        if (IsInCameraView()
+            && (currentState == MoveState.wander || currentState == MoveState.hover) 
             && poseCooldownTimer <= 0)
         {
             avoidTarget = Photography.Instance.gameObject.transform;
@@ -101,8 +100,12 @@ public class FlatwoodsMonster : Cryptid
                     poseTimer = 0;
                 }
 
-                //after a certain amount of time we can turn around and do a pose
-                poseTimer += Time.deltaTime;
+                //after a certain amount of time in frame we can turn around and do a pose
+                if (IsInCameraView())
+                {
+                    poseTimer += Time.deltaTime;
+                }
+
                 if (poseTimer >= timeUntilPose)
                 {
                     poseTimer = 0;
@@ -208,7 +211,18 @@ public class FlatwoodsMonster : Cryptid
     {
         //not enough to be in the pose state- i want the specific animation where shes holding the peace sign
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("peace_hold")) { return true; }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("peace_start")) { return true; }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("peace_end")) { return true; }
 
         return base.SpecialPose();
+    }
+
+    public bool IsInCameraView()
+    {
+        if (!Photography.Instance.CameraReady) { return false; }
+        if (!Photography.Instance.IsInCameraView(renderer)){ return false; }
+
+        return true;
+
     }
 }
