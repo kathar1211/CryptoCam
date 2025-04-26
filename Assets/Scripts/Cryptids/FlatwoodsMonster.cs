@@ -37,12 +37,20 @@ public class FlatwoodsMonster : Cryptid
     private const string PoseBool = "Pose";
     private const string MoveBool = "Move";
 
+    RandomChanceInterval HoverChance;
+    RandomChanceInterval LookAroundChance;
+    RandomChanceInterval WanderChance;
+
     // Start is called before the first frame update
     void Start()
     {
         baseScore = 175;
         cryptidType = Constants.Flatwoods;
         StartUp();
+
+        HoverChance = new RandomChanceInterval(2, .4f);
+        LookAroundChance = new RandomChanceInterval(1, .1f);
+        WanderChance = new RandomChanceInterval(1, .3f);
     }
 
     // Update is called once per frame
@@ -81,7 +89,7 @@ public class FlatwoodsMonster : Cryptid
                 Move(runSpeed);
 
                 //random chance to hover ominously
-                if (RandomChance(.3f)) {
+                if (HoverChance.UpdateTimerAndCheckSuccess()) {
                     animator.SetBool(MoveBool, false);
                     currentState = MoveState.hover;
                 }
@@ -178,13 +186,13 @@ public class FlatwoodsMonster : Cryptid
                 }
 
                 //chance to look around (animation only no movestate change)
-                if (RandomChance(.1f))
+                if (LookAroundChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetTrigger(LookAroundTrigger);
                 }
 
                 //chance to return to wandering
-                else if (RandomChance(.5f))
+                else if (WanderChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetBool(MoveBool, true);
                     currentState = MoveState.wander;

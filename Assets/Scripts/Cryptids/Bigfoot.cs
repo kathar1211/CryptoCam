@@ -47,6 +47,12 @@ public class Bigfoot : Cryptid
     public float timeToSit = -1; //negative one indicates infinite
     public float timeToScratch = 0;
 
+    //random driven behaviors
+    RandomChanceInterval LookPoseChance;
+    RandomChanceInterval IdleChance;
+    RandomChanceInterval WalkChance;
+    RandomChanceInterval SitChance;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +77,11 @@ public class Bigfoot : Cryptid
                 animator.SetBool(WalkBool, false);
                 break;
         }
+
+        LookPoseChance = new RandomChanceInterval(1, .06f);
+        IdleChance = new RandomChanceInterval(3, .1f);
+        WalkChance = new RandomChanceInterval(3, .2f);
+        SitChance = new RandomChanceInterval(3, .2f);
     }
 
     // Update is called once per frame
@@ -93,17 +104,17 @@ public class Bigfoot : Cryptid
                 Move(walkSpeed);
 
                 //chance to do the pose
-                if (RandomChance(.1f) || (lookedOnce && RandomChance(.05f)))
+                if (LookPoseChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetTrigger(TurnTrigger);
-                    lookedOnce = true; //reset value when bigfoot returns to idle
+                    LookPoseChance.SetChance(.03f); //lower the chance of subsequent poses
                     break ;
                 }
 
                 //chance to stop and idle for a bit
-                if (RandomChance(.05f))
+                if (IdleChance.UpdateTimerAndCheckSuccess())
                 {
-                    lookedOnce = false;
+                    LookPoseChance.SetChance(.06f); //put this back to normal
                     animator.SetBool(WalkBool, false);
                     currentState = MoveState.idle;
                 }
@@ -123,14 +134,14 @@ public class Bigfoot : Cryptid
                 break;
             case MoveState.idle:
                 //chance to start walkin
-                if (RandomChance(.1f))
+                if (WalkChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetBool(WalkBool, true);
                     currentState = MoveState.wander;
                 }
 
                 //chance to start sittin
-                if (RandomChance(.1f))
+                if (SitChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetBool(SitBool, true);
                     currentState = MoveState.sit;

@@ -22,6 +22,10 @@ public class Nessie : Cryptid {
 
     bool justChangedStates;
 
+    RandomChanceInterval DiveChance;
+    RandomChanceInterval BreachChance;
+    RandomChanceInterval LookAroundChance;
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -30,6 +34,10 @@ public class Nessie : Cryptid {
         currentState = MoveState.underWaterSwim;
         ripples = GetComponentInChildren<ParticleSystem>();
         head = GetComponentInChildren<HeadBone>();
+
+        DiveChance = new RandomChanceInterval(2, .15f);
+        BreachChance = new RandomChanceInterval(3, .2f);
+        LookAroundChance = new RandomChanceInterval(2, .3f);
     }
 	
 	// Update is called once per frame
@@ -47,7 +55,7 @@ public class Nessie : Cryptid {
                     transform.Translate(Vector3.down * Time.deltaTime * upDownSpeed/2); //move down until we're fully below water
                     
                 }
-                else if (RandomChance(.05f))
+                else if (BreachChance.UpdateTimerAndCheckSuccess())
                //else if (RandomChance(1))
                 {
                     //animator.SetBool("Breach", true);
@@ -76,22 +84,21 @@ public class Nessie : Cryptid {
                 break;
             case MoveState.aboveWaterSwim:
                 MoveinCircle(forwardSpeed / 2, rotateSpeed / 2); //move half as fast above water
-                if (RandomChance(.1f) || (lookedOnce && RandomChance(.2f)))
-                //if (RandomChance(0))
+                if (DiveChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", false);
                     animator.SetBool("Dive", true);
                     currentState = MoveState.underWaterSwim;
                     ripples.Stop();
-                    lookedOnce = false; //reset value when nessie descends
+                    DiveChance.SetChance(.15f); //reset value when nessie descends
                 }
-                else if(RandomChance(.2f))
+                else if(LookAroundChance.UpdateTimerAndCheckSuccess())
                 {
                     animator.SetBool("Breach", false);
                     animator.SetBool("Look", true);
                     animator.SetBool("Dive", false);
-                    lookedOnce = true; //curb back on consecutive looking around animations by increasing the chance of descending after one look per surface appearance
+                    DiveChance.SetChance(.3f); //curb back on consecutive looking around animations by increasing the chance of descending after one look per surface appearance
                       
                     currentState = MoveState.look;
                     

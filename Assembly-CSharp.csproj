@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\Util\Move.cs" />
     <Compile Include="Assets\Scripts\Util\PauseSoundOnAnimationState.cs" />
     <Compile Include="Assets\Scripts\Util\PlaySoundOnAnimationState.cs" />
+    <Compile Include="Assets\Scripts\Util\RandomChanceInterval.cs" />
     <Compile Include="Assets\Scripts\Util\Reverse.cs" />
     <Compile Include="Assets\Scripts\Util\Rotate.cs" />
     <Compile Include="Assets\Scripts\Util\Save.cs" />
