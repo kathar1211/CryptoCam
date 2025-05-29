@@ -11,15 +11,16 @@
 		_MaxWidth("Max Displacement Width", Range(0, 2)) = 0.1 // width of the line around the dissolve
 		_Radius("Radius", float) = 6 // width of the line around the dissolve
 		_Multiplier("Multiplier", float) = 7 //increase bigness of sway
+		_AlphaCutoff("Alpha Cutoff", float) = .5
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "DisableBatching" = "True" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Opaque" "DisableBatching" = "True" }
 		LOD 200
 		Cull Off
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf CelShadingForward vertex:vert addshadow alpha:fade keepalpha
+		#pragma surface surf CelShadingForward vertex:vert addshadow alphatest:_AlphaCutoff keepalpha
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -43,7 +44,6 @@
 		float _Rigidness;
 		float _MaxWidth;
 		float _Multiplier;
-
 
 		struct Input {
 			float2 uv_MainTex;

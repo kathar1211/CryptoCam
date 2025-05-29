@@ -47,7 +47,7 @@ public class Ted : MonoBehaviour {
     public Sprite happy;
 
     //teds actual image, not his container
-    public Image tedImg;
+    public SpriteWithShadow tedImg;
 
 	// Use this for initialization
 	void Start () {
@@ -65,49 +65,49 @@ public class Ted : MonoBehaviour {
         switch (mood)
         {
             case TedMoods.Default:
-                tedImg.sprite = normal;
+                tedImg.SetSprite(normal);
                 break;
             case TedMoods.LookDownHandUp:
-                tedImg.sprite = lookDownHandUp;
+                tedImg.SetSprite(lookDownHandUp);
                 break;
             case TedMoods.LookDownHandUpBlush:
-                tedImg.sprite = lookDownHandUpBlush;
+                tedImg.SetSprite(lookDownHandUpBlush);
                 break;
             case TedMoods.LookUpHandUp:
-                tedImg.sprite = lookUpHandUp;
+                tedImg.SetSprite(lookUpHandUp);
                 break;
             case TedMoods.LookUp:
-                tedImg.sprite = lookUp;
+                tedImg.SetSprite(lookUp);
                 break;
             case TedMoods.LookUpBlush:
-                tedImg.sprite = lookUpBlush;
+                tedImg.SetSprite(lookUpBlush);
                 break;
             case TedMoods.SquintHandUp:
-                tedImg.sprite = squintHandUp;
+                tedImg.SetSprite(squintHandUp);
                 break;
             case TedMoods.SquintHandUpBlush:
-                tedImg.sprite = squintHandUpBlush;
+                tedImg.SetSprite(squintHandUpBlush);
                 break;
             case TedMoods.Surprised:
-                tedImg.sprite = surprised;
+                tedImg.SetSprite(surprised);
                 break;
             case TedMoods.Disappointed:
-                tedImg.sprite = disappointed;
+                tedImg.SetSprite(disappointed);
                 break;
             case TedMoods.Satisfied:
-                tedImg.sprite = satisfied;
+                tedImg.SetSprite(satisfied);
                 break;
             case TedMoods.LeanForward:
-                tedImg.sprite = leanForward;
+                tedImg.SetSprite(leanForward);
                 break;
             case TedMoods.Pleased:
-                tedImg.sprite = pleased;
+                tedImg.SetSprite(pleased);
                 break;
             case TedMoods.Uncertain:
-                tedImg.sprite = uncertain;
+                tedImg.SetSprite(uncertain);
                 break;
             case TedMoods.Happy:
-                tedImg.sprite = happy;
+                tedImg.SetSprite(happy);
                 break;
         }
     }
