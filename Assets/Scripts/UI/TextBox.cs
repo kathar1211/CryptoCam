@@ -342,7 +342,7 @@ public class TextBox : MonoBehaviour {
             LeftOptionButton.onClick.RemoveAllListeners();
             LeftOptionButton.onClick.AddListener(buttonAction);
             //if (shouldAdvanceDialogue) { LeftOptionButton.onClick.AddListener(Continue); }
-            Text buttonLabel = LeftOptionButton.GetComponentInChildren<Text>();
+            TextMeshProUGUI buttonLabel = LeftOptionButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonLabel != null) { buttonLabel.text = buttonText; }
             //if (removeAfterInvoke) { LeftOptionButton.onClick.AddListener(ClearLeftButtonAction); }
         }
@@ -362,8 +362,8 @@ public class TextBox : MonoBehaviour {
         {
             RightOptionButton.onClick.RemoveAllListeners();
             RightOptionButton.onClick.AddListener(() => buttonAction.Invoke());
-           // if (shouldAdvanceDialogue) { RightOptionButton.onClick.AddListener(Continue); }
-            Text buttonLabel = RightOptionButton.GetComponentInChildren<Text>();
+            // if (shouldAdvanceDialogue) { RightOptionButton.onClick.AddListener(Continue); }
+            TextMeshProUGUI buttonLabel = RightOptionButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonLabel != null) { buttonLabel.text = buttonText; }
             // if (removeAfterInvoke) { RightOptionButton.onClick.AddListener(ClearRightButtonAction); }
         }

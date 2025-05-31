@@ -11,6 +11,8 @@ public class SpriteFaceForward : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (Camera.main == null) { return; }
+
 		//sprite always facin camera
 		Vector3 towardsCamera = this.transform.position - Camera.main.transform.position;
 		Quaternion rotation = Quaternion.LookRotation(towardsCamera, Vector3.up);

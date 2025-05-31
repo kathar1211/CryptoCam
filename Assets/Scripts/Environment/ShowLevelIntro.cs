@@ -26,6 +26,9 @@ public class ShowLevelIntro : MonoBehaviour
     //hide canvas until intro is over so its appearance will indicate when gameplay has begun
     public GameObject canvas;
 
+    //this needs to snap to whatever the active camera is for consistent lighting
+    public GameObject cameraIlluminationLight;
+
     //play appropriate music
     [SerializeField]
     AudioSource BGMIntro;
@@ -71,6 +74,7 @@ public class ShowLevelIntro : MonoBehaviour
             cam.DeactivateCamera();
         }
         mainCamera.gameObject.SetActive(true);
+       // cameraIlluminationLight.transform.SetParent(mainCamera.transform, false);
         introFinished = true;
         canvas.SetActive(true);
         fps.enabled = true;
@@ -95,6 +99,7 @@ public class ShowLevelIntro : MonoBehaviour
             }
             timer = 0;
             introCameras[activeCameraIndex].ActivateCamera();
+            MoveLightToActiveCamera();
         }
     }
 
@@ -104,9 +109,18 @@ public class ShowLevelIntro : MonoBehaviour
         if (BGMIntro != null) { BGMIntro.Play(); }
         timer = 0;
         activeCameraIndex = 0;
-        introCameras[activeCameraIndex].ActivateCamera();
+        IntroCameraBehavior cam = introCameras[activeCameraIndex];
+        cam.ActivateCamera();
+        MoveLightToActiveCamera();
 
         //pause controls until intro is done
         fps.enabled = false;
+        mainCamera.gameObject.SetActive(false);
+    }
+
+    void MoveLightToActiveCamera()
+    {
+        //IntroCameraBehavior cam = introCameras[activeCameraIndex];
+        //cameraIlluminationLight.transform.SetParent(cam.transform, false);
     }
 }

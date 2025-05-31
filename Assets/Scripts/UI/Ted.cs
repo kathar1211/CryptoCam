@@ -48,6 +48,7 @@ public class Ted : MonoBehaviour {
 
     //teds actual image, not his container
     public SpriteWithShadow tedImg;
+    public Animator tedAnimator;
 
 	// Use this for initialization
 	void Start () {
@@ -110,5 +111,10 @@ public class Ted : MonoBehaviour {
                 tedImg.SetSprite(happy);
                 break;
         }
+    }
+
+    public void SlideTed()
+    {
+        tedAnimator.SetTrigger("Slide");
     }
 }

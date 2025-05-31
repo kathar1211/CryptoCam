@@ -14,7 +14,7 @@ public class CabinLab : MonoBehaviour {
     public GameObject textMarker;
     int currentButton;
 
-    public GameObject textBox; //for dialogue
+    public TextBox textBox; //for dialogue
     public GameObject ted;
 
     public GameObject cryptidNomicon;
@@ -66,7 +66,7 @@ public class CabinLab : MonoBehaviour {
 
         options.SetActive(false);
 
-        textBox.SetActive(false);
+        textBox.gameObject.SetActive(false);
         gradingThumbnailHolder.gameObject.SetActive(false);
 
         //if the gamemanager object is found and it has a non empty list of photos, jump right into grading mode
@@ -86,9 +86,9 @@ public class CabinLab : MonoBehaviour {
                 string[] dialogue = { Constants.WelcomeBack };
                 TedMoods[] sprites = { TedMoods.Default};
                 string[] emptyScoreTxt = { "" };
-                textBox.GetComponent<TextBox>().ClearTextQueue();
-                textBox.GetComponent<TextBox>().FeedText(dialogue, sprites, emptyScoreTxt);
-                textBox.GetComponent<TextBox>().DisplayText();
+                textBox.ClearTextQueue();
+                textBox.FeedText(dialogue, sprites, emptyScoreTxt);
+                textBox.DisplayText();
                 //currentState = MenuState.Grading;
             }
         }
@@ -128,10 +128,10 @@ public class CabinLab : MonoBehaviour {
 
         currentState = MenuState.Talking;
         PlayerPrefs.SetInt(Constants.FirstPlay, 1);
-        textBox.SetActive(true);
-        textBox.GetComponent<TextBox>().ClearTextQueue();
-        textBox.GetComponent<TextBox>().FeedText(Constants.TedIntro, Constants.IntroMoods);
-        textBox.GetComponent<TextBox>().DisplayText();
+        textBox.gameObject.SetActive(true);
+        textBox.ClearTextQueue();
+        textBox.FeedText(Constants.TedIntro, Constants.IntroMoods);
+        textBox.DisplayText();
 
         introPlaying = false;
         yield return null;
@@ -195,22 +195,22 @@ public class CabinLab : MonoBehaviour {
             case MenuState.Grading:
                 //if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
                 {
-                    if (!textBox.activeInHierarchy && gradingIndex < gradeablePhotos.Count - 1)
+                    if (!textBox.gameObject.activeInHierarchy && gradingIndex < gradeablePhotos.Count - 1)
                     {
                         Debug.Log("queued grading for photo " + gradingIndex + ". increasing to " + gradingIndex + 1);
                         gradingIndex++;
                         //if textbox is not active it means its finished with the current photo 
                         //set it active again and queue up the next photo
-                        textBox.GetComponent<TextBox>().ClearTextQueue();
-                        textBox.SetActive(true);
+                        textBox.ClearTextQueue();
+                        textBox.gameObject.SetActive(true);
                         GradePhoto(gradeablePhotos[gradingIndex]);
                     }
                 }
-                if (!textBox.activeInHierarchy && gradingIndex >= gradeablePhotos.Count - 1)
+                if (!textBox.gameObject.activeInHierarchy && gradingIndex >= gradeablePhotos.Count - 1)
                 {
                     //outro
-                    textBox.GetComponent<TextBox>().FeedText(Constants.DoneGrading,TedMoods.Default);
-                    textBox.GetComponent<TextBox>().DisplayText();
+                    textBox.FeedText(Constants.DoneGrading,TedMoods.Default);
+                    textBox.DisplayText();
                     currentState = MenuState.GradingDone;
                     gradingThumbnailHolder.gameObject.SetActive(false);
                     //send over the photos to the cyrptidnomicon
@@ -218,7 +218,7 @@ public class CabinLab : MonoBehaviour {
                 }
                 break;
             case MenuState.GradingDone:
-                if (!textBox.activeInHierarchy)
+                if (!textBox.gameObject.activeInHierarchy)
                 {
                     currentState = MenuState.Main;
                     gradingThumbnailHolder.gameObject.SetActive(false);
@@ -268,7 +268,7 @@ public class CabinLab : MonoBehaviour {
         if (currentState == MenuState.Main)
         {
             currentState = MenuState.Talking;
-            textBox.SetActive(true);
+            textBox.gameObject.SetActive(true);
             ted.GetComponent<TedConvos>().Talk();
         }
     }
@@ -302,11 +302,11 @@ public class CabinLab : MonoBehaviour {
         if (currentState == MenuState.Main)
         {
             currentState = MenuState.Talking;
-            textBox.SetActive(true);
+            textBox.gameObject.SetActive(true);
             string txt = "You can't look at the items yet.";
-            textBox.GetComponent<TextBox>().FeedText(txt);
-            textBox.GetComponent<TextBox>().FeedTed(TedMoods.SquintHandUp);
-            textBox.GetComponent<TextBox>().DisplayText();
+            textBox.FeedText(txt);
+            textBox.FeedTed(TedMoods.SquintHandUp);
+            textBox.DisplayText();
         }
     }
 
@@ -315,11 +315,11 @@ public class CabinLab : MonoBehaviour {
         if (currentState == MenuState.Main)
         {
             currentState = MenuState.Talking;
-            textBox.SetActive(true);
+            textBox.gameObject.SetActive(true);
             string txt = "You can't look at the gallery yet.";
-            textBox.GetComponent<TextBox>().FeedText(txt);
-            textBox.GetComponent<TextBox>().FeedTed(TedMoods.Uncertain);
-            textBox.GetComponent<TextBox>().DisplayText();
+            textBox.FeedText(txt);
+            textBox.FeedTed(TedMoods.Uncertain);
+            textBox.DisplayText();
         }
     }
 
@@ -387,8 +387,8 @@ public class CabinLab : MonoBehaviour {
             dialogue.Add(Constants.NoPoints);
             sprites.Add(TedMoods.SquintHandUp);
             scoreUpdates.Add(Constants.FinalScore + 0);
-            textBox.GetComponent<TextBox>().FeedText(dialogue, sprites);
-            textBox.GetComponent<TextBox>().DisplayText();
+            textBox.FeedText(dialogue, sprites);
+            textBox.DisplayText();
             return;
         }
         else
@@ -517,7 +517,7 @@ public class CabinLab : MonoBehaviour {
         scoreUpdates.Add(Constants.FinalScore + score);
 
         //send off the text and sprites
-        TextBox actualTextBox = textBox.GetComponent<TextBox>();
+        TextBox actualTextBox = textBox;
         actualTextBox.ClearTextQueue();
         actualTextBox.FeedText(dialogue, sprites, scoreUpdates);
         
@@ -570,6 +570,7 @@ public class CabinLab : MonoBehaviour {
     public void ShowPreviousPhoto()
     {
         gradingThumbnailHolder.Play("SlideOver");
+        textBox.ted.SlideTed();
 
         Debug.Log("grabbing existing photo at index " + gradingIndex);
         CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
@@ -580,18 +581,18 @@ public class CabinLab : MonoBehaviour {
     //show buttons that give players the choice to keep an old photo vs a new one
     public void PromptPhotoChoice()
     {
-        textBox.GetComponent<TextBox>().ButtonsIn();
+        textBox.ButtonsIn();
     }
 
     //if the player chooses to use the new photo
     public void ChoseNewPhoto()
     {
         gradingThumbnailHolder.Play("NewSelected");
-        TextBox actualTextbox = textBox.GetComponent<TextBox>();
-        actualTextbox.ButtonsOut();
-        actualTextbox.FeedText(Constants.NewPhotoSelected, TedMoods.Satisfied);
-        actualTextbox.Continue();
-        actualTextbox.ClearRightButtonAction();
+        textBox.ted.SlideTed();
+        textBox.ButtonsOut();
+        textBox.FeedText(Constants.NewPhotoSelected, TedMoods.Satisfied);
+        textBox.Continue();
+        textBox.ClearRightButtonAction();
 
         //new photo is already in the list of photos that will be processed, so no need to do anything there
     }
@@ -600,11 +601,11 @@ public class CabinLab : MonoBehaviour {
     public void ChoseOldPhoto()
     {
         gradingThumbnailHolder.Play("PreviousSelected");
-        TextBox actualTextbox = textBox.GetComponent<TextBox>();
-        actualTextbox.ButtonsOut();
-        actualTextbox.FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
-        actualTextbox.Continue();
-        actualTextbox.ClearLeftButtonAction();
+        textBox.ted.SlideTed();
+        textBox.ButtonsOut();
+        textBox.FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
+        textBox.Continue();
+        textBox.ClearLeftButtonAction();
 
         //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
         CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();

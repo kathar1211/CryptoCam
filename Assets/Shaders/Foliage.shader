@@ -14,13 +14,13 @@
 		_AlphaCutoff("Alpha Cutoff", float) = .5
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType" = "Opaque" "DisableBatching" = "True" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "DisableBatching" = "Flase" }
 		LOD 200
 		Cull Off
 		
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf CelShadingForward vertex:vert addshadow alphatest:_AlphaCutoff keepalpha
+		#pragma surface surf CelShadingForward vertex:vert addshadow alpha:fade keepalpha
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0

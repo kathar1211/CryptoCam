@@ -60,7 +60,7 @@ public class Photography : MonoBehaviour {
     public static Photography Instance = null;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
 
         if (Instance == null)
         {

@@ -44,11 +44,7 @@ public class ThrowObject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         timer += Time.deltaTime;
-        //dont throw items if camera is poised for taking pictures
-        if (photographer != null && photographer.CameraReady)
-        {
-            return;
-        }
+
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
 		if (CustomController.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
