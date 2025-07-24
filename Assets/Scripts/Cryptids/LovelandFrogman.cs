@@ -33,8 +33,6 @@ public class LovelandFrogman : Cryptid {
     Transform fleeFromTarget;
     public float safeZone; //distance at which we no longer flee
 
-    bool needToAdjustPosition; //used to adjust transform information to match up with visuals after an edge leap
-
     [SerializeField]
     float timeToTurn; //how often to switch directions
     float timeToSit; //how long to sit after a leap
@@ -139,13 +137,6 @@ public class LovelandFrogman : Cryptid {
                 break;
         }
 
-        //apply position offset after leaping
-        if (needToAdjustPosition)
-        {
-            transform.position += leapOffset;
-            needToAdjustPosition = false;
-        }
-
         //clear timer and set new direction
         if (timer > timeToTurn && currentState != MoveState.sit)
         {
@@ -162,10 +153,23 @@ public class LovelandFrogman : Cryptid {
         animator.SetBool("climb", false);
         animator.Play("sit", 0);
         currentState = MoveState.sit;
-        needToAdjustPosition = true;
+        AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
         rb.useGravity = true;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    //event for when we're about to push the frog off the ledge
+    public void StartFrogFall()
+    {
+        rb.useGravity = false;
+        AdjustPosition(false);
+    }
+
+    //used when we need to snap frogman to a new position before/after doing animations that move him
+    private void AdjustPosition(bool preleap)
+    {
+        if (preleap) { transform.position += leapOffset; }
+        else { transform.position -= leapOffset; }
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -222,10 +226,31 @@ public class LovelandFrogman : Cryptid {
         }
     }
 
-    //sitting is frogmans special pose
+    //leaping is frogmans special pose
     public override bool SpecialPose()
     {
-        if (currentState == MoveState.sit){ return true; }
+        if (animator.GetBool("climb")){ return true; }
         return base.SpecialPose();
+    }
+
+    public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
+    {
+       switch (currentState)
+        {
+            case MoveState.sit:
+                break;
+            case MoveState.walk:
+                if (leftImpact)
+                {
+                    animator.Play("stand_bonk_left");
+                }
+                else
+                {
+                    animator.Play("stand_bonk_right");
+                }
+                break;
+            case MoveState.swim:
+                break;
+        }
     }
 }

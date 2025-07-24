@@ -405,7 +405,7 @@ ModelImporter:
       name: sit_bonk_forward
       takeName: Armature|Armature|Armature|ArmatureAction
       firstFrame: 291
-      lastFrame: 392
+      lastFrame: 391
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
