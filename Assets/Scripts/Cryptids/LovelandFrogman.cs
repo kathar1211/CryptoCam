@@ -8,16 +8,13 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, edgeLeap, sit, flee}
+    enum MoveState { swim, walk, edgeLeap, sit, flee, stand, floating}
     [SerializeField] MoveState currentState;
 
     //amount position needs to be adjusted after a leap
     [SerializeField]
     Vector3 leapOffset;
 
-    //amount position needs to be adjusted before a leap
-    [SerializeField]
-    Vector3 preleapOffset;
 
     public float walkSpeed;
     public float swimSpeed;
@@ -55,12 +52,6 @@ public class LovelandFrogman : Cryptid {
         cryptidType = Constants.Frogman;
         baseScore = 35;
         ripples = GetComponentInChildren<ParticleSystem>();
-
-        //convert offset to be relative to forgmans direction
-        Vector3 upMove = new Vector3(transform.up.x * leapOffset.y, transform.up.y * leapOffset.y, transform.up.z * leapOffset.y);
-        Vector3 forwardMove = new Vector3(transform.forward.x * leapOffset.z, transform.forward.y * leapOffset.z, transform.forward.z * leapOffset.z);
-        leapOffset = upMove + forwardMove;
-        preleapOffset = leapOffset;
 
         rotateSpeed = Random.Range(-maxRotateSpeed, maxRotateSpeed);
 
@@ -112,11 +103,20 @@ public class LovelandFrogman : Cryptid {
                 //move forward after setting direction in other methods
                 Move(walkSpeed);
                 break;
+            case MoveState.stand:
             case MoveState.sit:
                 if (timer > timeToSit)
                 {
                     timer = 0;
                     animator.SetBool("creep", true);
+                    currentState = MoveState.walk;
+                }
+                break;
+            case MoveState.floating:
+                if (timer > timeToSit)
+                {
+                    timer = 0;
+                    animator.SetBool("swim", true);
                     currentState = MoveState.walk;
                 }
                 break;
@@ -151,11 +151,12 @@ public class LovelandFrogman : Cryptid {
     {
         animator.SetBool("creep", false);
         animator.SetBool("climb", false);
-        animator.Play("sit", 0);
         currentState = MoveState.sit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
-        rb.useGravity = true;
+
+        //debug
+        GameObject.Instantiate(new GameObject(), this.transform);
     }
 
     //event for when we're about to push the frog off the ledge
@@ -163,20 +164,41 @@ public class LovelandFrogman : Cryptid {
     {
         rb.useGravity = false;
         AdjustPosition(false);
+        timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+        currentState = MoveState.floating;
+        animator.SetBool("swim", false);
+    }
+
+    //set this midway through frogmans leap so its a little less jarring when it turns back on
+    public void EnableGravity()
+    {
+        rb.useGravity = true;
     }
 
     //used when we need to snap frogman to a new position before/after doing animations that move him
     private void AdjustPosition(bool preleap)
     {
-        if (preleap) { transform.position += leapOffset; }
-        else { transform.position -= leapOffset; }
+        //convert offset to be relative to frogmans direction
+        Vector3 upMove = new Vector3(transform.up.x * leapOffset.y, transform.up.y * leapOffset.y, transform.up.z * leapOffset.y);
+        Vector3 forwardMove = new Vector3(transform.forward.x * leapOffset.z, transform.forward.y * leapOffset.z, transform.forward.z * leapOffset.z);
+        Vector3 totalMove = (upMove * transform.localScale.y) + (forwardMove * transform.localScale.z);
+
+        if (preleap) {
+            transform.position += totalMove; 
+        }
+        else {
+            transform.position -= totalMove;
+        }
     }
 
     public override void OnTriggerEnter(Collider other)
     { 
         
+        //dont try to handle collisions mid leap
+        if (animator.GetBool("climb")) { return; }
+
         //frogman leaves shore, returns to water
-        if (other.tag == Constants.WaterTag && currentState != MoveState.swim)
+        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.sit)//somethings happening here
         {
             currentState = MoveState.swim;
             animator.Play("swim", 0);
@@ -187,15 +209,16 @@ public class LovelandFrogman : Cryptid {
         //frogman approaches shore
         else if (other.tag == Constants.ShoreTag && currentState == MoveState.swim)
         {
-            transform.Translate(preleapOffset);
-            rb.useGravity = true;
+           // transform.Translate(preleapOffset);
             currentState = MoveState.edgeLeap;
             animator.SetBool("climb", true);
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
-            rb.useGravity = true;
-            //rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+
+            //debug
+            GameObject.Instantiate(new GameObject(), this.transform);
         }
 
 
@@ -238,6 +261,21 @@ public class LovelandFrogman : Cryptid {
        switch (currentState)
         {
             case MoveState.sit:
+                //sit looks for forward and back rather than left/right, so we have to calculate impact direction again
+                //line from cryptid to carrot
+                Vector3 bonkDistance = this.gameObject.transform.position - bonked.gameObject.transform.position;
+
+                //if the line from the cryptid to the carrot is in the same direction as the cryptid's forward vector,
+                //then the carrot is in front of the cryptid
+                bool frontImpact = false;
+                if (Vector3.Dot(this.transform.forward, bonkDistance) < 0)
+                {
+                    frontImpact = false;
+                }
+
+                if (frontImpact) { animator.Play("frogman_sit_bonk_forward"); }
+                else { animator.Play("sit_bonk_back"); }
+
                 break;
             case MoveState.walk:
                 if (leftImpact)
@@ -250,6 +288,14 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
             case MoveState.swim:
+                if (leftImpact)
+                {
+                    animator.Play("swim_bonk_left");
+                }
+                else
+                {
+                    animator.Play("swim_bonk_right");
+                }
                 break;
         }
     }
