@@ -151,12 +151,10 @@ public class LovelandFrogman : Cryptid {
     {
         animator.SetBool("creep", false);
         animator.SetBool("climb", false);
+        animator.SetBool("swim", false);
         currentState = MoveState.sit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
-
-        //debug
-        GameObject.Instantiate(new GameObject(), this.transform);
     }
 
     //event for when we're about to push the frog off the ledge
@@ -167,6 +165,9 @@ public class LovelandFrogman : Cryptid {
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
         currentState = MoveState.floating;
         animator.SetBool("swim", false);
+
+        //cancel out the force applied from the impact of the carrot
+        rb.velocity = Vector3.zero;
     }
 
     //set this midway through frogmans leap so its a little less jarring when it turns back on
@@ -201,7 +202,7 @@ public class LovelandFrogman : Cryptid {
         if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.sit)//somethings happening here
         {
             currentState = MoveState.swim;
-            animator.Play("swim", 0);
+            animator.SetBool("swim", true);
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             //no gravity while swimming
             rb.useGravity = false;
@@ -270,7 +271,7 @@ public class LovelandFrogman : Cryptid {
                 bool frontImpact = false;
                 if (Vector3.Dot(this.transform.forward, bonkDistance) < 0)
                 {
-                    frontImpact = false;
+                    frontImpact = true;
                 }
 
                 if (frontImpact) { animator.Play("frogman_sit_bonk_forward"); }

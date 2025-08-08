@@ -34,6 +34,7 @@ public class BonkableObject : MonoBehaviour
     {
         //become deactivated once you hit the ground
         if (collision.gameObject.tag == Constants.TerrainTag) { Active = false; }
+        else if (collision.gameObject.tag == Constants.WaterTag) { Active = false; }
 
         //todo: we should slowly fade out and then destroy this object once its inactive
     }
