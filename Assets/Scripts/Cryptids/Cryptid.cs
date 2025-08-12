@@ -32,13 +32,17 @@ public class Cryptid : MonoBehaviour {
     [SerializeField] GameObject particles;
 
     //used for determining if cryptid is visible/centered in shot
-    public Transform CenterOfMass; 
+    public Transform CenterOfMass;
+
+    //keep track of obstacles within our path
+    private List<Collider> obstacles;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
         renderer = this.gameObject.GetComponentInChildren<Renderer>();
         animator = GetComponent<Animator>();
+        obstacles = new List<Collider>();
 	}
 	
 	// Update is called once per frame
@@ -147,21 +151,6 @@ public class Cryptid : MonoBehaviour {
         MoveToward(target, rotateSpeed);
     }
 
-    //move away from a given obstacle
-    public virtual void AvoidCollision(Collider other, float avoidSpeed)
-    {
-        if (other == null) { return; }
-        Vector3 objectToCryptid = other.transform.position - transform.position;
-        Vector3 awayFromObject = other.transform.forward * objectToCryptid.magnitude;
-        awayFromObject.y = 0;
-        Vector3 turnAway = Vector3.RotateTowards(transform.forward, awayFromObject, Mathf.PI / 2, 0);
-        /*Vector3 ninetyDegreeTurn = Quaternion.LookRotation(objectToCryptid) * new Vector3(0, 1, 0);
-        ninetyDegreeTurn.x = ninetyDegreeTurn.z = 0;*/
-        transform.rotation = Quaternion.LookRotation(turnAway);
-        targetPos = Vector3.zero;
-       
-    }
-
     //method to deal with player entering certain trigger zones; implementation varies by cryptid
     //todo: delete. not being used as far as i can tell
     public virtual void AvoidPlayer(Collider other)
@@ -184,113 +173,40 @@ public class Cryptid : MonoBehaviour {
     //should be called after doing all other movement calculations- check for object in front of cryptid and rotate if something is found
     public bool AvoidObstacles(float aheadDistance, float rotateSpeed, bool checkHeadLevel = false)
     {
-        //check for obstacles at the level of the cryptids head instead of the ground-
-        //useful for cyrptids like frogman who might not fit under the foliage of trees
-        Vector3 position = transform.position;
-        if (checkHeadLevel)
+        //if there are no obstacles in our path we can peace out
+        if (obstacles == null || obstacles.Count == 0)
         {
-            float height = renderer.bounds.size.y / 2;
-            position = new Vector3(position.x, position.y + height, position.z);
+            return false;
         }
 
-        Ray ray = new Ray(position, transform.forward);
-        RaycastHit hit;
-        RaycastHit leftHit;
-        RaycastHit rightHit;
+        float avoidRotateSpeed = Mathf.Abs(rotateSpeed);
 
-        //double rotate speed so that obstacle avoidance overpowers other rotations
-        rotateSpeed = Mathf.Abs( rotateSpeed);
-
-        //return a bool representing whether avoidance needs to happen
-        bool obstacleAhead = false;
-
-        //check 45 degrees to left and right to determine which way to turn
-        //not considered clear of obstacles unless the cone is clear
-        //45 degrees = pi/4 radians
-        Vector3 forwardLeft = Vector3.RotateTowards(transform.forward, transform.right * -1, Mathf.PI / 4, 0);
-        Vector3 forwardRight = Vector3.RotateTowards(transform.forward, transform.right, Mathf.PI / 4, 0);
-
-        //if (renderer == null) { renderer = this.gameObject.GetComponentInChildren<Renderer>(); }
-        //float cryptidWidth = renderer.bounds.size.x / 2.0f;
-
-        //Ray rightForward = new Ray(transform.position + (transform.right * cryptidWidth), transform.forward);
-        //Ray leftForward = new Ray(transform.position - (transform.right * cryptidWidth), transform.forward);
-
-        //determine which way to turn
-        bool turnRight = false;
-        bool turnLeft = false;
-
-        //check for obstacle directly in front
-        if (Physics.Raycast(ray, out hit, aheadDistance) && hit.collider.tag != "lvl")
+        //let's find the closest obstacle to us and just deal with that one
+        float distFromObstacle = float.MaxValue;
+        Collider obstacleToAvoid = null;
+        foreach(Collider other in obstacles)
         {
-            obstacleAhead = true;
-        }
-        //check 45 degrees to the left
-        if (Physics.Raycast(new Ray(position, forwardLeft), out leftHit, aheadDistance) && leftHit.collider.tag != "lvl")
-        {
-            obstacleAhead = true;
-            turnRight = true;
-        }
-        //check 45 degrees to the right
-        if (Physics.Raycast(new Ray(position, forwardRight), out rightHit, aheadDistance) && rightHit.collider.tag != "lvl")
-        {
-            obstacleAhead = true;
-            turnLeft = true;
+            float dist = (other.transform.position - transform.position).magnitude;
+            if (dist < distFromObstacle) { obstacleToAvoid = other; }
         }
 
-        if (obstacleAhead)
+        //todo: the amount that it rotates is a function of how far to the right/left the object is
+
+        //this obstacle is on the right side of us, so turn to the left
+        if (Vector3.Dot(this.transform.right, transform.position - obstacleToAvoid.transform.position) < 0)
         {
-           // Debug.DrawRay(position, (transform.forward * aheadDistance), Color.magenta);
-            //if there's an obstacle on both sides, determine which way to go based on what's closer
-            if (turnRight && turnLeft)
-            {
-                float rightDist = (transform.position - rightHit.transform.position).magnitude;
-                float leftDist = (transform.position - leftHit.transform.position).magnitude;
-                if (rightDist > leftDist)
-                {
-                    Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardLeft, rotateSpeed * Time.deltaTime, 0);
-                    transform.rotation = Quaternion.LookRotation(newDir);
-                }
-                else
-                {
-                    Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardRight, rotateSpeed * Time.deltaTime, 0);
-                    transform.rotation = Quaternion.LookRotation(newDir);
-                }
-
-                //Debug.DrawRay(position, forwardLeft * aheadDistance, Color.green);
-                //Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
-            }
-            //turn according to what obstacles we found
-            else if (turnRight)
-            {
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardRight, rotateSpeed * Time.deltaTime, 0);
-                transform.rotation = Quaternion.LookRotation(newDir);
-
-                //Debug.DrawRay(transform.position, forwardLeft * aheadDistance, Color.green);
-            }
-            else if (turnLeft)
-            {
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardLeft, rotateSpeed * Time.deltaTime, 0);
-                transform.rotation = Quaternion.LookRotation(newDir);
-
-                //Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
-            }
-            //default to turn right 
-            else
-            {
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, forwardRight, rotateSpeed * Time.deltaTime, 0);
-                transform.rotation = Quaternion.LookRotation(newDir);
-            }
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right * -1, avoidRotateSpeed * Time.deltaTime, 0);
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
+        //this obstacle is on the left side of us, so turn to the right
+        else
+        {
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right, avoidRotateSpeed * Time.deltaTime, 0);
+            transform.rotation = Quaternion.LookRotation(newDir);
         }
 
-        //debug
-        Debug.DrawRay(position, (transform.forward * aheadDistance), Color.magenta);
-        //Debug.DrawRay(leftForward.origin, leftForward.direction * aheadDistance, Color.green);
-        //Debug.DrawRay(rightForward.origin, rightForward.direction * aheadDistance, Color.red);
-        Debug.DrawRay(position, forwardLeft * aheadDistance, Color.green);
-        Debug.DrawRay(position, forwardRight * aheadDistance, Color.red);
 
-        return obstacleAhead;
+        return true;
     }
 
     //cryptids disappear when touched by player
@@ -347,6 +263,20 @@ public class Cryptid : MonoBehaviour {
         else if (!leftImpact && animator.HasState(0, Animator.StringToHash("bonk_right")))
         {
             animator.Play("bonk_right");
+        }
+    }
+
+    public void AddObstacleToList(Collider obstacle)
+    {
+        if (obstacles != null && !obstacles.Contains(obstacle)){
+            obstacles.Add(obstacle);
+        }
+    }
+
+    public void RemoveObstacleFromList(Collider obstacle)
+    {
+        if (obstacles != null && obstacles.Contains(obstacle)){
+            obstacles.Remove(obstacle);
         }
     }
 

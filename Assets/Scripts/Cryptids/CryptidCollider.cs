@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//script for external collider that can trigger additional behaviors on cryptids
+//script for external collider that's used for obstacle avoidance
 public class CryptidCollider : MonoBehaviour {
 
     [SerializeField]
     Cryptid baseCryptid;
-    [SerializeField]
-    float avoidSpeed;
 
 	// Use this for initialization
 	void Start () {
@@ -22,13 +20,27 @@ public class CryptidCollider : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!ShouldIgnoreCollision(other))
+        {
+            baseCryptid.AddObstacleToList(other);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!ShouldIgnoreCollision(other))
+        {
+            baseCryptid.RemoveObstacleFromList(other);
+        }
+    }
+
+    private bool ShouldIgnoreCollision(Collider other)
+    {
         //ignore collisions from the cryptid itself
-        if (other.transform.root == baseCryptid.transform) { return; }
+        if (other.transform.root == baseCryptid.transform) { return true; }
         //ignore ground collisions
-        if (other.gameObject.tag == "Ground" || other.gameObject.tag == "Water") { return; }
-        //handle interactions with player
-        if (other.gameObject.tag == "Player"){ baseCryptid.AvoidPlayer(other); }
-        //otherwise move
-        baseCryptid.AvoidCollision(other, avoidSpeed);
+        if (other.gameObject.tag == Constants.WaterTag || other.gameObject.tag == Constants.TerrainTag) { return true; }
+
+        return false;
     }
 }

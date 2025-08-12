@@ -78,14 +78,7 @@ public class LovelandFrogman : Cryptid {
             //movement states
             case MoveState.swim:
 
-                //Move(swimSpeed, rotateSpeed);
-                if (!AvoidObstacles(seeObstacles, rotateSpeed)){
-                    Move(swimSpeed, rotateSpeed);
-                }
-                else
-                {
-                    Move(swimSpeed);
-                }
+                Move(swimSpeed);
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
                     transform.Translate(Vector3.up * (swimHeight - transform.position.y) * swimSpeed * Time.deltaTime);
@@ -239,15 +232,6 @@ public class LovelandFrogman : Cryptid {
         }
 
         base.OnTriggerEnter(other);
-    }
-
-    public override void AvoidCollision(Collider other, float avoidSpeed)
-    {
-        //turning sharply away from obstacles causes problems on land; only do it in water
-        if (currentState == MoveState.swim)
-        {
-            base.AvoidCollision(other, avoidSpeed);
-        }
     }
 
     //leaping is frogmans special pose
