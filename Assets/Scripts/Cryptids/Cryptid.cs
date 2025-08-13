@@ -186,19 +186,20 @@ public class Cryptid : MonoBehaviour {
         Collider obstacleToAvoid = null;
         foreach(Collider other in obstacles)
         {
-            float dist = (other.transform.position - transform.position).magnitude;
-            float newCos = Vector3.Dot(this.transform.right, transform.position - other.transform.position);
-            if (newCos < cos) {
+            Vector3 dist = transform.position - other.transform.position;
+            float newCos = Vector3.Dot(this.transform.right, dist.normalized);
+            if (Mathf.Abs(newCos) < Mathf.Abs(cos)) {
                 cos = newCos;
                 obstacleToAvoid = other;
             }
         }
 
         //the amount that it rotates is a function of how far to the right/left the object is
-        float avoidRotateSpeed = (1-Mathf.Abs(cos)) * (rotateSpeed/10f);
+        float avoidRotateSpeed = (1-Mathf.Abs(cos)) * (rotateSpeed /10f);
+        //float avoidRotateSpeed =  (rotateSpeed / 10f);
 
         //this obstacle is on the right side of us, so turn to the left
-        if (cos > 0)
+        if (cos < 0 || Mathf.Abs(cos)<.05f)
         {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right * -1, avoidRotateSpeed * Time.deltaTime, 0);
             transform.rotation = Quaternion.LookRotation(newDir);
