@@ -159,8 +159,7 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.floating;
         animator.SetBool("swim", false);
 
-        //cancel out the force applied from the impact of the carrot
-        rb.velocity = Vector3.zero;
+        
     }
 
     //set this midway through frogmans leap so its a little less jarring when it turns back on

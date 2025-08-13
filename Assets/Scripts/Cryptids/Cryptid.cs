@@ -179,21 +179,26 @@ public class Cryptid : MonoBehaviour {
             return false;
         }
 
-        float avoidRotateSpeed = Mathf.Abs(rotateSpeed);
 
-        //let's find the closest obstacle to us and just deal with that one
-        float distFromObstacle = float.MaxValue;
+
+        //prioritize the obstacle thats most directly in front of us
+        float cos = 1;
         Collider obstacleToAvoid = null;
         foreach(Collider other in obstacles)
         {
             float dist = (other.transform.position - transform.position).magnitude;
-            if (dist < distFromObstacle) { obstacleToAvoid = other; }
+            float newCos = Vector3.Dot(this.transform.right, transform.position - other.transform.position);
+            if (newCos < cos) {
+                cos = newCos;
+                obstacleToAvoid = other;
+            }
         }
 
-        //todo: the amount that it rotates is a function of how far to the right/left the object is
+        //the amount that it rotates is a function of how far to the right/left the object is
+        float avoidRotateSpeed = (1-Mathf.Abs(cos)) * (rotateSpeed/10f);
 
         //this obstacle is on the right side of us, so turn to the left
-        if (Vector3.Dot(this.transform.right, transform.position - obstacleToAvoid.transform.position) < 0)
+        if (cos > 0)
         {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right * -1, avoidRotateSpeed * Time.deltaTime, 0);
             transform.rotation = Quaternion.LookRotation(newDir);
@@ -255,6 +260,8 @@ public class Cryptid : MonoBehaviour {
 
     public virtual void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
+        //cancel out the force applied from the impact of the carrot. i dont want it actually knocking anyone over
+        rb.velocity = Vector3.zero;
 
         if (leftImpact && animator.HasState(0, Animator.StringToHash("bonk_left")))
         {
