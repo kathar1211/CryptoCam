@@ -14,6 +14,7 @@ Shader "Custom/Water"
 		_WaveSpeed("Wave Speed", float) = 1.0
 		_WaveAmp("Wave Amp", float) = 0.2
 		_AnimSpeed("Texture Animation", float) = 1.0
+		_Enabled("Enabled", int) = 1
 	}
 		SubShader
 	{
@@ -50,6 +51,7 @@ Shader "Custom/Water"
 	float _WaveSpeed;
 	float _WaveAmp;
 	float _AnimSpeed;
+	int _Enabled;
 
 	//new properties from https://www.patreon.com/posts/24192529
 	uniform float3 _Position;
@@ -82,8 +84,8 @@ Shader "Custom/Water"
 
 		// apply wave animation
 		float noiseSample = tex2Dlod(_NoiseTex, float4(input.texCoord.xy, 0, 0));
-		output.pos.y += sin(_Time*_WaveSpeed*noiseSample)*_WaveAmp;
-		output.pos.x += cos(_Time*_WaveSpeed*noiseSample)*_WaveAmp;
+		output.pos.y += sin(_Time*_WaveSpeed*noiseSample)*_WaveAmp*_Enabled;
+		output.pos.x += cos(_Time*_WaveSpeed*noiseSample)*_WaveAmp*_Enabled;
 
 		// compute depth (screenPos is a float4)
 		output.screenPos = ComputeScreenPos(output.pos);
