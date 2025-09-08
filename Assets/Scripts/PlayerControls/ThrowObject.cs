@@ -17,8 +17,16 @@ public class ThrowObject : MonoBehaviour {
     [SerializeField]
     TextMeshProUGUI objText;
 
-    ///forward force applied to the thrown object
-    public float throwForce;
+    [SerializeField]
+    Image throwMeter;
+
+
+
+    //forward force applied to the thrown object
+    public int throwForceMin;
+    public int throwForceMax;
+    public int forceIncreaseRate;
+    private float throwForce;
     //time in seconds between when objects can be thrown
     public float coolDownTime;
     private float timer;
@@ -37,8 +45,10 @@ public class ThrowObject : MonoBehaviour {
         
         timer = coolDownTime;
         currentObjects = 0;
+        throwForce = throwForceMin;
         photographer = Photography.Instance;
         objText.text = (objectLimit - currentObjects).ToString();
+        throwMeter.gameObject.SetActive(false);
     }
 	
 	// Update is called once per frame
@@ -46,9 +56,20 @@ public class ThrowObject : MonoBehaviour {
         timer += Time.deltaTime;
 
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
-		if (CustomController.GetButtonDown(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
+		if (CustomController.GetButton(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
+            throwMeter.gameObject.SetActive(true);
+            throwForce += forceIncreaseRate * Time.deltaTime;
+            throwForce = Mathf.Min(throwForce, throwForceMax);
+
+            throwMeter.fillAmount = (throwForce - throwForceMin) / ((throwForceMax * 1f) - (throwForceMin *1f));
+        }
+        if (CustomController.GetButtonUp(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
+        {
+            throwMeter.gameObject.SetActive(false);
             ThrowCarrot();
+            throwMeter.fillAmount = 0;
+            throwForce = throwForceMin;
         }
 	}
 

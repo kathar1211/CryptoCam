@@ -59,7 +59,7 @@ public class CustomController : MonoBehaviour {
         return false;
     }
 
-    //true if a saved button is not being pressed (false if button does not exist)
+    //true if a saved button was released this frame (false if button does not exist)
     public static bool GetButtonUp(string buttonName)
     {
         if (buttons.ContainsKey(buttonName))
