@@ -1,15 +1,14 @@
 fileFormatVersion: 2
-guid: 86f0df14865b2be489c627a21c213a51
+guid: c34af93aa40d4cc42acb688d38dcbb01
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Material.001
-    2100002: Material
+    2100000: No Name
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Grid.002
+    4300000: Cube.001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -66,7 +65,7 @@ ModelImporter:
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
