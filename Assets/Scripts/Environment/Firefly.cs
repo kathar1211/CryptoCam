@@ -34,7 +34,10 @@ public class Firefly : MonoBehaviour {
 	void Update () {
 
         //sprite always facin camera
-        transform.forward = Camera.main.transform.forward;
+        if (Camera.main != null)
+        {
+            transform.forward = Camera.main.transform.forward;
+        }
 
         //cycle throuh sprite animation
         currentFrameTime += Time.deltaTime;

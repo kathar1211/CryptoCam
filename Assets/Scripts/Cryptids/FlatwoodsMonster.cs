@@ -77,7 +77,7 @@ public class FlatwoodsMonster : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
-                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Wander(distance, minDistance, runSpeed, rotateSpeed);
                 }
@@ -156,7 +156,7 @@ public class FlatwoodsMonster : Cryptid
 
                 break;
             case MoveState.flee:
-                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
+                if (!AvoidObstacles(rotateSpeed))
                 { 
                     Flee(avoidTarget, runSpeed, rotateSpeed);
                 }

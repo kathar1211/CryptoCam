@@ -37,6 +37,9 @@ public class Cryptid : MonoBehaviour {
     //keep track of obstacles within our path
     private List<Collider> obstacles;
 
+    public CryptidPathPoint[] PathPoints;
+    protected int pathIndex = 0;
+
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
@@ -143,6 +146,7 @@ public class Cryptid : MonoBehaviour {
         transform.rotation = Quaternion.LookRotation(newDir, transform.up);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
+        Debug.DrawRay(transform.position, newDir, Color.blue);
     }
 
     public void MoveTowardXZOnly(Vector3 target, float rotateSpeed)
@@ -171,7 +175,7 @@ public class Cryptid : MonoBehaviour {
     }
 
     //should be called after doing all other movement calculations- check for object in front of cryptid and rotate if something is found
-    public bool AvoidObstacles(float aheadDistance, float rotateSpeed, bool checkHeadLevel = false)
+    public bool AvoidObstacles(float rotateSpeed)
     {
         //if there are no obstacles in our path we can peace out
         if (obstacles == null || obstacles.Count == 0)
@@ -193,6 +197,8 @@ public class Cryptid : MonoBehaviour {
                 obstacleToAvoid = other;
             }
         }
+
+        Debug.DrawRay(this.transform.position, obstacleToAvoid.transform.position - this.transform.position, Color.red);
 
         //the amount that it rotates is a function of how far to the right/left the object is
         float avoidRotateSpeed = (1-Mathf.Abs(cos)) * (rotateSpeed /10f);

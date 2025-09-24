@@ -29,6 +29,8 @@ public class Tsuchinoko : Cryptid {
     //distance at which tsuchinoko sees obstacles
     public float seeAhead;
 
+    public CryptidTrigger trigger;
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -41,6 +43,11 @@ public class Tsuchinoko : Cryptid {
         if (currentMovestate == MoveState.Sleeping)
         {
             animator.Play("sleep");
+        }
+
+        if (trigger != null)
+        {
+            trigger.TriggerEnterAction += TriggerMove;
         }
     }
 	
@@ -68,7 +75,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     MoveToward(target, fleespeed);
                 }
@@ -78,11 +85,13 @@ public class Tsuchinoko : Cryptid {
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
                 }
+                Debug.DrawRay(transform.position, secondLocation.position - transform.position, Color.yellow);
+
                 break;
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
                 
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Flee(target, fleespeed, rotateSpeed);
                 }
@@ -144,7 +153,7 @@ public class Tsuchinoko : Cryptid {
     }
 
     //triggers tsuchinokos decision to move to new location
-    public override void AvoidPlayer(Collider other)
+    public void TriggerMove()
     {
         target = secondLocation;
         currentMovestate = MoveState.Seeking;

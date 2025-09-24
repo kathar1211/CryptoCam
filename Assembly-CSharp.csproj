@@ -66,11 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Cryptids\Bigfoot.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidCollider.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidPathPoint.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidTrigger.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\HeadBone.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid.cs" />
-    <Compile Include="Assets\Scripts\Cryptids\CryptidCollider.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FlatwoodsMonster.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FresnoNightcrawler.cs" />
-    <Compile Include="Assets\Scripts\Cryptids\HeadBone.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Jackalope.cs" />
     <Compile Include="Assets\Scripts\Cryptids\LovelandFrogman.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Nessie.cs" />

@@ -35,6 +35,7 @@ public static class Constants {
     public const string OptionalTag = "Optional";
     public const string DropShadowTag = "DropShadow";
     public const string BGMTag = "BGM";
+    public const string CryptidContainerTag = "CryptidContainer";
 
 
     //grading page text

@@ -92,7 +92,7 @@ public class Bigfoot : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
-                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
                 }
@@ -175,7 +175,7 @@ public class Bigfoot : Cryptid
 
                 break;
             case MoveState.flee:
-                if (!AvoidObstacles(seeAhead, rotateSpeed, true))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Flee(avoidTarget, walkSpeed, rotateSpeed);
                 }

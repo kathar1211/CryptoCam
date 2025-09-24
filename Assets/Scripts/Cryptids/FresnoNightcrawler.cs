@@ -56,7 +56,7 @@ public class FresnoNightcrawler : Cryptid {
                     break;
                 }
                 //prioritize obstacle avoidance
-                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     MoveToward(targetPos, speed);
                 }
@@ -76,7 +76,7 @@ public class FresnoNightcrawler : Cryptid {
                 {
                     break;
                 }
-                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
                 }
@@ -125,13 +125,7 @@ public class FresnoNightcrawler : Cryptid {
     //keep fresno nightcrawlers in their designated zone
     private void OnTriggerExit(Collider other)
     {
-        //fresnos turn around and choose new point to walk to- in the center of the zone plus or minus 15 degrees
-        targetPos = zone.transform.position - (transform.position - zone.transform.position);
-
-        //rotate
-        //https://answers.unity.com/questions/46770/rotate-a-vector3-direction.html
-        //targetPos = Quaternion.AngleAxis(Random.Range(-15, 15), Vector3.up) * targetPos;
-        timeChasing = 0;
+       
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -152,6 +146,14 @@ public class FresnoNightcrawler : Cryptid {
             if (shutdownTxt !=null){
                 renderer.material.SetTexture("_MainTex", shutdownTxt);
             }
+        }
+
+        else if (other.tag == Constants.CryptidContainerTag)
+        {
+            //fresnos turn around and choose new point to walk to directly behind them
+            targetPos = this.transform.position + (this.transform.forward * -15);
+
+            timeChasing = 0;
         }
 
         base.OnTriggerEnter(other);

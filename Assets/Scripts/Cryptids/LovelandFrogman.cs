@@ -85,7 +85,7 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
             case MoveState.walk:
-                if (!AvoidObstacles(seeObstacles, rotateSpeed, true))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
                 }
@@ -118,7 +118,7 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.flee:
                 
-                if (!AvoidObstacles(seeObstacles, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
                 }

@@ -371,6 +371,7 @@ public class Photography : MonoBehaviour {
         // But instead we want to collide against everything except layer 1. The ~ operator does this, it inverts a bitmask.
         layerMask = ~layerMask;
 
+        int actualHitBoxCount = 0;
         foreach (Collider check in hitboxes)
         {
             Vector3 direction = check.transform.position - cryptoCam.transform.position;

@@ -76,7 +76,7 @@ public class Jackalope : Cryptid {
         {
             //wander with random chance to switch states
             case MoveState.run:
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Wander(distance, minDistance, runSpeed, rotateSpeed);
                 }
@@ -117,7 +117,7 @@ public class Jackalope : Cryptid {
                 break;
             //move away from the player
             case MoveState.flee:              
-                if (!AvoidObstacles(seeAhead, rotateSpeed))
+                if (!AvoidObstacles(rotateSpeed))
                 {
                     Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
                 }
