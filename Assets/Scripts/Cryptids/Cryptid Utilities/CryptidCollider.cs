@@ -10,7 +10,15 @@ public class CryptidCollider : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+
+        BoxCollider box = this.GetComponent<BoxCollider>();
+
+        //get colliders that are already in range at start, as they wont fire OnTriggerEnter
+        foreach (Collider col in Physics.OverlapBox(box.center, box.size / 2f, this.transform.rotation))
+        {
+            OnTriggerEnter(col);
+        }
+
 	}
 	
 	// Update is called once per frame

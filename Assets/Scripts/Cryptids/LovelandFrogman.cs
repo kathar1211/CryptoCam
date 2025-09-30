@@ -20,10 +20,8 @@ public class LovelandFrogman : Cryptid {
     public float swimSpeed;
     public float leapSpeed;
     public float leapHeight;
-    float rotateSpeed;
-    public float maxRotateSpeed;
+    public float rotateSpeed;
     public float changeTargetTime; //how often should direction change during wander behavior
-    public float seeObstacles;
 
     //properties for fleeing
     public float fleeSpeed;
@@ -53,12 +51,20 @@ public class LovelandFrogman : Cryptid {
         baseScore = 35;
         ripples = GetComponentInChildren<ParticleSystem>();
 
-        rotateSpeed = Random.Range(-maxRotateSpeed, maxRotateSpeed);
-
         //set up animator for starting state
-        if (currentState == MoveState.walk || currentState == MoveState.sit)
+        if (currentState == MoveState.walk)
         {
-            EndFrogLeap();
+            animator.SetBool("creep", true);
+            animator.SetBool("climb", false);
+            animator.SetBool("swim", false);
+        }
+        else if (currentState == MoveState.sit)
+        {
+            animator.SetBool("creep", false);
+            animator.SetBool("climb", false);
+            animator.SetBool("swim", false);
+            animator.Play("sit");
+            timeToSit = Random.Range(sitTimeMin, sitTimeMax);
         }
         else if (currentState == MoveState.swim)
         {
@@ -77,7 +83,10 @@ public class LovelandFrogman : Cryptid {
         {
             //movement states
             case MoveState.swim:
-
+                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
+                {
+                    Wander(targetMaxDistance, targetMinDistance, swimSpeed, rotateSpeed, changeTargetTime);
+                }
                 Move(swimSpeed);
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
@@ -85,13 +94,9 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
             case MoveState.walk:
-                if (!AvoidObstacles(rotateSpeed))
+                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
                 {
                     Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
-                }
-                else
-                {
-                    targetPos = Vector3.zero;
                 }
                 //move forward after setting direction in other methods
                 Move(walkSpeed);
@@ -118,7 +123,7 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.flee:
                 
-                if (!AvoidObstacles(rotateSpeed))
+                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
                 {
                     Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
                 }
@@ -133,7 +138,6 @@ public class LovelandFrogman : Cryptid {
         //clear timer and set new direction
         if (timer > timeToTurn && currentState != MoveState.sit)
         {
-            rotateSpeed = Random.Range(-maxRotateSpeed, maxRotateSpeed);
             timer = 0;
         }      
 

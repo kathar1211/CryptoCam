@@ -14,9 +14,16 @@ public class Firefly : MonoBehaviour {
     float currentFrameTime; //time passed since frame was last chaned
     public bool stationary = false;
 
+    public Light emission;
+    private List<GameObject> litObjects;
+
+    private SpriteRenderer renderer;
+
     // Use this for initialization
     void Start () {
-        
+
+        renderer = GetComponent<SpriteRenderer>();
+
         spriteIndex = Random.Range(0,sprites.Length-1);
         glowUp = true;
         currentFrameTime = 0;
@@ -28,6 +35,11 @@ public class Firefly : MonoBehaviour {
         frameSpeed = Random.Range(.1f, .2f);
         transform.GetChild(0).gameObject.GetComponent<Light>().range = Random.Range(1, 2.1f);
         transform.GetChild(0).gameObject.GetComponent<Light>().range  += spriteIndex * .1f;
+
+        //to reduce render cost, keep the light off until something is close enough to be illuminated by it
+        //profiler tool isnt showing that this actually made much difference if any
+        litObjects = new List<GameObject>();
+        emission.enabled = false;
     }
 	
 	// Update is called once per frame
@@ -47,7 +59,7 @@ public class Firefly : MonoBehaviour {
             if (glowUp)
             {
                 spriteIndex++;
-                transform.GetChild(0).gameObject.GetComponent<Light>().range+=.1f;
+                emission.range+=.1f;
                 if (spriteIndex >= sprites.Length - 1)
                 {
                     glowUp = false;
@@ -56,7 +68,7 @@ public class Firefly : MonoBehaviour {
             else if (!glowUp)
             {
                 spriteIndex--;
-                transform.GetChild(0).gameObject.GetComponent<Light>().range-=.1f;
+                emission.range-=.1f;
                 if (spriteIndex <= 0)
                 {
                     glowUp = true;
@@ -64,7 +76,7 @@ public class Firefly : MonoBehaviour {
             }
             //set active sprite
             spriteIndex %= sprites.Length;
-            GetComponent<SpriteRenderer>().sprite = sprites[spriteIndex];
+            renderer.sprite = sprites[spriteIndex];
             currentFrameTime = 0;
         }
 
@@ -80,5 +92,29 @@ public class Firefly : MonoBehaviour {
         targetPos += new Vector3(Random.Range(-distance, distance), Random.Range(-distance, distance), Random.Range(-distance, distance));
         transform.position = Vector3.MoveTowards(transform.position, targetPos, floatSpeed * Time.deltaTime);
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (litObjects == null || other == null) { return; }
+
+        if (!litObjects.Contains(other.gameObject))
+        {
+            litObjects.Add(other.gameObject);
+        }
+
+        emission.enabled = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (litObjects == null || other == null) { return; }
+
+        if (litObjects.Contains(other.gameObject))
+        {
+            litObjects.Remove(other.gameObject);
+        }
+
+        if (litObjects.Count == 0) { emission.enabled = false; }
     }
 }

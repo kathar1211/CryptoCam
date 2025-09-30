@@ -36,6 +36,9 @@ public class Cryptid : MonoBehaviour {
 
     //keep track of obstacles within our path
     private List<Collider> obstacles;
+    public float obstacleAvoidanceInterval = 1; //time in seconds between doing checks for new obstacles
+    private float timeOfLastObstacleCheck = -1;
+    private Collider currentObstacle;
 
     public CryptidPathPoint[] PathPoints;
     protected int pathIndex = 0;
@@ -180,32 +183,39 @@ public class Cryptid : MonoBehaviour {
         //if there are no obstacles in our path we can peace out
         if (obstacles == null || obstacles.Count == 0)
         {
+            currentObstacle = null;
             return false;
         }
 
-
-
-        //prioritize the obstacle thats most directly in front of us
-        float cos = 1;
-        Collider obstacleToAvoid = null;
-        foreach(Collider other in obstacles)
+        if (currentObstacle == null || Time.time - timeOfLastObstacleCheck > obstacleAvoidanceInterval || !obstacles.Contains(currentObstacle))
         {
-            Vector3 dist = transform.position - other.transform.position;
-            float newCos = Vector3.Dot(this.transform.right, dist.normalized);
-            if (Mathf.Abs(newCos) < Mathf.Abs(cos)) {
-                cos = newCos;
-                obstacleToAvoid = other;
+            //prioritize the obstacle thats most directly in front of us
+            float cos = 1;
+            Collider obstacleToAvoid = null;
+            foreach (Collider other in obstacles)
+            {
+                Vector3 dist = transform.position - other.transform.position;
+                float newCos = Vector3.Dot(this.transform.right, dist.normalized);
+                if (Mathf.Abs(newCos) < Mathf.Abs(cos))
+                {
+                    cos = newCos;
+                    obstacleToAvoid = other;
+                }
             }
+
+            currentObstacle = obstacleToAvoid;
+            timeOfLastObstacleCheck = Time.time;
         }
 
-        Debug.DrawRay(this.transform.position, obstacleToAvoid.transform.position - this.transform.position, Color.red);
+        float angle = Vector3.Dot(this.transform.right, (transform.position - currentObstacle.transform.position).normalized);
+        Debug.DrawRay(this.transform.position, currentObstacle.transform.position - this.transform.position, Color.red);
 
         //the amount that it rotates is a function of how far to the right/left the object is
-        float avoidRotateSpeed = (1-Mathf.Abs(cos)) * (rotateSpeed /10f);
+        float avoidRotateSpeed = (1-Mathf.Abs(angle)) * (rotateSpeed /5f);
         //float avoidRotateSpeed =  (rotateSpeed / 10f);
 
         //this obstacle is on the right side of us, so turn to the left
-        if (cos < 0 || Mathf.Abs(cos)<.05f)
+        if (angle < 0 || Mathf.Abs(angle) <.3f)
         {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, transform.right * -1, avoidRotateSpeed * Time.deltaTime, 0);
             transform.rotation = Quaternion.LookRotation(newDir);
