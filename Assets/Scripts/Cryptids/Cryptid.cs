@@ -40,8 +40,10 @@ public class Cryptid : MonoBehaviour {
     private float timeOfLastObstacleCheck = -1;
     private Collider currentObstacle;
 
+    //for cryptids that move along a path. make sure these are in order
     public CryptidPathPoint[] PathPoints;
     protected int pathIndex = 0;
+    public float pathPointMinDist = 5;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
@@ -135,7 +137,6 @@ public class Cryptid : MonoBehaviour {
     //move in the direction of a given target (transform)
     public void MoveToward(Transform target, float rotateSpeed)
     {
-        rotateSpeed = Mathf.Abs(rotateSpeed);
         MoveToward(target.position, rotateSpeed);
     }
 
@@ -156,6 +157,25 @@ public class Cryptid : MonoBehaviour {
     {
         target.y = transform.position.y;
         MoveToward(target, rotateSpeed);
+    }
+
+    //move along path once we've gotten within distance of a path point
+    public void CheckPath()
+    {
+        //todo:what happens when we run out of points
+        if (pathIndex >= PathPoints.Length) { return; }
+
+        CryptidPathPoint currentPoint = PathPoints[pathIndex];
+        if ((transform.position - currentPoint.transform.position).magnitude < pathPointMinDist)
+        {
+            pathIndex++;
+            if (currentPoint.DoActionAtPoint) { DoActionAtPathPoint(currentPoint); }
+        }
+    }
+
+    protected virtual void DoActionAtPathPoint(CryptidPathPoint triggerPoint)
+    {
+        //specifics should be handled in child class
     }
 
     //method to deal with player entering certain trigger zones; implementation varies by cryptid
@@ -211,7 +231,7 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawRay(this.transform.position, currentObstacle.transform.position - this.transform.position, Color.red);
 
         //the amount that it rotates is a function of how far to the right/left the object is
-        float avoidRotateSpeed = (1-Mathf.Abs(angle)) * (rotateSpeed /5f);
+        float avoidRotateSpeed = (1-Mathf.Abs(angle)) * (rotateSpeed /1f);
         //float avoidRotateSpeed =  (rotateSpeed / 10f);
 
         //this obstacle is on the right side of us, so turn to the left

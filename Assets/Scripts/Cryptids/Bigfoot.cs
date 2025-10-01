@@ -24,7 +24,7 @@ public class Bigfoot : Cryptid
     public const float MinScratchTime = 0;
 
     //keep track of  move state,
-    enum MoveState { wander, sit, idle, befuddle, flee }
+    enum MoveState { wander, sit, idle, befuddle, flee, pointReached }
     [SerializeField] MoveState currentState;
     private bool lookedOnce;
 
@@ -92,16 +92,21 @@ public class Bigfoot : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
+
                 if (!AvoidObstacles(rotateSpeed))
                 {
-                    Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
-                }
-                else
-                {
-                    targetPos = Vector3.zero;
+                    if (pathIndex < PathPoints.Length)
+                    {
+                        MoveToward(PathPoints[pathIndex].transform, rotateSpeed);
+                    }
+                    else
+                    {
+                        Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
+                    }
                 }
                 //move forward after setting direction in other methods
                 Move(walkSpeed);
+                CheckPath();
 
                 //chance to do the pose
                 if (LookPoseChance.UpdateTimerAndCheckSuccess())
@@ -140,6 +145,7 @@ public class Bigfoot : Cryptid
                     currentState = MoveState.wander;
                 }
 
+                /*
                 //chance to start sittin
                 if (SitChance.UpdateTimerAndCheckSuccess())
                 {
@@ -149,7 +155,7 @@ public class Bigfoot : Cryptid
                     //how long we sittin?
                     timer = 0;
                     timeToSit = Random.Range(MinSitTime, MaxSitTime);
-                }
+                }*/
 
                 break;
             case MoveState.befuddle:
@@ -187,6 +193,21 @@ public class Bigfoot : Cryptid
                     currentState = MoveState.wander;
                 }
                 break;
+            case MoveState.pointReached:
+
+                //rotate in the direction of the point
+                MoveTowardXZOnly(targetPos, rotateSpeed);
+
+                //once we're facing the right way, sit
+                animator.SetBool(SitBool, true);
+                currentState = MoveState.sit;
+
+                //how long we sittin?
+                timer = 0;
+                timeToSit = Random.Range(MinSitTime, MaxSitTime);
+
+                break;
+
         }
     }
 
@@ -259,5 +280,11 @@ public class Bigfoot : Cryptid
         //todo
 
         return base.SpecialPose();
+    }
+
+    protected override void DoActionAtPathPoint(CryptidPathPoint triggerPoint)
+    {
+        currentState = MoveState.pointReached;
+        targetPos = this.transform.position + triggerPoint.transform.forward;
     }
 }
