@@ -199,6 +199,7 @@ public class LovelandFrogman : Cryptid {
         {
             currentState = MoveState.swim;
             animator.SetBool("swim", true);
+            animator.SetBool("creep", false);
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             //no gravity while swimming
             rb.useGravity = false;
@@ -241,6 +242,7 @@ public class LovelandFrogman : Cryptid {
     public override bool SpecialPose()
     {
         if (animator.GetBool("climb")){ return true; }
+        else if (currentState == MoveState.sit) { return true; }
         return base.SpecialPose();
     }
 

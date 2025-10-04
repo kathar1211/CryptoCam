@@ -217,7 +217,7 @@ public class Photography : MonoBehaviour {
                 //calculate a "score" for each cryptid based on placement and visibility
                 //distance from center should have more "weight" in score than distance from camera which is why its bein multipied
                 Vector2 distanceFromCenter = new Vector2(.5f, .5f) - new Vector2(viewPos.x, viewPos.y);
-                float currentScore = viewPos.z + (100 * distanceFromCenter.magnitude);
+                float currentScore = viewPos.z + (500 * distanceFromCenter.magnitude);
 
                 //lowest scoring cryptid becomes the main subject: lower score means less distance from ideal placement
                 if (currentScore < subjectScore)

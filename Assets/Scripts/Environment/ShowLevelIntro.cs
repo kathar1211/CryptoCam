@@ -73,7 +73,7 @@ public class ShowLevelIntro : MonoBehaviour
         {
             cam.DeactivateCamera();
         }
-        mainCamera.gameObject.SetActive(true);
+        mainCamera.enabled = true;
        // cameraIlluminationLight.transform.SetParent(mainCamera.transform, false);
         introFinished = true;
         canvas.SetActive(true);
@@ -115,7 +115,7 @@ public class ShowLevelIntro : MonoBehaviour
 
         //pause controls until intro is done
         fps.enabled = false;
-        mainCamera.gameObject.SetActive(false);
+        mainCamera.enabled = false;
     }
 
     void MoveLightToActiveCamera()

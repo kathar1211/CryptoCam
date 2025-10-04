@@ -48,6 +48,8 @@ public class CryptidCollider : MonoBehaviour {
         if (other.transform.root == baseCryptid.transform) { return true; }
         //ignore ground collisions
         if (other.gameObject.tag == Constants.WaterTag || other.gameObject.tag == Constants.TerrainTag) { return true; }
+        //items are not obstacles
+        if (other.gameObject.tag == Constants.CarrotTag) { return true; }
 
         return false;
     }

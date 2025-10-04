@@ -53,12 +53,13 @@ public class FresnoNightcrawler : Cryptid {
                 //dont move during stationary parts of animation
                 if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
                 {
+                   // MoveToward(targetPos, rotateSpeed);
                     break;
                 }
                 //prioritize obstacle avoidance
                 if (!AvoidObstacles(rotateSpeed))
                 {
-                    MoveToward(targetPos, speed);
+                    MoveToward(targetPos, rotateSpeed);
                 }
                 Move(speed);
                 timeChasing += Time.deltaTime;
@@ -151,7 +152,8 @@ public class FresnoNightcrawler : Cryptid {
         else if (other.tag == Constants.CryptidContainerTag)
         {
             //fresnos turn around and choose new point to walk to directly behind them
-            targetPos = this.transform.position + (this.transform.forward * -15);
+            //targetPos = this.transform.position + (this.transform.forward * -15);
+            targetPos = zone.transform.position; //move back to the center
 
             timeChasing = 0;
         }

@@ -214,6 +214,9 @@ public class Cryptid : MonoBehaviour {
             Collider obstacleToAvoid = null;
             foreach (Collider other in obstacles)
             {
+                //it's possible obstacles have been removed/destroyed
+                if (other == null) { obstacles.Remove(other); continue; }
+
                 Vector3 dist = transform.position - other.transform.position;
                 float newCos = Vector3.Dot(this.transform.right, dist.normalized);
                 if (Mathf.Abs(newCos) < Mathf.Abs(cos))
@@ -247,6 +250,8 @@ public class Cryptid : MonoBehaviour {
             transform.rotation = Quaternion.LookRotation(newDir);
         }
 
+        //if the obstacle is more than 45degrees on the periphery, obstacle avoidance doesnt need to override other movement
+        //if (Mathf.Abs(angle) > .5) { return false; }
 
         return true;
     }

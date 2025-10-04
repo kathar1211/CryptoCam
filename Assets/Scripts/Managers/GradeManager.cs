@@ -13,10 +13,10 @@ public class GradeManager : MonoBehaviour {
     Image bigThumbnail;
     Image selectedImage;
 
-    GameObject YesButton;
-    GameObject NoButton;
-    GameObject AutoButton;
-    GameObject DoneButton;
+    public GameObject YesButton;
+    public GameObject NoButton;
+    public GameObject AutoButton;
+    public GameObject DoneButton;
 
     GameObject gameManager;
 
@@ -76,10 +76,10 @@ public class GradeManager : MonoBehaviour {
         //find the game manager, which has all the data we need from the previous level stored
         gameManager = GameObject.Find("GameManager");
 
-        YesButton = GameObject.Find("YesButton");
+        /*YesButton = GameObject.Find("YesButton");
         NoButton = GameObject.Find("NoButton");
         DoneButton = GameObject.Find("Done");
-        AutoButton = GameObject.Find("Auto");
+        AutoButton = GameObject.Find("Auto");*/
 
         YesButton.SetActive(false);
         NoButton.SetActive(false);
