@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Cryptid : MonoBehaviour {
 
     //thins all cryptids need:
@@ -45,9 +47,15 @@ public class Cryptid : MonoBehaviour {
     protected int pathIndex = 0;
     public float pathPointMinDist = 5;
 
+    protected NavMeshAgent nav;
+    private float movementTimer;
+    private float wanderRepositionInterval = 10;
+    private float fleeRepositionInterval = 1.5f;
+
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
+        nav = this.gameObject.GetComponent<NavMeshAgent>();
         renderer = this.gameObject.GetComponentInChildren<Renderer>();
         animator = GetComponent<Animator>();
         obstacles = new List<Collider>();
@@ -94,44 +102,90 @@ public class Cryptid : MonoBehaviour {
     //move randomly in 2d space
     public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed, float changeTime = 14)
     {
-        rotateSpeed = Mathf.Abs(rotateSpeed); //rotate speed must be positive
-        //choose a random target position within range and move towards it
-        //https://answers.unity.com/questions/23010/ai-wandering-script.html
-        timeChasing += Time.deltaTime;
+        movementTimer += Time.deltaTime;
 
         //change target position once within a certain range or after chasing it for a period of time
-        if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || timeChasing > changeTime)
+        if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || movementTimer > wanderRepositionInterval)
         {
-            targetPos = transform.position + transform.forward * (distance / 2.0f) + Random.insideUnitSphere * distance;
-            targetPos.y = transform.position.y;
-            timeChasing = 0;
+            //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
+            //get a random position on the navmesh by sampling a few times at a small radius
+            for (int i = 0; i < 10; i++)
+            {
+                targetPos = transform.position + transform.forward * (distance / 2.0f) + Random.insideUnitSphere * distance;
+                targetPos.y = transform.position.y;
+
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(targetPos, out hit, 2, NavMesh.AllAreas))
+                {
+                    movementTimer = 0;
+                    nav.destination = hit.position;
+                    break;
+                }
+            }
+           
         }
 
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (targetPos - transform.position), rotateSpeed * Time.deltaTime, 0);
-        newDir.y = 0;
-        transform.rotation = Quaternion.LookRotation(newDir);
-
+       // ForceNavMeshToMoveForward();
         Debug.DrawLine(transform.position, targetPos, Color.cyan);
-
-        //transform.position = Vector3.MoveTowards(transform.position, targetPos, runSpeed * Time.deltaTime);
-        //update: handle forward movement separate from deciding direction with move() in child script
-
     }
 
     //move in the opposite direction of a given target
-    public void Flee(Transform fleeFromTarget, float forwardSpeed, float rotateSpeed)
+    public void Flee(Transform fleeFromTarget, float minDistance, float rotateSpeed)
     {
-        rotateSpeed = Mathf.Abs(rotateSpeed);
+        movementTimer += Time.deltaTime;
+
+        if (movementTimer > fleeRepositionInterval || (transform.position - nav.destination).magnitude < minDistance)
+        {
+            SetNavmeshFleeTarget(fleeFromTarget);
+        }
+
+       // ForceNavMeshToMoveForward();
+        Debug.DrawLine(transform.position, nav.destination, Color.red);
+    }
+
+    //by default navmesh seems to handle rotation and velocity separately
+    //when you want to keep cryptids moving in the direction they're facing, use this
+   /* private void ForceNavMeshToMoveForward()
+    {
+        if (nav.hasPath)
+        {
+            Vector3 desiredDirection = nav.steeringTarget - transform.position;
+            desiredDirection.y = 0;
+
+            Quaternion desiredRotation = Quaternion.LookRotation(desiredDirection);
+            transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotation, nav.angularSpeed * Time.deltaTime);
+
+            transform.Translate(transform.forward * nav.speed * Time.deltaTime);
+
+            nav.nextPosition = transform.position;
+        }
+    }*/
+
+    //set the navmesh target to a point in the opposite direction of the thing to flee from
+    protected void SetNavmeshFleeTarget(Transform fleeFromTarget)
+    {
         if (fleeFromTarget == null) { return; }
 
-        //make y not a factor so cryptids dont rotate down to get away from player
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
         fleeFromTargetPos.y = transform.position.y;
+        Vector3 oppositeDirection = transform.position - fleeFromTargetPos;
+        oppositeDirection.Normalize();
 
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTargetPos), rotateSpeed * Time.deltaTime, 0);
-        transform.rotation = Quaternion.LookRotation(newDir);
-        //Move(forwardSpeed, 0);
-        //update: handle forward movement separate from deciding direction with move() in child script
+
+        //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
+        //get a random position on the navmesh by sampling a few times at a small radius
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(10,200)); //lets make sure this works before getting overly concerned about values
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(positionAwayFromTarget, out hit, 2, NavMesh.AllAreas))
+            {
+                movementTimer = 0;
+                nav.destination = hit.position;
+                break;
+            }
+        }
     }
 
     //move in the direction of a given target (transform)

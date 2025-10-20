@@ -76,11 +76,11 @@ public class Jackalope : Cryptid {
         {
             //wander with random chance to switch states
             case MoveState.run:
-                if (!AvoidObstacles(rotateSpeed))
+                //if (!AvoidObstacles(rotateSpeed))
                 {
                     Wander(distance, minDistance, runSpeed, rotateSpeed);
                 }
-                Move(runSpeed);
+               // Move(runSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
                 {
                     currentState = MoveState.scratch;
@@ -89,6 +89,7 @@ public class Jackalope : Cryptid {
                     //animator.Play("scratch n sniff");
                     animator.SetBool(Sniff, true);
                     animator.SetBool(Run, false);
+                    nav.isStopped = true;
                 }
                 else if (Random.Range(0.0f, 100.0f) > 99.9f)
                 {
@@ -98,6 +99,7 @@ public class Jackalope : Cryptid {
                     //animator.Play("stand n sniff");
                     animator.SetBool(StandUp, true);
                     animator.SetBool(Run, false);
+                    nav.isStopped = true;
                 }
                 break;
 
@@ -112,20 +114,22 @@ public class Jackalope : Cryptid {
                     animator.SetBool(Run, true);
                     animator.SetBool(Sniff, false);
                     //animator.Play("run");
+                    nav.isStopped = false;
                 }
 
                 break;
             //move away from the player
             case MoveState.flee:              
-                if (!AvoidObstacles(rotateSpeed))
+               // if (!AvoidObstacles(rotateSpeed))
                 {
-                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
+                    Flee(fleeFromTarget, minDistance, rotateSpeed + 1);
                 }
-                Move(fleeSpeed);
+               // Move(fleeSpeed);
                 //stop fleeing once jackalope reaches a certain distance from player
                 if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
                 {
                     currentState = MoveState.run;
+                    nav.speed = runSpeed;
                     animator.SetFloat(Speed, 1);
                 }
                 break;
@@ -210,6 +214,8 @@ public class Jackalope : Cryptid {
         animator.SetBool(Eat, false);
         targetPos = Vector3.zero;
         animator.SetFloat(Speed, 2);
+        SetNavmeshFleeTarget(fleeFromTarget);
+        nav.speed = fleeSpeed;
     }
 
     //transition from sleep state
