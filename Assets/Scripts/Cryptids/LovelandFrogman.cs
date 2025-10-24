@@ -77,32 +77,28 @@ public class LovelandFrogman : Cryptid {
         base.Update();
         if (lockMovementSuper) { return; }
 
-        timer += Time.deltaTime;
+        
 
         switch (currentState)
         {
             //movement states
             case MoveState.swim:
-                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
-                {
-                    Wander(targetMaxDistance, targetMinDistance, swimSpeed, rotateSpeed, changeTargetTime);
-                }
-                Move(swimSpeed);
+
+                Wander(targetMaxDistance, targetMinDistance);
+
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
                     transform.Translate(Vector3.up * (swimHeight - transform.position.y) * swimSpeed * Time.deltaTime);
                 }
                 break;
             case MoveState.walk:
-                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
-                {
-                    Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed, changeTargetTime);
-                }
-                //move forward after setting direction in other methods
-                Move(walkSpeed);
+
+                Wander(targetMaxDistance, targetMinDistance);
+
                 break;
             case MoveState.stand:
             case MoveState.sit:
+                timer += Time.deltaTime;
                 if (timer > timeToSit)
                 {
                     timer = 0;
@@ -111,35 +107,26 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
             case MoveState.floating:
+                timer += Time.deltaTime;
                 if (timer > timeToSit)
                 {
                     timer = 0;
                     animator.SetBool("swim", true);
-                    currentState = MoveState.walk;
+                    currentState = MoveState.swim;
                 }
                 break;
             case MoveState.edgeLeap:
                 //Leap(leapSpeed, 0);
                 break;
             case MoveState.flee:
-                
-                if (!AvoidObstacles(Mathf.Abs(rotateSpeed)))
-                {
-                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed);
-                }
-                Move(fleeSpeed);
+
+                Flee(fleeFromTarget, fleeSpeed);
                 if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                 {
                     currentState = MoveState.walk;
                 }
                 break;
         }
-
-        //clear timer and set new direction
-        if (timer > timeToTurn && currentState != MoveState.sit)
-        {
-            timer = 0;
-        }      
 
     }
 
@@ -214,6 +201,7 @@ public class LovelandFrogman : Cryptid {
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+            KillNavMeshMovement();
 
             //debug
             GameObject.Instantiate(new GameObject(), this.transform);
@@ -227,12 +215,14 @@ public class LovelandFrogman : Cryptid {
             {
                 currentState = MoveState.flee;
                 fleeFromTarget = other.gameObject.transform;
+                SetNavmeshFleeTarget(fleeFromTarget);
             }
         }
         else if (other.tag == Constants.AvoidTag)
         {
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
+            SetNavmeshFleeTarget(fleeFromTarget);
         }
 
         base.OnTriggerEnter(other);

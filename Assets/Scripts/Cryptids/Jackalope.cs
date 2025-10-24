@@ -47,8 +47,7 @@ public class Jackalope : Cryptid {
     // Use this for initialization
     void Start () {
         StartUp();
-        targetPos = transform.position + Random.insideUnitSphere * distance;
-        targetPos.y = transform.position.y;
+        targetPos = Vector3.zero;
         currentState = MoveState.sleep;
         nextState = MoveState.run;
         cryptidType = Constants.Jackalope;
@@ -78,7 +77,7 @@ public class Jackalope : Cryptid {
             case MoveState.run:
                 //if (!AvoidObstacles(rotateSpeed))
                 {
-                    Wander(distance, minDistance, runSpeed, rotateSpeed);
+                    Wander(distance, minDistance);
                 }
                // Move(runSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
@@ -89,7 +88,7 @@ public class Jackalope : Cryptid {
                     //animator.Play("scratch n sniff");
                     animator.SetBool(Sniff, true);
                     animator.SetBool(Run, false);
-                    nav.isStopped = true;
+                    KillNavMeshMovement();
                 }
                 else if (Random.Range(0.0f, 100.0f) > 99.9f)
                 {
@@ -99,7 +98,7 @@ public class Jackalope : Cryptid {
                     //animator.Play("stand n sniff");
                     animator.SetBool(StandUp, true);
                     animator.SetBool(Run, false);
-                    nav.isStopped = true;
+                    KillNavMeshMovement();
                 }
                 break;
 
@@ -119,18 +118,18 @@ public class Jackalope : Cryptid {
 
                 break;
             //move away from the player
-            case MoveState.flee:              
-               // if (!AvoidObstacles(rotateSpeed))
+            case MoveState.flee:
+                if (!AvoidObstacles(rotateSpeed))
                 {
-                    Flee(fleeFromTarget, minDistance, rotateSpeed + 1);
+                    DirectFlee(fleeFromTarget, rotateSpeed + 1);
                 }
-               // Move(fleeSpeed);
+                Move(fleeSpeed);
                 //stop fleeing once jackalope reaches a certain distance from player
                 if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
                 {
                     currentState = MoveState.run;
-                    nav.speed = runSpeed;
                     animator.SetFloat(Speed, 1);
+                    nav.enabled = true;
                 }
                 break;
 
@@ -148,11 +147,11 @@ public class Jackalope : Cryptid {
                 break;
             //move toward a specific object
             case MoveState.runtoward:
-                MoveTowardXZOnly(moveToTarget.position, runSpeed);
-                Move(runSpeed);
+                MoveToward(moveToTarget);
                 //switch to eating within a certain range
                 if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
                 {
+                    KillNavMeshMovement();
                     currentState = MoveState.eat;
                     animator.SetBool(Eat, true);
                     eatingTimer = 0;
@@ -162,13 +161,28 @@ public class Jackalope : Cryptid {
                 eatingTimer += Time.deltaTime;
                 if (eatingTimer >= timeToEat)
                 {
-                    currentState = MoveState.run;
-                    animator.SetBool(Eat, false);
+                    StopEating();
                     Destroy(moveToTarget.gameObject);
                 }
+
+                //stop eating if the carrot gets too far away
+                if ((moveToTarget.position - this.transform.position).magnitude > minDistance * 2)
+                {
+
+                    StopEating();
+                }
+
                 break;
         }
 	}
+
+    private void StopEating()
+    {
+        nav.isStopped = false;
+        nav.destination = targetPos;
+        currentState = MoveState.run;
+        animator.SetBool(Eat, false);
+    }
 
     public override void OnTriggerEnter(Collider other)
     {
@@ -187,7 +201,8 @@ public class Jackalope : Cryptid {
         else if (other.tag == Constants.CarrotTag)
         {
             //we don't need to chase after the new carrot if we've already got our eyes on one
-            if (currentState != MoveState.runtoward)
+            //we should also ignore carrots if we're busy running away
+            if (currentState != MoveState.runtoward && currentState != MoveState.flee)
             {
                 if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
                 else { currentState = MoveState.runtoward; }
@@ -196,6 +211,7 @@ public class Jackalope : Cryptid {
                 animator.SetBool(Sniff, false);
                 animator.SetBool(Eat, false);
                 moveToTarget = other.transform;
+                SetNavMeshChaseTarget(moveToTarget);
             }
 
         }
@@ -214,8 +230,8 @@ public class Jackalope : Cryptid {
         animator.SetBool(Eat, false);
         targetPos = Vector3.zero;
         animator.SetFloat(Speed, 2);
-        SetNavmeshFleeTarget(fleeFromTarget);
-        nav.speed = fleeSpeed;
+        KillNavMeshMovement();
+        nav.enabled = false;
     }
 
     //transition from sleep state

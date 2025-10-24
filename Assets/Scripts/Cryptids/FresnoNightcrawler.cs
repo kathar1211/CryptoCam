@@ -34,8 +34,7 @@ public class FresnoNightcrawler : Cryptid {
         cryptidType = Constants.Fresno;
 
         //inital target position is directly in front, 100 units away
-        targetPos = transform.position + transform.forward.normalized * 100;
-        timeChasing = 0;
+        SetNavMeshChaseTarget(PathPoints[0].transform);
 	}
 
     // Update is called once per frame
@@ -45,7 +44,7 @@ public class FresnoNightcrawler : Cryptid {
         if (lockMovementSuper) { return; }
 
         //lock rotation: for top heavy cryptids prone to falling over
-        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        //transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
         switch (currentState)
         {
@@ -53,43 +52,15 @@ public class FresnoNightcrawler : Cryptid {
                 //dont move during stationary parts of animation
                 if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
                 {
-                   // MoveToward(targetPos, rotateSpeed);
+                    // MoveToward(targetPos, rotateSpeed);
+                    KillNavMeshMovement();
                     break;
                 }
-                //prioritize obstacle avoidance
-                if (!AvoidObstacles(rotateSpeed))
-                {
-                    MoveToward(targetPos, rotateSpeed);
-                }
-                Move(speed);
-                timeChasing += Time.deltaTime;
-                //if they reach their target position give them a new one on the other side of the zone to get them back on track
-                //addition of time tracker lets them change target if they get stuck
-                if ((transform.position - targetPos).magnitude < minDistance || timeChasing > maxTime)
-                {
-                    targetPos = zone.transform.position - (transform.position - zone.transform.position);
-                    timeChasing = 0;
-                }
+                MoveToward(PathPoints[pathIndex].transform);
+                CheckPath();
+                if (pathIndex >= PathPoints.Length) { pathIndex = 0; }
                 break;
             case MoveState.Flee:
-                //dont move during stationary parts of animation
-                if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
-                {
-                    break;
-                }
-                if (!AvoidObstacles(rotateSpeed))
-                {
-                    Flee(fleeFromTarget, fleeSpeed, rotateSpeed + 1);
-                }
-                Move(fleeSpeed);
-                //stop fleeing once jackalope reaches a certain distance from player
-                if ((fleeFromTarget.position - transform.position).magnitude > maxDistance)
-                {
-                    currentState = MoveState.Walk;
-                    animator.SetFloat(Speed, 1);
-                    targetPos = zone.transform.position - (transform.position - zone.transform.position);
-                    timeChasing = 0;
-                }
                 break;
             case MoveState.Nothing:
                 //do nothing
@@ -141,12 +112,15 @@ public class FresnoNightcrawler : Cryptid {
              animator.SetFloat(Speed, 2);*/
 
             //rather than flee, activate defense mechanism and become unrecognizeable
+            KillNavMeshMovement();
+            nav.enabled = false;
             rb.useGravity = false;
             animator.SetTrigger("Recede");
             currentState = MoveState.Nothing;
             if (shutdownTxt !=null){
                 renderer.material.SetTexture("_MainTex", shutdownTxt);
             }
+            
         }
 
         else if (other.tag == Constants.CryptidContainerTag)

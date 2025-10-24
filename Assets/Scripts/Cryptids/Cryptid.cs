@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
 public class Cryptid : MonoBehaviour {
 
     //thins all cryptids need:
@@ -51,6 +50,7 @@ public class Cryptid : MonoBehaviour {
     private float movementTimer;
     private float wanderRepositionInterval = 10;
     private float fleeRepositionInterval = 1.5f;
+    private float chaseRepositionInterval = .5f;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
@@ -75,15 +75,7 @@ public class Cryptid : MonoBehaviour {
     public void Move(float forwardSpeed, float rotateSpeed = 0)
     {
         //move forward
-       // if (rb == null)
-        {
-            transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
-            //transform.position = Vector3.MoveTowards(transform.position, transform.forward * 1000, forwardSpeed * Time.deltaTime);
-        }
-        //else
-        {
-           // rb.AddForce(Vector3.forward * Time.deltaTime * forwardSpeed);
-        }
+        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
 
         //turn right
         if (rotateSpeed != 0)
@@ -100,9 +92,10 @@ public class Cryptid : MonoBehaviour {
     }
 
     //move randomly in 2d space
-    public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed, float changeTime = 14)
+    public void Wander(float distance, float minDistance)
     {
         movementTimer += Time.deltaTime;
+        UnKillNavMeshMovement();
 
         //change target position once within a certain range or after chasing it for a period of time
         if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || movementTimer > wanderRepositionInterval)
@@ -129,10 +122,11 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawLine(transform.position, targetPos, Color.cyan);
     }
 
-    //move in the opposite direction of a given target
-    public void Flee(Transform fleeFromTarget, float minDistance, float rotateSpeed)
+    //move in the opposite direction of a given target. uses navmesh agent
+    public void Flee(Transform fleeFromTarget, float minDistance)
     {
         movementTimer += Time.deltaTime;
+        UnKillNavMeshMovement();
 
         if (movementTimer > fleeRepositionInterval || (transform.position - nav.destination).magnitude < minDistance)
         {
@@ -143,23 +137,21 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawLine(transform.position, nav.destination, Color.red);
     }
 
-    //by default navmesh seems to handle rotation and velocity separately
-    //when you want to keep cryptids moving in the direction they're facing, use this
-   /* private void ForceNavMeshToMoveForward()
+    //move in the opposite direction of a given target. does not use navmesh
+    public void DirectFlee(Transform fleeFromTarget, float rotateSpeed)
     {
-        if (nav.hasPath)
-        {
-            Vector3 desiredDirection = nav.steeringTarget - transform.position;
-            desiredDirection.y = 0;
+        rotateSpeed = Mathf.Abs(rotateSpeed);
+        if (fleeFromTarget == null) { return; }
 
-            Quaternion desiredRotation = Quaternion.LookRotation(desiredDirection);
-            transform.rotation = Quaternion.Lerp(transform.rotation, desiredRotation, nav.angularSpeed * Time.deltaTime);
+        //make y not a factor so cryptids dont rotate down to get away from player
+        Vector3 fleeFromTargetPos = fleeFromTarget.position;
+        fleeFromTargetPos.y = transform.position.y;
 
-            transform.Translate(transform.forward * nav.speed * Time.deltaTime);
-
-            nav.nextPosition = transform.position;
-        }
-    }*/
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - fleeFromTargetPos), rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir);
+        //Move(forwardSpeed, 0);
+        //update: handle forward movement separate from deciding direction with move() in child script
+    }
 
     //set the navmesh target to a point in the opposite direction of the thing to flee from
     protected void SetNavmeshFleeTarget(Transform fleeFromTarget)
@@ -188,14 +180,29 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
-    //move in the direction of a given target (transform)
-    public void MoveToward(Transform target, float rotateSpeed)
+    protected void SetNavMeshChaseTarget(Transform chaseTarget)
     {
-        MoveToward(target.position, rotateSpeed);
+        movementTimer = 0;
+        nav.destination = chaseTarget.position;
     }
 
-    //move in the direction of a given target (vector3)
-    public void MoveToward(Vector3 target, float rotateSpeed)
+    //move in the direction of a given target (transform). utilizes navmesh
+    public void MoveToward(Transform target)
+    {
+        movementTimer += Time.deltaTime;
+        UnKillNavMeshMovement();
+
+        //same as flee, periodically update to make sure our target location is still aligned with the target object
+        if (movementTimer > chaseRepositionInterval && nav.destination != target.position)
+        {
+            SetNavMeshChaseTarget(target);
+        }
+
+        Debug.DrawLine(transform.position, nav.destination, Color.cyan);
+    }
+
+    //rotate in the direction of a given target (vector3). does not utilize navmesh
+    public void RotateToward(Vector3 target, float rotateSpeed)
     {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
@@ -207,10 +214,16 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawRay(transform.position, newDir, Color.blue);
     }
 
-    public void MoveTowardXZOnly(Vector3 target, float rotateSpeed)
+    public void RotateAway(Vector3 target, float rotateSpeed)
     {
-        target.y = transform.position.y;
-        MoveToward(target, rotateSpeed);
+        rotateSpeed = Mathf.Abs(rotateSpeed);
+        //vector3.zero is used in place of a null value
+        if (target == Vector3.zero) { return; }
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - target), rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir, transform.up);
+        //Move(forwardSpeed, 0);
+        //update: handle forward movement separate from deciding direction with move() in child script
+        Debug.DrawRay(transform.position, newDir, Color.blue);
     }
 
     //move along path once we've gotten within distance of a path point
@@ -266,7 +279,9 @@ public class Cryptid : MonoBehaviour {
             //prioritize the obstacle thats most directly in front of us
             float cos = 1;
             Collider obstacleToAvoid = null;
-            foreach (Collider other in obstacles)
+            //make local copy of obstacles before iterating; original might be modified during loop
+            List<Collider> obstaclesCopy = new List<Collider>(obstacles);
+            foreach (Collider other in obstaclesCopy)
             {
                 //it's possible obstacles have been removed/destroyed
                 if (other == null) { obstacles.Remove(other); continue; }
@@ -358,6 +373,8 @@ public class Cryptid : MonoBehaviour {
     {
         //cancel out the force applied from the impact of the carrot. i dont want it actually knocking anyone over
         rb.velocity = Vector3.zero;
+        KillNavMeshMovement();
+        nav.enabled = false;
 
         if (leftImpact && animator.HasState(0, Animator.StringToHash("bonk_left")))
         {
@@ -381,6 +398,21 @@ public class Cryptid : MonoBehaviour {
         if (obstacles != null && obstacles.Contains(obstacle)){
             obstacles.Remove(obstacle);
         }
+    }
+
+    protected void KillNavMeshMovement()
+    {
+        if (nav.enabled)
+        {
+            nav.velocity = Vector3.zero;
+            nav.isStopped = true;
+        }
+    }
+
+    protected void UnKillNavMeshMovement()
+    {
+        if (!nav.enabled) { nav.enabled = true; }
+        if (nav.isStopped) { nav.isStopped = false; }
     }
 
 }

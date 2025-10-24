@@ -17,12 +17,12 @@ public class Firefly : MonoBehaviour {
     public Light emission;
     private List<GameObject> litObjects;
 
-    private SpriteRenderer renderer;
+    private SpriteRenderer spriteRenderer;
 
     // Use this for initialization
     void Start () {
 
-        renderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         spriteIndex = Random.Range(0,sprites.Length-1);
         glowUp = true;
@@ -76,7 +76,7 @@ public class Firefly : MonoBehaviour {
             }
             //set active sprite
             spriteIndex %= sprites.Length;
-            renderer.sprite = sprites[spriteIndex];
+            spriteRenderer.sprite = sprites[spriteIndex];
             currentFrameTime = 0;
         }
 

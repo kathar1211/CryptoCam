@@ -39,9 +39,9 @@ public class Nessie : Cryptid {
         BreachChance = new RandomChanceInterval(3, .2f);
         LookAroundChance = new RandomChanceInterval(2, .3f);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    protected override void Update () {
         base.Update();
         if (lockMovementSuper) { return; }
 
@@ -147,11 +147,6 @@ public class Nessie : Cryptid {
 
         //turn riht
         transform.Rotate(Vector3.up * Time.deltaTime * sideSpeed);
-    }
-
-    void MoveForward()
-    {
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
     }
 
     public override bool IsVisible()

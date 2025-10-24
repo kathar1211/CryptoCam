@@ -60,13 +60,14 @@ public class FlatwoodsMonster : Cryptid
         if (lockMovementSuper) { return; }
 
         if (IsInCameraView()
-            && (currentState == MoveState.wander || currentState == MoveState.hover) 
+            && (currentState == MoveState.wander || currentState == MoveState.hover)
             && poseCooldownTimer <= 0)
         {
             avoidTarget = Photography.Instance.gameObject.transform;
             animator.SetBool(MoveBool, false);
             currentState = MoveState.turnAway;
             poseTimer = 0;
+            KillNavMeshMovement();
         }
 
         if (poseCooldownTimer >= 0)
@@ -77,28 +78,29 @@ public class FlatwoodsMonster : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
-                if (!AvoidObstacles(rotateSpeed))
-                {
-                    Wander(distance, minDistance, runSpeed, rotateSpeed);
-                }
-                else
-                {
+                //if (!AvoidObstacles(rotateSpeed))
+                //{
+                    Wander(distance, minDistance);
+               // }
+               // else
+                //{
                     //still increment time spent chasing this wander point while avoiding obstacles to avoid getting stuck
-                    timeChasing += Time.deltaTime;
-                }
-                Move(runSpeed);
+                //    timeChasing += Time.deltaTime;
+                //}
+               // Move(runSpeed);
 
                 //random chance to hover ominously
                 if (HoverChance.UpdateTimerAndCheckSuccess()) {
                     animator.SetBool(MoveBool, false);
                     currentState = MoveState.hover;
+                    KillNavMeshMovement();
                 }
 
                 break;
             case MoveState.turnAway:
 
-                //fleeing with a movespeed of 0 is the same as just rotating away
-                Flee(avoidTarget, 0, rotateSpeed);
+                //rotatetoward with a negative rotate speed is the same as rotate away
+                RotateAway(avoidTarget.position, rotateSpeed);
 
                 //if the camera gets put away we can return to wandering
                 if (!Photography.Instance.CameraReady)
@@ -128,7 +130,7 @@ public class FlatwoodsMonster : Cryptid
                 break;
             case MoveState.turnToward:
                 //movetoward with a movespeed of 0 is the same as rotating toward
-                MoveTowardXZOnly(avoidTarget.position, rotateSpeed);
+                RotateToward(avoidTarget.position, rotateSpeed);
 
                 //once we're within an error margin of facing the player, start the pose timer
                 Vector3 flatwoodToPlayerDirection = avoidTarget.transform.position - transform.position;
@@ -156,11 +158,11 @@ public class FlatwoodsMonster : Cryptid
 
                 break;
             case MoveState.flee:
-                if (!AvoidObstacles(rotateSpeed))
-                { 
-                    Flee(avoidTarget, runSpeed, rotateSpeed);
-                }
-                Move(runSpeed);
+               // if (!AvoidObstacles(rotateSpeed))
+                //{ 
+                    Flee(avoidTarget, runSpeed);
+                //}
+               // Move(runSpeed);
 
                 //stop fleeing once we get far enough away
                 if ((avoidTarget.position - transform.position).magnitude > fleeDistance)
@@ -209,6 +211,7 @@ public class FlatwoodsMonster : Cryptid
             avoidTarget = other.transform;
             animator.SetBool(MoveBool, true);
             currentState = MoveState.flee;
+            SetNavmeshFleeTarget(avoidTarget);
         }
 
 

@@ -65,7 +65,6 @@ public class Tsuchinoko : Cryptid {
             //default state: tsuchinoko slithers in a little circle
             case MoveState.Circling:
                 Move(speed, circlingRotateSpeed);
-                //AvoidObstacles(seeAhead, rotateSpeed);
                 //tsuchinoko only goes upright in his relaxed state
                 if (Random.Range(0.0f, 100.0f) < chanceUpDown)
                 {
@@ -75,13 +74,10 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
-                if (!AvoidObstacles(rotateSpeed))
+                //motion is handled by navmesh agent, but check here if we get in range
+                if ((target.position - transform.position).magnitude < minDistance)
                 {
-                    MoveToward(target, fleespeed);
-                }
-                Move(fleespeed);
-                if ((secondLocation.position - transform.position).magnitude < minDistance)
-                {
+                    KillNavMeshMovement();
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
                 }
@@ -90,14 +86,11 @@ public class Tsuchinoko : Cryptid {
                 break;
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
-                
-                if (!AvoidObstacles(rotateSpeed))
-                {
-                    Flee(target, fleespeed, rotateSpeed);
-                }
-                Move(fleespeed);
+
+                Flee(target, fleespeed);
                 if ((target.position - transform.position).magnitude > maxDistance)
                 {
+                    KillNavMeshMovement();
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
                 }
@@ -139,6 +132,8 @@ public class Tsuchinoko : Cryptid {
                 currentMovestate = MoveState.Fleeing;
                 SetUpright(false);
                 animator.SetFloat("Speed", fleespeed / speed);
+                nav.speed = fleespeed;
+                SetNavmeshFleeTarget(target);
             }
         }
         else if (other.tag == Constants.AvoidTag)
@@ -147,6 +142,8 @@ public class Tsuchinoko : Cryptid {
             currentMovestate = MoveState.Fleeing;
             SetUpright(false);
             animator.SetFloat("Speed", fleespeed / speed);
+            nav.speed = fleespeed;
+            SetNavmeshFleeTarget(target);
         }
 
         base.OnTriggerEnter(other);
@@ -157,8 +154,11 @@ public class Tsuchinoko : Cryptid {
     {
         target = secondLocation;
         currentMovestate = MoveState.Seeking;
+        nav.destination = target.position;
+        nav.speed = fleespeed;
         SetUpright(false);
         animator.SetFloat("Speed", fleespeed / speed);
+        SetNavMeshChaseTarget(target);
     }
 
     //tsuchinokos special pose is when he sits up

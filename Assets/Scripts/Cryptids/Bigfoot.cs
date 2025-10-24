@@ -93,19 +93,16 @@ public class Bigfoot : Cryptid
         {
             case MoveState.wander:
 
-                if (!AvoidObstacles(rotateSpeed))
+                if (pathIndex < PathPoints.Length)
                 {
-                    if (pathIndex < PathPoints.Length)
-                    {
-                        MoveToward(PathPoints[pathIndex].transform, rotateSpeed);
-                    }
-                    else
-                    {
-                        Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
-                    }
+                    MoveToward(PathPoints[pathIndex].transform);
+                }
+                else
+                {
+                    Wander(wanderDistance, minDistance);
                 }
                 //move forward after setting direction in other methods
-                Move(walkSpeed);
+                //Move(walkSpeed);
                 CheckPath();
 
                 //chance to do the pose
@@ -121,6 +118,7 @@ public class Bigfoot : Cryptid
                 {
                     LookPoseChance.SetChance(.06f); //put this back to normal
                     animator.SetBool(WalkBool, false);
+                    KillNavMeshMovement();
                     currentState = MoveState.idle;
                 }
 
@@ -166,7 +164,7 @@ public class Bigfoot : Cryptid
                 }
 
                 //rotate towards the object that bonked u. no other movement
-                MoveTowardXZOnly(targetPos, rotateSpeed);
+                RotateToward(targetPos, rotateSpeed);
 
                 //increment timer
                 timer += Time.deltaTime;
@@ -181,11 +179,7 @@ public class Bigfoot : Cryptid
 
                 break;
             case MoveState.flee:
-                if (!AvoidObstacles(rotateSpeed))
-                {
-                    Flee(avoidTarget, walkSpeed, rotateSpeed);
-                }
-                Move(walkSpeed);
+                Flee(avoidTarget, walkSpeed);
 
                 //stop fleeing once we get far enough away
                 if ((avoidTarget.position - transform.position).magnitude > fleeDistance)
@@ -196,7 +190,7 @@ public class Bigfoot : Cryptid
             case MoveState.pointReached:
 
                 //rotate in the direction of the point
-                MoveTowardXZOnly(targetPos, rotateSpeed);
+                RotateToward(targetPos, rotateSpeed);
 
                 //once we're facing the right way, sit
                 animator.SetBool(SitBool, true);
@@ -228,6 +222,7 @@ public class Bigfoot : Cryptid
             }
 
             avoidTarget = other.transform;
+            SetNavmeshFleeTarget(avoidTarget);
             currentState = MoveState.flee;
         }
 
