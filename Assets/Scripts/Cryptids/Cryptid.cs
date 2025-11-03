@@ -105,7 +105,7 @@ public class Cryptid : MonoBehaviour {
             for (int i = 0; i < 10; i++)
             {
                 targetPos = transform.position + transform.forward * (distance / 2.0f) + Random.insideUnitSphere * distance;
-                targetPos.y = transform.position.y;
+                targetPos.y = transform.position.y - (nav.baseOffset * transform.localScale.y);
 
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(targetPos, out hit, 2, NavMesh.AllAreas))

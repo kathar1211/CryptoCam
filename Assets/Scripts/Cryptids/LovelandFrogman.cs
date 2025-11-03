@@ -43,6 +43,7 @@ public class LovelandFrogman : Cryptid {
 
     //represents the height frog should be at to look like he's swimming apropriately
     private float swimHeight = -1;
+    public float swimBaseOffset = -2.75f; //used to scooch navmesh base so frog sits in the water instead of on top of it
 
 	// Use this for initialization
 	void Start () {
@@ -57,6 +58,7 @@ public class LovelandFrogman : Cryptid {
             animator.SetBool("creep", true);
             animator.SetBool("climb", false);
             animator.SetBool("swim", false);
+            nav.baseOffset = 0;
         }
         else if (currentState == MoveState.sit)
         {
@@ -65,10 +67,12 @@ public class LovelandFrogman : Cryptid {
             animator.SetBool("swim", false);
             animator.Play("sit");
             timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+            nav.baseOffset = 0;
         }
         else if (currentState == MoveState.swim)
         {
             swimHeight = transform.position.y;
+            nav.baseOffset = swimBaseOffset;
         }
     }
 	
@@ -104,6 +108,8 @@ public class LovelandFrogman : Cryptid {
                     timer = 0;
                     animator.SetBool("creep", true);
                     currentState = MoveState.walk;
+                    nav.speed = walkSpeed;
+                    nav.baseOffset = 0;
                 }
                 break;
             case MoveState.floating:
@@ -113,6 +119,8 @@ public class LovelandFrogman : Cryptid {
                     timer = 0;
                     animator.SetBool("swim", true);
                     currentState = MoveState.swim;
+                    nav.speed = swimSpeed;
+                    nav.baseOffset = swimBaseOffset;
                 }
                 break;
             case MoveState.edgeLeap:
@@ -120,10 +128,12 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.flee:
 
-                Flee(fleeFromTarget, fleeSpeed);
+                DirectFlee(fleeFromTarget, fleeSpeed);
                 if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                 {
                     currentState = MoveState.walk;
+                    nav.speed = walkSpeed;
+                    nav.baseOffset = 0;
                 }
                 break;
         }
@@ -185,6 +195,8 @@ public class LovelandFrogman : Cryptid {
         if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.sit)//somethings happening here
         {
             currentState = MoveState.swim;
+            nav.speed = swimSpeed;
+            nav.baseOffset = swimBaseOffset;
             animator.SetBool("swim", true);
             animator.SetBool("creep", false);
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -197,11 +209,12 @@ public class LovelandFrogman : Cryptid {
            // transform.Translate(preleapOffset);
             currentState = MoveState.edgeLeap;
             animator.SetBool("climb", true);
+            KillNavMeshMovement();
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-            KillNavMeshMovement();
+            
 
             //debug
             GameObject.Instantiate(new GameObject(), this.transform);
@@ -215,14 +228,14 @@ public class LovelandFrogman : Cryptid {
             {
                 currentState = MoveState.flee;
                 fleeFromTarget = other.gameObject.transform;
-                SetNavmeshFleeTarget(fleeFromTarget);
+                KillNavMeshMovement();
             }
         }
         else if (other.tag == Constants.AvoidTag)
         {
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
-            SetNavmeshFleeTarget(fleeFromTarget);
+            KillNavMeshMovement();
         }
 
         base.OnTriggerEnter(other);
