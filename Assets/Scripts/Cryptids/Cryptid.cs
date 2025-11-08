@@ -98,7 +98,7 @@ public class Cryptid : MonoBehaviour {
         UnKillNavMeshMovement();
 
         //change target position once within a certain range or after chasing it for a period of time
-        if (targetPos == Vector3.zero || (transform.position - targetPos).magnitude < minDistance || movementTimer > wanderRepositionInterval)
+        if (targetPos == Vector3.zero || (transform.position - nav.destination).magnitude < minDistance || movementTimer > wanderRepositionInterval)
         {
             //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
             //get a random position on the navmesh by sampling a few times at a small radius
@@ -108,7 +108,7 @@ public class Cryptid : MonoBehaviour {
                 targetPos.y = transform.position.y - (nav.baseOffset * transform.localScale.y);
 
                 NavMeshHit hit;
-                if (NavMesh.SamplePosition(targetPos, out hit, 2, NavMesh.AllAreas))
+                if (NavMesh.SamplePosition(targetPos, out hit, 2, nav.areaMask))
                 {
                     movementTimer = 0;
                     nav.destination = hit.position;
