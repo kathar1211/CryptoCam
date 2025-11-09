@@ -78,7 +78,8 @@ public class Bigfoot : Cryptid
                 break;
         }
 
-        LookPoseChance = new RandomChanceInterval(1, .06f);
+        // LookPoseChance = new RandomChanceInterval(1, .06f);
+        LookPoseChance = new RandomChanceInterval(1, -1f);
         IdleChance = new RandomChanceInterval(3, .1f);
         WalkChance = new RandomChanceInterval(3, .2f);
         SitChance = new RandomChanceInterval(3, .2f);
@@ -92,6 +93,14 @@ public class Bigfoot : Cryptid
         switch (currentState)
         {
             case MoveState.wander:
+
+                //dont move during stationary parts of animation
+                if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
+                {
+                    // MoveToward(targetPos, rotateSpeed);
+                    KillNavMeshMovement();
+                    break;
+                }
 
                 if (pathIndex < PathPoints.Length)
                 {
