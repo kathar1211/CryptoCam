@@ -210,6 +210,7 @@ public class LovelandFrogman : Cryptid {
             currentState = MoveState.edgeLeap;
             animator.SetBool("climb", true);
             KillNavMeshMovement();
+            nav.enabled = false;
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);

@@ -207,6 +207,8 @@ public class Cryptid : MonoBehaviour {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
+        Debug.DrawRay(transform.position, transform.forward, Color.red);
+        Debug.DrawLine(target, transform.position, Color.green);
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir, transform.up);
         //Move(forwardSpeed, 0);
@@ -288,7 +290,7 @@ public class Cryptid : MonoBehaviour {
 
                 Vector3 dist = transform.position - other.transform.position;
                 float newCos = Vector3.Dot(this.transform.right, dist.normalized);
-                if (Mathf.Abs(newCos) < Mathf.Abs(cos))
+                if (Mathf.Abs(newCos) > Mathf.Abs(cos))
                 {
                     cos = newCos;
                     obstacleToAvoid = other;

@@ -12,6 +12,7 @@ public class Bigfoot : Cryptid
     private const string STAND_BONK_RIGHT = "bonk_right";
     private const string SIT_IDLE = "sit_idle";
     private const string SIT_TRANSITION_UP = "sit_transition_reverse";
+    private const string WALK_TURN = "walk_turn";
 
     private const string SitBool = "Sit";
     private const string WalkBool = "Walk";
@@ -113,6 +114,9 @@ public class Bigfoot : Cryptid
                 //Move(walkSpeed);
                 CheckPath();
 
+                //i dont want to interrupt the turn pose by checking and firing other states
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName(WALK_TURN)) { break; }
+
                 //chance to do the pose
                 if (LookPoseChance.UpdateTimerAndCheckSuccess())
                 {
@@ -200,14 +204,20 @@ public class Bigfoot : Cryptid
                 //rotate in the direction of the point
                 RotateToward(targetPos, rotateSpeed);
 
-                //once we're facing the right way, sit
-                animator.SetBool(SitBool, true);
-                currentState = MoveState.sit;
+                //do a little math to see if we're within a few degrees of where we want to be
+                Vector3 targetForward = (targetPos - transform.position);
+                float cos = Vector3.Dot(targetForward, transform.forward);
+                if (Mathf.Abs(cos) >= .9f)
+                {
+                    //once we're facing the right way, sit
+                    animator.SetBool(WalkBool, false);
+                    animator.SetBool(SitBool, true);
+                    currentState = MoveState.sit;
 
-                //how long we sittin?
-                timer = 0;
-                timeToSit = Random.Range(MinSitTime, MaxSitTime);
-
+                    //how long we sittin?
+                    timer = 0;
+                    timeToSit = Random.Range(MinSitTime, MaxSitTime);
+                }
                 break;
 
         }
@@ -289,5 +299,6 @@ public class Bigfoot : Cryptid
     {
         currentState = MoveState.pointReached;
         targetPos = this.transform.position + triggerPoint.transform.forward;
+        KillNavMeshMovement();
     }
 }
