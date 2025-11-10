@@ -78,8 +78,7 @@ public class Bigfoot : Cryptid
                 break;
         }
 
-        // LookPoseChance = new RandomChanceInterval(1, .06f);
-        LookPoseChance = new RandomChanceInterval(1, -1f);
+        LookPoseChance = new RandomChanceInterval(1, .06f);
         IdleChance = new RandomChanceInterval(3, .1f);
         WalkChance = new RandomChanceInterval(3, .2f);
         SitChance = new RandomChanceInterval(3, .2f);
