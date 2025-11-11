@@ -74,6 +74,8 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
+                if (nav.destination != target.position) { SetupNavMeshSeek(); }
+
                 //motion is handled by navmesh agent, but check here if we get in range
                 if ((target.position - transform.position).magnitude < minDistance)
                 {
@@ -154,6 +156,11 @@ public class Tsuchinoko : Cryptid {
     {
         target = secondLocation;
         currentMovestate = MoveState.Seeking;
+        
+    }
+
+    private void SetupNavMeshSeek()
+    {
         nav.destination = target.position;
         nav.speed = fleespeed;
         SetUpright(false);
@@ -180,8 +187,12 @@ public class Tsuchinoko : Cryptid {
     //wake up tsuchinoko, and specify what he should do after he's awake
     public void WakeTsuchinoko(MoveState postWakeAction, Transform postWakeTarget = null)
     {
+        if (currentMovestate != MoveState.Sleeping) { return; }
+
         currentMovestate = MoveState.Awake;
         nextState = postWakeAction;
-        if (postWakeTarget != null) { target = postWakeTarget; }
+        if (postWakeTarget != null) { 
+            target = postWakeTarget; 
+        }
     }
 }

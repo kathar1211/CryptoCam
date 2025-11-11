@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\Environment\ShowLevelIntro.cs" />
     <Compile Include="Assets\Scripts\Environment\Splash.cs" />
     <Compile Include="Assets\Scripts\Environment\SpriteFaceForward.cs" />
+    <Compile Include="Assets\Scripts\Environment\TsuchinokoLog.cs" />
     <Compile Include="Assets\Scripts\Items\BonkableObject.cs" />
     <Compile Include="Assets\Scripts\Items\Float.cs" />
     <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
