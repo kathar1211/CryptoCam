@@ -300,6 +300,7 @@ public class Cryptid : MonoBehaviour {
             currentObstacle = obstacleToAvoid;
             timeOfLastObstacleCheck = Time.time;
         }
+        if (currentObstacle == null) { return false; } //not sure how this would happen but i guess it can
 
         float angle = Vector3.Dot(this.transform.right, (transform.position - currentObstacle.transform.position).normalized);
         Debug.DrawRay(this.transform.position, currentObstacle.transform.position - this.transform.position, Color.red);

@@ -83,7 +83,7 @@ public class Tsuchinoko : Cryptid {
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
                 }
-                Debug.DrawRay(transform.position, secondLocation.position - transform.position, Color.yellow);
+                Debug.DrawRay(transform.position, target.position - transform.position, Color.yellow);
 
                 break;
             //tsuchinoko moves away from something until he is outside a certain range of it
@@ -161,6 +161,7 @@ public class Tsuchinoko : Cryptid {
 
     private void SetupNavMeshSeek()
     {
+        UnKillNavMeshMovement();
         nav.destination = target.position;
         nav.speed = fleespeed;
         SetUpright(false);
@@ -187,9 +188,11 @@ public class Tsuchinoko : Cryptid {
     //wake up tsuchinoko, and specify what he should do after he's awake
     public void WakeTsuchinoko(MoveState postWakeAction, Transform postWakeTarget = null)
     {
+        Debug.Log("tsuchinoko awaken");
         if (currentMovestate != MoveState.Sleeping) { return; }
 
         currentMovestate = MoveState.Awake;
+        animator.SetTrigger("Awake");
         nextState = postWakeAction;
         if (postWakeTarget != null) { 
             target = postWakeTarget; 

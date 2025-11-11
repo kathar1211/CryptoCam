@@ -28,7 +28,7 @@ public class TsuchinokoLog : MonoBehaviour
         //thought: should the log also respond to the player's avoid zone? or just let tsuchinoko handle it?
     }
 
-    public virtual void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         BonkableObject bonked = collision.gameObject.GetComponent<BonkableObject>();
         if (bonked != null && bonked.CanDoBonk())
