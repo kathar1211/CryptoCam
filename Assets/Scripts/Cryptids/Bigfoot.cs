@@ -79,7 +79,7 @@ public class Bigfoot : Cryptid
                 break;
         }
 
-        LookPoseChance = new RandomChanceInterval(1, .06f);
+        LookPoseChance = new RandomChanceInterval(.5f, .06f);
         IdleChance = new RandomChanceInterval(3, .1f);
         WalkChance = new RandomChanceInterval(3, .2f);
         SitChance = new RandomChanceInterval(3, .2f);
@@ -115,7 +115,7 @@ public class Bigfoot : Cryptid
                 CheckPath();
 
                 //i dont want to interrupt the turn pose by checking and firing other states
-                if (animator.GetCurrentAnimatorStateInfo(0).IsName(WALK_TURN)) { break; }
+                if (animator.GetBool("IsTurning")) { break; }
 
                 //chance to do the pose
                 if (LookPoseChance.UpdateTimerAndCheckSuccess())
