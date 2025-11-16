@@ -105,6 +105,10 @@ public class Tsuchinoko : Cryptid {
                 if (animator.GetCurrentAnimatorStateInfo(0).IsName("downSlither"))
                 {
                     currentMovestate = nextState;
+                    if (currentMovestate == MoveState.Fleeing)
+                    {
+                        animator.SetFloat("Speed", fleespeed / speed);
+                    }
                 }
                 break;
         }
@@ -130,25 +134,35 @@ public class Tsuchinoko : Cryptid {
         {
             if (!other.gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.FirstPersonController>().IsCrouching)
             {
-                target = other.gameObject.transform;
-                currentMovestate = MoveState.Fleeing;
-                SetUpright(false);
-                animator.SetFloat("Speed", fleespeed / speed);
-                nav.speed = fleespeed;
-                SetNavmeshFleeTarget(target);
+                SetupFlee(other.transform);
             }
         }
         else if (other.tag == Constants.AvoidTag)
         {
-            target = other.gameObject.transform;
+            SetupFlee(other.transform);
+        }
+
+        base.OnTriggerEnter(other);
+    }
+
+    private void SetupFlee(Transform fleetarget)
+    {
+        if (currentMovestate != MoveState.Sleeping)
+        {
+            target = fleetarget;
             currentMovestate = MoveState.Fleeing;
             SetUpright(false);
             animator.SetFloat("Speed", fleespeed / speed);
             nav.speed = fleespeed;
             SetNavmeshFleeTarget(target);
         }
-
-        base.OnTriggerEnter(other);
+        else
+        {
+            WakeTsuchinoko(MoveState.Fleeing, fleetarget);
+            nav.speed = fleespeed;
+            nav.destination = this.transform.position;
+            KillNavMeshMovement();
+        }
     }
 
     //triggers tsuchinokos decision to move to new location

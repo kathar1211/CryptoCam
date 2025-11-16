@@ -281,7 +281,7 @@ public class CabinLab : MonoBehaviour {
             //for now just load gameplay scene
             loadingAnim.SetActive(true);
             Destroy(GameObject.Find("GameManager"));
-            SceneManager.LoadSceneAsync("demolvl", LoadSceneMode.Single);
+            SceneManager.LoadSceneAsync("demolevl2", LoadSceneMode.Single);
         }
         
     }
