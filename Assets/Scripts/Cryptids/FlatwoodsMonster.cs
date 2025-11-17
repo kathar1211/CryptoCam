@@ -80,7 +80,7 @@ public class FlatwoodsMonster : Cryptid
             case MoveState.wander:
                 //if (!AvoidObstacles(rotateSpeed))
                 //{
-                    Wander(distance, minDistance);
+                    Wander(distance, minDistance, runSpeed, rotateSpeed);
                // }
                // else
                 //{
@@ -160,7 +160,7 @@ public class FlatwoodsMonster : Cryptid
             case MoveState.flee:
                // if (!AvoidObstacles(rotateSpeed))
                 //{ 
-                    Flee(avoidTarget, runSpeed);
+                    Flee(avoidTarget, minDistance, runSpeed, rotateSpeed);
                 //}
                // Move(runSpeed);
 

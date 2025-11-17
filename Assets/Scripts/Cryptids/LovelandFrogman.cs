@@ -88,7 +88,7 @@ public class LovelandFrogman : Cryptid {
             //movement states
             case MoveState.swim:
 
-                Wander(targetMaxDistance, targetMinDistance);
+                Wander(targetMaxDistance, targetMinDistance, swimSpeed, rotateSpeed);
 
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
@@ -97,7 +97,7 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.walk:
 
-                Wander(targetMaxDistance, targetMinDistance);
+                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed);
 
                 break;
             case MoveState.stand:
@@ -128,9 +128,10 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.flee:
 
-                DirectFlee(fleeFromTarget, fleeSpeed);
+                Flee(fleeFromTarget, targetMinDistance, fleeSpeed, rotateSpeed);
                 if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                 {
+                    
                     currentState = MoveState.walk;
                     nav.speed = walkSpeed;
                     nav.baseOffset = 0;
@@ -232,7 +233,7 @@ public class LovelandFrogman : Cryptid {
                 KillNavMeshMovement();
             }
         }
-        else if (other.tag == Constants.AvoidTag)
+        else if (other.tag == Constants.AvoidTag && currentState == MoveState.walk)
         {
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;

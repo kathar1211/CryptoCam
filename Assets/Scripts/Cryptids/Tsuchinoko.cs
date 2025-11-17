@@ -76,7 +76,10 @@ public class Tsuchinoko : Cryptid {
                 
                 if (nav.destination != target.position) { SetupNavMeshSeek(); }
 
-                //motion is handled by navmesh agent, but check here if we get in range
+                //nvm, handle movement manually
+                MoveManuallyAlongNavMeshPath(speed, rotateSpeed);
+
+                //check here if we get in range
                 if ((target.position - transform.position).magnitude < minDistance)
                 {
                     KillNavMeshMovement();
@@ -89,7 +92,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves away from something until he is outside a certain range of it
             case MoveState.Fleeing:
 
-                Flee(target, fleespeed);
+                Flee(target, minDistance, fleespeed, rotateSpeed * 10, false);
                 if ((target.position - transform.position).magnitude > maxDistance)
                 {
                     KillNavMeshMovement();
@@ -147,6 +150,8 @@ public class Tsuchinoko : Cryptid {
 
     private void SetupFlee(Transform fleetarget)
     {
+        if (nextState == MoveState.Fleeing) { return; }
+
         if (currentMovestate != MoveState.Sleeping)
         {
             target = fleetarget;
@@ -159,8 +164,6 @@ public class Tsuchinoko : Cryptid {
         else
         {
             WakeTsuchinoko(MoveState.Fleeing, fleetarget);
-            nav.speed = fleespeed;
-            nav.destination = this.transform.position;
             KillNavMeshMovement();
         }
     }

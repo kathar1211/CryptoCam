@@ -77,7 +77,7 @@ public class Jackalope : Cryptid {
             case MoveState.run:
                 //if (!AvoidObstacles(rotateSpeed))
                 {
-                    Wander(distance, minDistance);
+                    Wander(distance, minDistance, runSpeed, rotateSpeed);
                 }
                // Move(runSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)
@@ -147,7 +147,7 @@ public class Jackalope : Cryptid {
                 break;
             //move toward a specific object
             case MoveState.runtoward:
-                MoveToward(moveToTarget);
+                MoveToward(moveToTarget, runSpeed, rotateSpeed);
                 //switch to eating within a certain range
                 if ((moveToTarget.position - this.transform.position).magnitude <= minDistance)
                 {

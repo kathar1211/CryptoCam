@@ -104,11 +104,11 @@ public class Bigfoot : Cryptid
 
                 if (pathIndex < PathPoints.Length)
                 {
-                    MoveToward(PathPoints[pathIndex].transform);
+                    MoveToward(PathPoints[pathIndex].transform, walkSpeed, rotateSpeed);
                 }
                 else
                 {
-                    Wander(wanderDistance, minDistance);
+                    Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
                 }
                 //move forward after setting direction in other methods
                 //Move(walkSpeed);
@@ -191,7 +191,7 @@ public class Bigfoot : Cryptid
 
                 break;
             case MoveState.flee:
-                Flee(avoidTarget, walkSpeed);
+                Flee(avoidTarget, minDistance, walkSpeed, rotateSpeed);
 
                 //stop fleeing once we get far enough away
                 if ((avoidTarget.position - transform.position).magnitude > fleeDistance)

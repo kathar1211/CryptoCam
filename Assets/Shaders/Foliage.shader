@@ -14,7 +14,7 @@
 		_AlphaCutoff("Alpha Cutoff", float) = .5
 	}
 	SubShader {
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "DisableBatching" = "Flase" }
+		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" "DisableBatching" = "False" }
 		LOD 200
 		Cull Off
 		
