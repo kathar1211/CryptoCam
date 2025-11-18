@@ -92,7 +92,16 @@ public class Cryptid : MonoBehaviour {
     }
 
     //move randomly in 2d space
-    public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed)
+    public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed, bool avoidObstacles = false)
+    {
+        Wander(distance, minDistance);
+
+        //override navmesh movement to keep cryptids from sliding weird
+        MoveManuallyAlongNavMeshPath(runSpeed, rotateSpeed, avoidObstacles);
+
+    }
+
+    public void Wander(float distance, float minDistance)
     {
         movementTimer += Time.deltaTime;
         UnKillNavMeshMovement();
@@ -115,19 +124,14 @@ public class Cryptid : MonoBehaviour {
                     break;
                 }
             }
-           
+
         }
 
-       // ForceNavMeshToMoveForward();
+        // ForceNavMeshToMoveForward();
         Debug.DrawLine(transform.position, targetPos, Color.cyan);
-
-        //override navmesh movement to keep cryptids from sliding weird
-        MoveManuallyAlongNavMeshPath(runSpeed, rotateSpeed);
-
     }
 
-    //move in the opposite direction of a given target. uses navmesh agent
-    public void Flee(Transform fleeFromTarget, float minDistance, float fleeSpeed, float rotateSpeed, bool overrideNavMesh = true)
+    public void Flee(Transform fleeFromTarget, float minDistance)
     {
         movementTimer += Time.deltaTime;
         UnKillNavMeshMovement();
@@ -137,14 +141,18 @@ public class Cryptid : MonoBehaviour {
             SetNavmeshFleeTarget(fleeFromTarget);
         }
 
-       // ForceNavMeshToMoveForward();
+        // ForceNavMeshToMoveForward();
         Debug.DrawLine(transform.position, nav.destination, Color.red);
+    }
+
+    //move in the opposite direction of a given target. uses navmesh agent
+    public void Flee(Transform fleeFromTarget, float minDistance, float fleeSpeed, float rotateSpeed)
+    {
+        Flee(fleeFromTarget, minDistance);
 
         //override navmesh movement to keep cryptids from sliding weird
-        if (overrideNavMesh)
-        {
-            MoveManuallyAlongNavMeshPath(fleeSpeed, rotateSpeed);
-        }
+         MoveManuallyAlongNavMeshPath(fleeSpeed, rotateSpeed, false);
+
     }
 
     //move in the opposite direction of a given target. does not use navmesh
@@ -197,7 +205,15 @@ public class Cryptid : MonoBehaviour {
     }
 
     //move in the direction of a given target (transform). utilizes navmesh for pathing but movement is manual
-    public void MoveToward(Transform target, float speed, float rotateSpeed)
+    public void MoveToward(Transform target, float speed, float rotateSpeed, bool avoidObstacles = false)
+    {
+        MoveToward(target);
+
+        Debug.DrawLine(transform.position, nav.destination, Color.cyan);
+        MoveManuallyAlongNavMeshPath(speed, rotateSpeed, avoidObstacles);
+    }
+
+    public void MoveToward(Transform target)
     {
         movementTimer += Time.deltaTime;
         UnKillNavMeshMovement();
@@ -207,9 +223,6 @@ public class Cryptid : MonoBehaviour {
         {
             SetNavMeshChaseTarget(target);
         }
-
-        Debug.DrawLine(transform.position, nav.destination, Color.cyan);
-        MoveManuallyAlongNavMeshPath(speed, rotateSpeed);
     }
 
     //rotate in the direction of a given target (vector3). does not utilize navmesh
@@ -301,7 +314,7 @@ public class Cryptid : MonoBehaviour {
 
                 Vector3 dist = transform.position - other.transform.position;
                 float newCos = Vector3.Dot(this.transform.right, dist.normalized);
-                if (Mathf.Abs(newCos) > Mathf.Abs(cos))
+                if (Mathf.Abs(newCos) < Mathf.Abs(cos))
                 {
                     cos = newCos;
                     obstacleToAvoid = other;
@@ -431,11 +444,16 @@ public class Cryptid : MonoBehaviour {
 
     //navmesh handles rotation and movement independently
     //but i want crytpids to always move in the direction they're facing
-    protected void MoveManuallyAlongNavMeshPath(float moveSpeed, float rotateSpeed)
+    protected void MoveManuallyAlongNavMeshPath(float moveSpeed, float rotateSpeed, bool avoidObstacles)
     {
         nav.updatePosition = false;
         nav.updateRotation = false;
-        RotateToward(nav.nextPosition, rotateSpeed);
+
+        //option to do additional obstacle avoidance in the event the navmesh and cryptid get separated (common)
+        if (!avoidObstacles || !AvoidObstacles(rotateSpeed))
+        {
+            RotateToward(nav.nextPosition, rotateSpeed);
+        }
         Move(moveSpeed);
     }
 

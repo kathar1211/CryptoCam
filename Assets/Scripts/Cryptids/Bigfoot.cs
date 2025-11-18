@@ -104,11 +104,11 @@ public class Bigfoot : Cryptid
 
                 if (pathIndex < PathPoints.Length)
                 {
-                    MoveToward(PathPoints[pathIndex].transform, walkSpeed, rotateSpeed);
+                    MoveToward(PathPoints[pathIndex].transform);
                 }
                 else
                 {
-                    Wander(wanderDistance, minDistance, walkSpeed, rotateSpeed);
+                    Wander(wanderDistance, minDistance);
                 }
                 //move forward after setting direction in other methods
                 //Move(walkSpeed);

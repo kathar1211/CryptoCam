@@ -77,7 +77,7 @@ public class Jackalope : Cryptid {
             case MoveState.run:
                 //if (!AvoidObstacles(rotateSpeed))
                 {
-                    Wander(distance, minDistance, runSpeed, rotateSpeed);
+                    Wander(distance, minDistance);
                 }
                // Move(runSpeed);
                 if (Random.Range(0.0f,100.0f) > 99.9f)

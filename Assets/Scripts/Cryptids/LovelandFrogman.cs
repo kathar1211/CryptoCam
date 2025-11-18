@@ -88,7 +88,7 @@ public class LovelandFrogman : Cryptid {
             //movement states
             case MoveState.swim:
 
-                Wander(targetMaxDistance, targetMinDistance, swimSpeed, rotateSpeed);
+                Wander(targetMaxDistance, targetMinDistance);
 
                 if (swimHeight != -1 && transform.position.y != swimHeight)
                 {
@@ -97,7 +97,7 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.walk:
 
-                Wander(targetMaxDistance, targetMinDistance, walkSpeed, rotateSpeed);
+                Wander(targetMaxDistance, targetMinDistance);
 
                 break;
             case MoveState.stand:

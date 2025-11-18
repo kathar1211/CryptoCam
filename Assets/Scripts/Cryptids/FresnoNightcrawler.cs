@@ -56,7 +56,7 @@ public class FresnoNightcrawler : Cryptid {
                     KillNavMeshMovement();
                     break;
                 }
-                MoveToward(PathPoints[pathIndex].transform, speed, rotateSpeed);
+                MoveToward(PathPoints[pathIndex].transform);
                 CheckPath();
                 if (pathIndex >= PathPoints.Length) { pathIndex = 0; }
                 break;
