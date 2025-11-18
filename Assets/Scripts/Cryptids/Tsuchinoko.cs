@@ -98,6 +98,7 @@ public class Tsuchinoko : Cryptid {
                     KillNavMeshMovement();
                     currentMovestate = MoveState.Circling;
                     animator.SetFloat("Speed", 1);
+                    nav.speed = speed;
                 }
                 break;
             case MoveState.Sleeping:
@@ -164,6 +165,7 @@ public class Tsuchinoko : Cryptid {
         else
         {
             WakeTsuchinoko(MoveState.Fleeing, fleetarget);
+            nav.speed = fleespeed;
             KillNavMeshMovement();
         }
     }

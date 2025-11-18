@@ -22,6 +22,8 @@ public class Splash : MonoBehaviour
     {
         if (other.isTrigger) { return; }
 
+        if (other.tag == "NoSplash") { return; }
+
         //only counts if we're entering the water from above
         if (other.transform.position.y < this.transform.position.y) { return; }
 
