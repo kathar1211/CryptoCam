@@ -21,8 +21,8 @@ public class FresnoNightcrawler : Cryptid {
     public float maxDistance;
     public float seeObstacles;
 
-    enum MoveState { Walk, Flee, Dance, Nothing};
-    MoveState currentState = MoveState.Walk;
+    public enum MoveState { Walk, Flee, Dance, Nothing, Wander};
+    public MoveState currentState = MoveState.Walk;
 
     [SerializeField]
     Texture2D shutdownTxt;
@@ -34,7 +34,10 @@ public class FresnoNightcrawler : Cryptid {
         cryptidType = Constants.Fresno;
 
         //inital target position is directly in front, 100 units away
-        SetNavMeshChaseTarget(PathPoints[0].transform);
+        if (currentState == MoveState.Walk)
+        {
+            SetNavMeshChaseTarget(PathPoints[0].transform);
+        }
 	}
 
     // Update is called once per frame
@@ -59,6 +62,9 @@ public class FresnoNightcrawler : Cryptid {
                 MoveToward(PathPoints[pathIndex].transform);
                 CheckPath();
                 if (pathIndex >= PathPoints.Length) { pathIndex = 0; }
+                break;
+            case MoveState.Wander:
+                Wander(maxDistance, minDistance);
                 break;
             case MoveState.Flee:
                 break;

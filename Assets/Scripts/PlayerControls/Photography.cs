@@ -388,20 +388,22 @@ public class Photography : MonoBehaviour {
                 if (hit.collider.transform.root == check.transform.root)
                 {
                     hitCounter++;
+                    actualHitBoxCount++;
                 }
                 else if (check.transform.tag == Constants.OptionalTag)
                 {
-                    hitCounter++;
+                    continue;
                 }
                 else
                 {
                     Debug.Log("obstacle hit: " + hit.transform.ToString());
                     Debug.Log("attempting to hit: " + check.transform.ToString());
                     Debug.DrawRay(cryptoCam.transform.position, direction, Color.yellow, 10);
+                    actualHitBoxCount++;
                 }
             }      
         }
-        if (hitboxes.Length != 0) { return (float)hitCounter / (float)hitboxes.Length; }
+        if (hitboxes.Length != 0) { return (float)hitCounter / (float)actualHitBoxCount; }
 
         return 0;
     }
