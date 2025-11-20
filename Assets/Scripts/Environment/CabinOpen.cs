@@ -15,7 +15,7 @@ public class CabinOpen : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (animator != null)
+        if (animator != null && other.tag == "Player")
         {
             animator.SetTrigger("Open");
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,8 @@ public class GradeManager : MonoBehaviour {
 
     [SerializeField]
     GameObject ConfirmScreen;
+    [SerializeField]
+    TextMeshProUGUI ConfirmText;
 
     enum GradeState { allThumbs, bigThumb, doneConfirm};
     GradeState currentState;
@@ -320,7 +323,7 @@ public class GradeManager : MonoBehaviour {
             if (ClickSFX != null) { ClickSFX.Play(); }
 
             ConfirmScreen.SetActive(true);
-            ConfirmScreen.transform.Find("Text").GetComponent<Text>().text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
+            ConfirmText.text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
             AutoButton.SetActive(false);
             DoneButton.SetActive(false);
             currentState = GradeState.doneConfirm;
