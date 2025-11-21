@@ -59,6 +59,10 @@ public class Jackalope : Cryptid {
             renderer.material.SetTexture("_MainTex", awakeTexture);
             animator.Play("run", 0);
         }
+        else
+        {
+            KillNavMeshMovement();
+        }
     }
 	
 	// Update is called once per frame
@@ -205,6 +209,7 @@ public class Jackalope : Cryptid {
             if (currentState != MoveState.runtoward && currentState != MoveState.flee)
             {
                 if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
+                else if (currentState == MoveState.wake) { nextState = MoveState.runtoward; }
                 else { currentState = MoveState.runtoward; }
                 animator.SetBool(StandUp, false);
                 animator.SetBool(Run, true);
@@ -223,6 +228,7 @@ public class Jackalope : Cryptid {
     {
         fleeFromTarget = target;
         if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.flee; }
+        else if (currentState == MoveState.wake) { nextState = MoveState.flee; }
         else { currentState = MoveState.flee; }
         animator.SetBool(StandUp, false);
         animator.SetBool(Run, true);
