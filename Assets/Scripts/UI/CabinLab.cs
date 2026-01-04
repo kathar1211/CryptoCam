@@ -49,6 +49,7 @@ public class CabinLab : MonoBehaviour {
     public GameObject blackScreen;
 
     bool introPlaying = false;
+    bool loadingScene = false;
 
 	// Use this for initialization
 	void Start () {
@@ -275,10 +276,10 @@ public class CabinLab : MonoBehaviour {
 
     public void Embark()
     {
-        if (currentState == MenuState.Main)
+        if (currentState == MenuState.Main && !loadingScene)
         {
-            //todo: level selector
-            //for now just load gameplay scene
+            //there will never be multiple levels
+            loadingScene = true;
             loadingAnim.SetActive(true);
             Destroy(GameObject.Find("GameManager"));
             SceneManager.LoadSceneAsync("demolevl2", LoadSceneMode.Single);
@@ -349,8 +350,9 @@ public class CabinLab : MonoBehaviour {
 
     public void Exit()
     {
-        if (currentState == MenuState.Main)
+        if (currentState == MenuState.Main && !loadingScene)
         {
+            loadingScene = true;
             loadingAnim.SetActive(true);
             SceneManager.LoadSceneAsync("Title");
         }

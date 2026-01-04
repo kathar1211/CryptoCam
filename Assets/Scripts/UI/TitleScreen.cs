@@ -32,6 +32,8 @@ public class TitleScreen : MonoBehaviour {
     [SerializeField]
     AudioSource selectSFX;
 
+    private bool isSceneLoading;
+
     // Use this for initialization
     void Start () {
         currentButton = 0;
@@ -92,7 +94,10 @@ public class TitleScreen : MonoBehaviour {
     //todo: if player selects continue, load sava data
     public void Continue()
     {
+        if (isSceneLoading) { return; }
+
         loader.SetActive(true);
+        isSceneLoading = true;
         SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
     }
@@ -100,9 +105,12 @@ public class TitleScreen : MonoBehaviour {
     //if player selects new game, load next scene
     public void NewGame()
     {
+        if (isSceneLoading) { return; }
+
         //PlayerPrefs.DeleteAll();
         if (Save.SaveFileExists()) { Save.DeleteSaveData(); }
         loader.SetActive(true);
+        isSceneLoading = true;
         PlayerPrefs.SetInt(Constants.FirstPlay,0);
         SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }

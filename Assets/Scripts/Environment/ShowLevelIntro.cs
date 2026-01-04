@@ -83,7 +83,7 @@ public class ShowLevelIntro : MonoBehaviour
     //iterate through cameras, setting them active for their active duration
     void UpdateIntro()
     {
-        if (introCameras == null || activeCameraIndex >= introCameras.Length)
+        if (introCameras == null || activeCameraIndex >= introCameras.Length || introCameras[activeCameraIndex] == null)
         {
             return;
         }

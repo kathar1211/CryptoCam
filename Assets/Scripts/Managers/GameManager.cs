@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour {
     GameObject pauseText;
 
     public static GameManager Instance;
+
+    private bool isSceneLoading;
    
 	// Use this for initialization
 	void Start () {
@@ -56,7 +58,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            Debug.LogError("Only one photography component allowed per scene");
+            Debug.LogError("Only one Game Manager component allowed per scene");
         }
 
 
@@ -153,12 +155,15 @@ public class GameManager : MonoBehaviour {
     //if user clicks yes and ends course
     public void EndCourse()
     {
+        if (isSceneLoading) { return; }
+
         Time.timeScale = 1;
 
         //load async next scene
         LevelOver = true;
         endprompt.SetActive(false);
         SceneManager.LoadSceneAsync("Grading", LoadSceneMode.Single);
+        isSceneLoading = true;
 
         //set loading icon to active
         loadingAnim.gameObject.SetActive(true);
@@ -177,10 +182,12 @@ public class GameManager : MonoBehaviour {
 
     public void ReturnToLab(List<Photograph> finalPhotos)
     {
+        if (isSceneLoading) { return; }
         Time.timeScale = 1;
 
         //load async next scene
         pics4grading = finalPhotos;
+        isSceneLoading = true;
         SceneManager.LoadSceneAsync("Lab", LoadSceneMode.Single);
 
         //set loading icon to active
