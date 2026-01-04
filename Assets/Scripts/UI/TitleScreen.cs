@@ -130,7 +130,6 @@ public class TitleScreen : MonoBehaviour {
     {
         int xmargin = 10;
         int ymargin = 5;
-        Debug.Log(button.GetComponent<RectTransform>().rect.position.y);
         //selector.GetComponent<RectTransform>().position = new Vector2((this.transform.position.x-(button.GetComponent<RectTransform>().rect.width)), button.GetComponent<RectTransform>().position.y);
         //selector.transform.GetChild(0).GetComponent<RectTransform>().position = new Vector3(this.transform.position.x + (button.GetComponent<RectTransform>().rect.width), button.GetComponent<RectTransform>().position.y, 0);
         selector.GetComponent<RectTransform>().anchoredPosition = new Vector2(-button.GetComponent<RectTransform>().rect.width/2 -xmargin, button.GetComponent<RectTransform>().anchoredPosition.y + ymargin);
