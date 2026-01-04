@@ -78,5 +78,5 @@
 		}
 		ENDCG
 		}
-			FallBack "Diffuse"
+			FallBack "CelShader"
 	}
