@@ -106,6 +106,7 @@ public static class Constants {
     public static string TextSpeed = "TextSpeed";
     public static string SFXVolume = "SFXVolume";
     public static string BGMVolume = "BGMVolume";
+    public static string ErrorTrackingConsent = "ErrorTracking";
     //used for image data- what size are these images
     public static int CameraWidth = 1920;
     public static int CameraHeight = 1080;

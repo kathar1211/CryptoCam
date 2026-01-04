@@ -8,6 +8,7 @@ using UnityStandardAssets.CrossPlatformInput;
 using System;
 using DG.Tweening;
 using TMPro;
+using Sentry.Unity;
 
 public class Options : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class Options : MonoBehaviour {
     public Toggle FullScreenToggle;
     public Slider BGMSlider;
     public Slider SFXSlider;
+    public Toggle ErrorTrackingToggle;
 
     //buttons on all screens
     public GameObject Exit;
@@ -77,6 +79,9 @@ public class Options : MonoBehaviour {
     [SerializeField] AudioSource NormalButtonSFX;
     [SerializeField] AudioSource MoreButtonSFX;
 
+    //sentry options
+    public SentryOptionConfiguration SentryOptions;
+
 	// Use this for initialization
 	void Start () {
         controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
@@ -88,6 +93,7 @@ public class Options : MonoBehaviour {
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
         LoadTextSpeed();
+        LoadErrorTracking();
         audioManager = FindObjectOfType<AudioManager>();
 
         UpdateButtonText();
@@ -346,6 +352,7 @@ public class Options : MonoBehaviour {
         TextSpeedSlider.value = speed;
         BGMSlider.value = audioManager.getBGMVolume();
         SFXSlider.value = audioManager.getSFXVolume();
+        FullScreenToggle.isOn = Screen.fullScreen;
     }
 
     public void RestoreControlDefaults()
@@ -429,6 +436,31 @@ public class Options : MonoBehaviour {
         PlayerPrefs.SetFloat(Constants.TextSpeed, speed);
     }
 
+    //load error tracking enabled from playerprefs
+    void LoadErrorTracking()
+    {
+        ErrorTrackingToggle.isOn = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent, 0) == 1;
+    }
+
+    public void OnErrorTrackingToggleChanged()
+    {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
+        int trackingEnabled = ErrorTrackingToggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt(Constants.ErrorTrackingConsent, trackingEnabled);
+
+        // SentryOptions.EnableSentry(ErrorTrackingToggle.isOn);
+        if (ErrorTrackingToggle.isOn)
+        {
+            SentrySdk.Init(options => { });
+            SentrySdk.ResumeSession();
+        }
+        else
+        {
+            SentrySdk.PauseSession();
+        }
+
+    }
+
     //if selector is activated it still needs to reflect mouseover options
     public void MoveSelector(GameObject button)
     {
@@ -501,5 +533,10 @@ public class Options : MonoBehaviour {
 
         //snap to position
         More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
+    }
+
+    public void ThrowFakeError()
+    {
+        Debug.LogError("This error was thrown on purpose at " + DateTime.Now);
     }
 }

@@ -36,6 +36,7 @@ public class TitleScreen : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
         currentButton = 0;
         MoveSelector(buttons[0]);
         animationDone = false;
@@ -58,10 +59,6 @@ public class TitleScreen : MonoBehaviour {
         if (!optionsActive)
         {
             //only accept input once buttons have appeared on screen
-            if (buttons[buttons.Count - 1].activeInHierarchy)
-            {
-                animationDone = true;
-            }
             if (animationDone && animationDonePevFrame)
             {
                 float dir = 0;
@@ -88,6 +85,17 @@ public class TitleScreen : MonoBehaviour {
                     buttons[currentButton].GetComponent<Button>().onClick.Invoke();
                 }
             }
+        }
+    }
+
+    public void OnIntroAnimDone()
+    {
+        animationDone = true;
+
+        //todo: prompt for error tracking consent if no playerpref is stored
+        if (!PlayerPrefs.HasKey(Constants.ErrorTrackingConsent))
+        {
+
         }
     }
 

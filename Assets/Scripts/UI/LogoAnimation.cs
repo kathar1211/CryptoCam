@@ -5,6 +5,8 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class LogoAnimation : MonoBehaviour {
 
+    public TitleScreen TitleScreen;
+
     //animate the logo on the title screen, moon fade in etc
     public GameObject moon;
     public GameObject[] stars;
@@ -30,6 +32,8 @@ public class LogoAnimation : MonoBehaviour {
     //keep track of when to turn on each star
     float starTimer;
     int starIndex;
+
+    bool AnimationDone;
 
 	// Use this for initialization
 	void Start () {
@@ -58,6 +62,8 @@ public class LogoAnimation : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (AnimationDone) { this.enabled = false; }
+
         //option to skip animation stuff by pressing enter
         if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
         {
@@ -73,6 +79,9 @@ public class LogoAnimation : MonoBehaviour {
                 //star.GetComponent<CanvasGroup>().alpha = 1;
                 star.SetActive(true);
             }
+
+            AnimationDone = true;
+            TitleScreen.OnIntroAnimDone();
         }
 
         //dont start animation right away
@@ -108,10 +117,11 @@ public class LogoAnimation : MonoBehaviour {
                 starTimer = 0;
             }
         }
-
-        
-
-
+        else
+        {
+            AnimationDone = true;
+            TitleScreen.OnIntroAnimDone();
+        }
 
     }
 }
