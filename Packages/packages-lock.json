@@ -51,15 +51,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.multiplayer-hlapi": {
-      "version": "1.0.8",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "nuget.mono-cecil": "0.1.6-preview"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.postprocessing": {
       "version": "2.3.0",
       "depth": 0,
@@ -144,12 +135,12 @@
       },
       "url": "https://packages.unity.com"
     },
-    "nuget.mono-cecil": {
-      "version": "0.1.6-preview",
-      "depth": 1,
-      "source": "registry",
+    "io.sentry.unity": {
+      "version": "https://github.com/getsentry/unity.git",
+      "depth": 0,
+      "source": "git",
       "dependencies": {},
-      "url": "https://packages.unity.com"
+      "hash": "ad36b581ab86a846c33a7d509acb9a0dd9016bde"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

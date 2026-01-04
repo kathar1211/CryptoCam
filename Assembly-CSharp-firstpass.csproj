@@ -299,6 +299,48 @@
     <Reference Include="DOTween">
       <HintPath>Assets\Standard Assets\DOTween\DOTween.dll</HintPath>
     </Reference>
+    <Reference Include="Sentry.System.Collections.Immutable">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Buffers">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.Unity.Android">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.Unity.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Text.Encodings.Web">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Threading.Tasks.Extensions">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.Unity.iOS">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.Unity.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.Microsoft.Bcl.AsyncInterfaces">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.Unity">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Memory">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Numerics.Vectors">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Reflection.Metadata">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Text.Json">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Sentry.System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Library\PackageCache\io.sentry.unity@ad36b581ab\Runtime\Sentry.System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.41f2\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
     </Reference>
@@ -650,9 +692,6 @@
     <Reference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64">
       <HintPath>Library\ScriptAssemblies\Unity.Toolchain.Win-x86_64-Linux-x86_64.dll</HintPath>
     </Reference>
-    <Reference Include="com.unity.multiplayer-hlapi.Editor">
-      <HintPath>Library\ScriptAssemblies\com.unity.multiplayer-hlapi.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
@@ -667,9 +706,6 @@
     </Reference>
     <Reference Include="Unity.Postprocessing.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Postprocessing.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="com.unity.multiplayer-weaver.Editor">
-      <HintPath>Library\ScriptAssemblies\com.unity.multiplayer-weaver.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
       <HintPath>Library\ScriptAssemblies\UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
@@ -713,8 +749,11 @@
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
-    <Reference Include="com.unity.multiplayer-hlapi.Runtime">
-      <HintPath>Library\ScriptAssemblies\com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
+    <Reference Include="io.sentry.unity.editor">
+      <HintPath>Library\ScriptAssemblies\io.sentry.unity.editor.dll</HintPath>
+    </Reference>
+    <Reference Include="io.sentry.unity.runtime">
+      <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
