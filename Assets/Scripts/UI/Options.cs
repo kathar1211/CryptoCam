@@ -79,8 +79,8 @@ public class Options : MonoBehaviour {
     [SerializeField] AudioSource NormalButtonSFX;
     [SerializeField] AudioSource MoreButtonSFX;
 
-    //sentry options
-    public SentryOptionConfiguration SentryOptions;
+    //Sentry options
+    [SerializeField] SentryOptionConfiguration SentryConfig;
 
 	// Use this for initialization
 	void Start () {
@@ -439,7 +439,10 @@ public class Options : MonoBehaviour {
     //load error tracking enabled from playerprefs
     void LoadErrorTracking()
     {
-        ErrorTrackingToggle.isOn = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent, 0) == 1;
+        //todo
+        // ErrorTrackingToggle.isOn = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent, 0) == 1;
+       ErrorTrackingToggle.isOn = SentryConfig.ShouldCaptureEvents;
+        Debug.Log("sentry on: " + SentryConfig.ShouldCaptureEvents);
     }
 
     public void OnErrorTrackingToggleChanged()
@@ -451,12 +454,13 @@ public class Options : MonoBehaviour {
         // SentryOptions.EnableSentry(ErrorTrackingToggle.isOn);
         if (ErrorTrackingToggle.isOn)
         {
-            SentrySdk.Init(options => { });
-            SentrySdk.ResumeSession();
+            SentryConfig.EnableSentry();
+            Debug.Log("sentry on");
         }
         else
         {
-            SentrySdk.PauseSession();
+            SentryConfig.DisableSentry();
+            Debug.Log("sentry off");
         }
 
     }
