@@ -439,10 +439,8 @@ public class Options : MonoBehaviour {
     //load error tracking enabled from playerprefs
     void LoadErrorTracking()
     {
-        //todo
-        // ErrorTrackingToggle.isOn = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent, 0) == 1;
-       ErrorTrackingToggle.isOn = SentryConfig.ShouldCaptureEvents;
-        Debug.Log("sentry on: " + SentryConfig.ShouldCaptureEvents);
+        ErrorTrackingToggle.isOn = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent, 0) == 1;
+        Debug.Log("sentry on: " + ErrorTrackingToggle.isOn);
     }
 
     public void OnErrorTrackingToggleChanged()
