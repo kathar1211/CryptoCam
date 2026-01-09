@@ -720,6 +720,9 @@
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="io.sentry.unity.runtime">
+      <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -773,9 +776,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="io.sentry.unity.runtime">
-      <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

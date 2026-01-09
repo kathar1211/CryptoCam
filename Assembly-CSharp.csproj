@@ -110,6 +110,7 @@
     <Compile Include="Assets\Scripts\Util\Rotate.cs" />
     <Compile Include="Assets\Scripts\Util\Save.cs" />
     <Compile Include="Assets\Scripts\Util\SentryUtils.cs" />
+    <Compile Include="Assets\Scripts\Util\VersionLabel.cs" />
     <Compile Include="Assets\Scripts\Util\spin2d.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -734,6 +735,9 @@
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="io.sentry.unity.runtime">
+      <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -787,9 +791,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="io.sentry.unity.runtime">
-      <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
