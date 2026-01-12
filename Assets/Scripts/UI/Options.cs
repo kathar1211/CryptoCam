@@ -450,12 +450,12 @@ public class Options : MonoBehaviour {
         // SentryOptions.EnableSentry(ErrorTrackingToggle.isOn);
         if (ErrorTrackingToggle.isOn)
         {
-            SentryUtils.EnableSentry();
+            SentryConfig.EnableSentry();
             Debug.Log("sentry on");
         }
         else
         {
-            SentryUtils.DisableSentry();
+            SentryConfig.DisableSentry();
             Debug.Log("sentry off");
         }
 

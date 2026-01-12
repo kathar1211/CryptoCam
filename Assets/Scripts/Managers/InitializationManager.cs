@@ -9,6 +9,8 @@ public class InitializationManager : MonoBehaviour
     public GameObject LoadingIcon;
     private bool isSceneLoading = false;
 
+    [SerializeField] SentryOptionConfiguration SentryConfig;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,8 +35,8 @@ public class InitializationManager : MonoBehaviour
         else
         {
             bool errorTrackingAllowed = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent) == 1;
-            if (errorTrackingAllowed) { SentryUtils.EnableSentry(); Debug.Log("initialization: enabling sentry"); }
-            else { SentryUtils.DisableSentry(); Debug.Log("initialization: disabling sentry"); }
+            if (errorTrackingAllowed) { SentryConfig.EnableSentry(); Debug.Log("initialization: enabling sentry"); }
+            else { SentryConfig.DisableSentry(); Debug.Log("initialization: disabling sentry"); }
         }
 
         //if there's nothing else we want to do first, we can proceed to the title screen
