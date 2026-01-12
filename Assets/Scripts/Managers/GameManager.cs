@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour {
     //if user clicks yes and ends course
     public void EndCourse()
     {
-        if (isSceneLoading) { return; }
+       // if (isSceneLoading) { return; }
 
         Time.timeScale = 1;
 
@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour {
 
     public void ReturnToLab(List<Photograph> finalPhotos)
     {
-        if (isSceneLoading) { return; }
+       // if (isSceneLoading) { return; }
         Time.timeScale = 1;
 
         //load async next scene

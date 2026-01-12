@@ -260,7 +260,6 @@ public class Options : MonoBehaviour {
         if (waitingForKeyPress) {
             keyEvent = Event.current;
 
-
             //Executes if a button gets pressed and
 
             //the user presses a key
@@ -291,8 +290,7 @@ public class Options : MonoBehaviour {
             }
 
             //https://forum.unity.com/threads/how-can-i-know-that-any-button-on-gamepad-is-pressed.757322/
-
-            //var gamepadButtonPressed = Gamepad.current.allControls.Any(x => x is ButtonControl button && x.isPressed && !x.synthetic);
+           // var gamepadButtonPressed = Gamepad.current.allControls.Any(x => x is ButtonControl button && x.isPressed && !x.synthetic);
         }
     }
 
@@ -452,12 +450,12 @@ public class Options : MonoBehaviour {
         // SentryOptions.EnableSentry(ErrorTrackingToggle.isOn);
         if (ErrorTrackingToggle.isOn)
         {
-            SentryConfig.EnableSentry();
+            SentryUtils.EnableSentry();
             Debug.Log("sentry on");
         }
         else
         {
-            SentryConfig.DisableSentry();
+            SentryUtils.DisableSentry();
             Debug.Log("sentry off");
         }
 
@@ -539,6 +537,7 @@ public class Options : MonoBehaviour {
 
     public void ThrowFakeError()
     {
+        Sentry.SentrySdk.CaptureMessage("attempting to reach sentry at " + DateTime.Now);
         Debug.LogError("This error was thrown on purpose at " + DateTime.Now);
     }
 }

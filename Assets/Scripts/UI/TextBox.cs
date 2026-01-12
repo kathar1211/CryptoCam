@@ -61,7 +61,7 @@ public class TextBox : MonoBehaviour {
         //scroll through text if there is text in the queue
         if (allText!= null && allText.Count != 0 && !progressLocked)
         {
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
             {
                 Continue();
             }

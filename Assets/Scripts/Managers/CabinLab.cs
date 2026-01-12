@@ -166,7 +166,7 @@ public class CabinLab : MonoBehaviour {
                     }
                 }
                 //don't count clicks unless user is clicking directly on something
-                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
                 {
                     if (currentButton >= 0 && currentButton < textButtons.Length)
                     {
@@ -227,7 +227,7 @@ public class CabinLab : MonoBehaviour {
                 break;
             case MenuState.Credits:
                 //exit credits on click
-                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
                 {
                     Return(credits);
                 }

@@ -33,8 +33,8 @@ public class InitializationManager : MonoBehaviour
         else
         {
             bool errorTrackingAllowed = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent) == 1;
-            if (errorTrackingAllowed) { SentryUtils.EnableSentry(); }
-            else { SentryUtils.DisableSentry(); }
+            if (errorTrackingAllowed) { SentryUtils.EnableSentry(); Debug.Log("initialization: enabling sentry"); }
+            else { SentryUtils.DisableSentry(); Debug.Log("initialization: disabling sentry"); }
         }
 
         //if there's nothing else we want to do first, we can proceed to the title screen
