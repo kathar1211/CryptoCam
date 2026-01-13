@@ -537,7 +537,6 @@ public class Options : MonoBehaviour {
 
     public void ThrowFakeError()
     {
-        Sentry.SentrySdk.CaptureMessage("attempting to reach sentry at " + DateTime.Now);
         Debug.LogError("This error was thrown on purpose at " + DateTime.Now);
     }
 }
