@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GradeManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InitializationManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\SteamManager.cs" />
     <Compile Include="Assets\Scripts\Managers\TitleScreen.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\CameraSnap.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\CustomController.cs" />
@@ -112,7 +113,6 @@
     <Compile Include="Assets\Scripts\Util\Rotate.cs" />
     <Compile Include="Assets\Scripts\Util\Save.cs" />
     <Compile Include="Assets\Scripts\Util\SentryUtils.cs" />
-    <Compile Include="Assets\Scripts\Util\SteamManager.cs" />
     <Compile Include="Assets\Scripts\Util\VersionLabel.cs" />
     <Compile Include="Assets\Scripts\Util\spin2d.cs" />
   </ItemGroup>
@@ -800,6 +800,21 @@
     </Reference>
     <Reference Include="com.rlabrecque.steamworks.net">
       <HintPath>Library\ScriptAssemblies\com.rlabrecque.steamworks.net.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.Addressables">
+      <HintPath>Library\ScriptAssemblies\UniTask.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask">
+      <HintPath>Library\ScriptAssemblies\UniTask.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.DOTween">
+      <HintPath>Library\ScriptAssemblies\UniTask.DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\UniTask.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UniTask.Linq">
+      <HintPath>Library\ScriptAssemblies\UniTask.Linq.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

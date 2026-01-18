@@ -68,7 +68,7 @@ public class SteamManager : MonoBehaviour
 	}
 #endif
 
-	protected virtual void Awake()
+	public virtual void Init()
 	{
 		// Only one instance of SteamManager at a time!
 		if (s_instance != null)
@@ -100,7 +100,7 @@ public class SteamManager : MonoBehaviour
 			Debug.LogError("[Steamworks.NET] DllCheck Test returned false, One or more of the Steamworks binaries seems to be the wrong version.", this);
 		}
 
-		try
+		/*try
 		{
 			// If Steam is not running or the game wasn't started through Steam, SteamAPI_RestartAppIfNecessary starts the
 			// Steam client and also launches this game again if the User owns it. This can act as a rudimentary form of DRM.
@@ -108,11 +108,14 @@ public class SteamManager : MonoBehaviour
 			// Once you get a Steam AppID assigned by Valve, you need to replace AppId_t.Invalid with it and
 			// remove steam_appid.txt from the game depot. eg: "(AppId_t)480" or "new AppId_t(480)".
 			// See the Valve documentation for more information: https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
-			if (SteamAPI.RestartAppIfNecessary((AppId_t)Constants.SteamAppID))
+
+		*if (SteamAPI.RestartAppIfNecessary((AppId_t)Constants.SteamAppID))
 			{
 				Application.Quit();
 				return;
 			}
+
+			//id like to avoid forcing steam to run to play my game if possible
 		}
 		catch (System.DllNotFoundException e)
 		{ // We catch this exception here, as it will be the first occurrence of it.
@@ -120,7 +123,7 @@ public class SteamManager : MonoBehaviour
 
 			Application.Quit();
 			return;
-		}
+		}*/
 
 		// Initializes the Steamworks API.
 		// If this returns false then this indicates one of the following conditions:

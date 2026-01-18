@@ -67,7 +67,7 @@ public class TrackErrorsPrompt : MonoBehaviour
         SentryUtils.EnableSentry();
         PlayerPrefs.SetInt(Constants.ErrorTrackingConsent, 1);
         AnimateOffscreen();
-        Manager.ProceedToTitle();
+        Manager.ContinueWithInitialization();
     }
 
     public void OnNoButtonClick()
@@ -76,6 +76,6 @@ public class TrackErrorsPrompt : MonoBehaviour
         SentryUtils.DisableSentry();
         PlayerPrefs.SetInt(Constants.ErrorTrackingConsent, 0);
         AnimateOffscreen();
-        Manager.ProceedToTitle();
+        Manager.ContinueWithInitialization();
     }
 }
