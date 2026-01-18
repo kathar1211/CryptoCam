@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\Util\Rotate.cs" />
     <Compile Include="Assets\Scripts\Util\Save.cs" />
     <Compile Include="Assets\Scripts\Util\SentryUtils.cs" />
+    <Compile Include="Assets\Scripts\Util\SteamManager.cs" />
     <Compile Include="Assets\Scripts\Util\VersionLabel.cs" />
     <Compile Include="Assets\Scripts\Util\spin2d.cs" />
   </ItemGroup>
@@ -793,6 +794,12 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net.editor">
+      <HintPath>Library\ScriptAssemblies\com.rlabrecque.steamworks.net.editor.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>Library\ScriptAssemblies\com.rlabrecque.steamworks.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

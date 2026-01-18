@@ -137,4 +137,6 @@ public static class Constants {
     //feedback form
     public const string FeedbackFormURL = "https://forms.gle/TTNtVqNbBSVfdTrU7";
 
+    public const int SteamAppID = 3772620;
+
 }
