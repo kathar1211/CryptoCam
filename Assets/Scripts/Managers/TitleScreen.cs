@@ -136,7 +136,6 @@ public class TitleScreen : MonoBehaviour {
     //quit
     public void Exit()
     {
-
         Application.Quit();
         if (selectSFX != null) { selectSFX.Play(); }
     }
@@ -161,5 +160,11 @@ public class TitleScreen : MonoBehaviour {
     {
         options.SetActive(false);
         optionsActive = false;
+    }
+
+    public void OpenFeedbackForm()
+    {
+        Application.OpenURL(Constants.FeedbackFormURL);
+        if (selectSFX != null) { selectSFX.Play(); }
     }
 }

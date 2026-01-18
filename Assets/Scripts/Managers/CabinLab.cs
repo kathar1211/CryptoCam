@@ -250,8 +250,8 @@ public class CabinLab : MonoBehaviour {
     {
         if (currentState == MenuState.Main)
         {
-            Vector2 pos = textMarker.GetComponent<RectTransform>().anchoredPosition;
-            textMarker.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, button.GetComponent<RectTransform>().anchoredPosition.y);
+            Vector2 pos = textMarker.GetComponent<RectTransform>().position;
+            textMarker.GetComponent<RectTransform>().position = new Vector2(pos.x, button.GetComponent<RectTransform>().position.y);
 
             //currentButton = textButtons.
             //todo: update the selected button
@@ -309,6 +309,12 @@ public class CabinLab : MonoBehaviour {
             textBox.FeedTed(TedMoods.SquintHandUp);
             textBox.DisplayText();
         }
+    }
+
+    public void Feedback()
+    {
+        Application.OpenURL(Constants.FeedbackFormURL);
+        if (selectSFX != null) { selectSFX.Play(); }
     }
 
     public void Gallery()

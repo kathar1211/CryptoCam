@@ -134,6 +134,7 @@ public static class Constants {
         {Mothman, "Alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law" }
     };
 
-    
+    //feedback form
+    public const string FeedbackFormURL = "https://forms.gle/TTNtVqNbBSVfdTrU7";
 
 }
