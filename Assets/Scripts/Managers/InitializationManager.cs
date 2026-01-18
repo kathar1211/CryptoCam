@@ -55,6 +55,7 @@ public class InitializationManager : MonoBehaviour
             if (!SteamManager.Initialized)
             {
                 //todo: ask the user if they want to relaunch steam or proceed without
+                Debug.Log("steam api not initialized");
             }
         }
 
