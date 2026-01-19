@@ -74,7 +74,7 @@ public class CustomController : MonoBehaviour {
     //write current values to playerprefs
     public static void SaveAllKeys()
     {
-        foreach (KeyValuePair<string,KeyCode> button in buttons)
+        foreach (KeyValuePair<string,ButtonControl> button in buttons)
         {
             PlayerPrefs.SetInt(button.Key, (int)button.Value);
         }
@@ -98,7 +98,7 @@ public class CustomController : MonoBehaviour {
     //restore default control settings
     public static void RestoreDefaults()
     {
-        buttons = new Dictionary<string, KeyCode>(defaultButtons);
+        buttons = new Dictionary<string, ButtonControl>(defaultButtons);
     }
 
     //used for displaying what the current input settings are
