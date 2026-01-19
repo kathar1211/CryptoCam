@@ -1,37 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
 public class CustomController : MonoBehaviour {
 
     //map names to inputs here
-    static Dictionary<string, KeyCode> buttons = new Dictionary<string, KeyCode>();
+    static Dictionary<string, ButtonControl> buttons = new Dictionary<string, ButtonControl>();
 
     //store default inputs
-    static Dictionary<string, KeyCode> defaultButtons = new Dictionary<string, KeyCode>
+    static Dictionary<string, ButtonControl> defaultButtons = new Dictionary<string, ButtonControl>
     {
-        {Constants.ReadyCamera, KeyCode.Mouse1 },
-        {Constants.TakePicture, KeyCode.Mouse0 },
-        {Constants.ThrowObject, KeyCode.Q },
-        {Constants.Pause, KeyCode.Escape },
-        {Constants.CrouchButton, KeyCode.LeftControl },
-        {Constants.RunButton, KeyCode.LeftShift }
+        {Constants.ReadyCamera, Mouse.current.rightButton},
+        {Constants.TakePicture,  Mouse.current.leftButton},
+        {Constants.ThrowObject, Keyboard.current.qKey },
+        {Constants.Pause, Keyboard.current.escapeKey },
+        {Constants.CrouchButton, Keyboard.current.leftCtrlKey },
+        {Constants.RunButton, Keyboard.current.leftShiftKey }
     };
 
-    static Dictionary<string, KeyCode> defaultGamepadButtons = new Dictionary<string, KeyCode>
+    static Dictionary<string, ButtonControl> defaultGamepadButtons = new Dictionary<string, ButtonControl>
     {
-        {Constants.ReadyCamera, KeyCode.Joystick1Button11 },
-        {Constants.TakePicture, KeyCode.Joystick1Button14 },
-        {Constants.ThrowObject, KeyCode.Joystick1Button10 },
-        {Constants.Pause, KeyCode.Joystick1Button0 },
-        {Constants.CrouchButton, KeyCode.LeftControl },
-        {Constants.RunButton, KeyCode.LeftShift }
+        {Constants.ReadyCamera, Gamepad.current.rightShoulder},
+        {Constants.TakePicture, Gamepad.current.leftShoulder },
+        {Constants.ThrowObject, Gamepad.current.xButton },
+        {Constants.Pause, Gamepad.current.startButton },
+        {Constants.CrouchButton, Gamepad.current.bButton },
+        {Constants.RunButton, Gamepad.current.leftStickButton }
     };
 
     // Use this for initialization
     void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
@@ -44,7 +46,7 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKeyDown(buttons[buttonName]);
+            return buttons[buttonName].wasPressedThisFrame;
         }
         return false;
     }
@@ -54,7 +56,7 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKey(buttons[buttonName]);
+            return buttons[buttonName].isPressed;
         }
         return false;
     }
@@ -64,7 +66,7 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKeyUp(buttons[buttonName]);
+            return buttons[buttonName].wasReleasedThisFrame;
         }
         return false;
     }
