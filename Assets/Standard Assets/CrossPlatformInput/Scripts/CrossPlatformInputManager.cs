@@ -163,6 +163,14 @@ namespace UnityStandardAssets.CrossPlatformInput
 			activeInput.SetAxis(name, value);
 		}
 
+		public static bool GetButtonOrAxis(string name)
+        {
+			if (GetButtonDown(name)) { return true; }
+			if (GetAxis(name) != 0) { return true; } //todo: need to track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+
+			return false;
+        }
+
 
 		public static Vector3 mousePosition
 		{

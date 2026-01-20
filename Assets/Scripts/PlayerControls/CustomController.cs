@@ -6,6 +6,8 @@ using UnityEngine;
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
 public class CustomController : MonoBehaviour {
 
+    //https://discussions.unity.com/t/xbox-one-controller-mapping-solved/187077/7
+
     //map names to inputs here
     static Dictionary<string, KeyCode> buttons = new Dictionary<string, KeyCode>();
 
@@ -33,6 +35,7 @@ public class CustomController : MonoBehaviour {
     //need this for detecting input from a gamepad during remapping
     public static ReadOnlyCollection<KeyCode> AllGamepadButtons = new ReadOnlyCollection<KeyCode>(new List<KeyCode> 
     {
+         KeyCode.JoystickButton19,
         KeyCode.JoystickButton0,
         KeyCode.JoystickButton1,
         KeyCode.JoystickButton2,
@@ -52,7 +55,7 @@ public class CustomController : MonoBehaviour {
         KeyCode.JoystickButton16,
         KeyCode.JoystickButton17,
         KeyCode.JoystickButton18,
-        KeyCode.JoystickButton19,
+       
     });
 
     // Use this for initialization
@@ -93,6 +96,11 @@ public class CustomController : MonoBehaviour {
             return Input.GetKeyUp(buttons[buttonName]);
         }
         return false;
+    }
+
+    public static float GetAxis(string axisName)
+    {
+        return Input.GetAxis(axisName);
     }
 
     //write current values to playerprefs
@@ -141,7 +149,7 @@ public class CustomController : MonoBehaviour {
 
                 //same for joystick buttons
                 case KeyCode.JoystickButton0:
-                    return "button";
+                    return "button 0";
                 default:;
                     return buttons[name].ToString();
             }
