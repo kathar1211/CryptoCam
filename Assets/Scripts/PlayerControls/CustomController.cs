@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
@@ -28,6 +29,31 @@ public class CustomController : MonoBehaviour {
         {Constants.CrouchButton, KeyCode.LeftControl },
         {Constants.RunButton, KeyCode.LeftShift }
     };
+
+    //need this for detecting input from a gamepad during remapping
+    public static ReadOnlyCollection<KeyCode> AllGamepadButtons = new ReadOnlyCollection<KeyCode>(new List<KeyCode> 
+    {
+        KeyCode.JoystickButton0,
+        KeyCode.JoystickButton1,
+        KeyCode.JoystickButton2,
+        KeyCode.JoystickButton3,
+        KeyCode.JoystickButton4,
+        KeyCode.JoystickButton5,
+        KeyCode.JoystickButton6,
+        KeyCode.JoystickButton7,
+        KeyCode.JoystickButton8,
+        KeyCode.JoystickButton9,
+        KeyCode.JoystickButton10,
+        KeyCode.JoystickButton11,
+        KeyCode.JoystickButton12,
+        KeyCode.JoystickButton13,
+        KeyCode.JoystickButton14,
+        KeyCode.JoystickButton15,
+        KeyCode.JoystickButton16,
+        KeyCode.JoystickButton17,
+        KeyCode.JoystickButton18,
+        KeyCode.JoystickButton19,
+    });
 
     // Use this for initialization
     void Start () {
@@ -104,14 +130,19 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(name))
         {
-            //convert mouse0 mouse1 etc to names humans understand better
+            
             switch (buttons[name])
             {
+                //convert mouse0 mouse1 etc to names humans understand better
                 case KeyCode.Mouse0:
                     return "Left Click";
                 case KeyCode.Mouse1:
                     return "Right Click";
-                default:
+
+                //same for joystick buttons
+                case KeyCode.JoystickButton0:
+                    return "button";
+                default:;
                     return buttons[name].ToString();
             }
         }

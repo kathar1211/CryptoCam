@@ -147,6 +147,19 @@ public class Options : MonoBehaviour {
             return;// dont handle input or do anything else while scrolling
         }
 
+        //gamepad buttons dont have an event like keypresses, we have to check them all ourselves
+        //https://discussions.unity.com/t/find-out-if-any-button-on-any-gamepad-has-been-pressed-and-which-one/65089
+        if (waitingForKeyPress)
+        {
+            foreach(KeyCode button in CustomController.AllGamepadButtons)
+            {
+                if (Input.GetKeyDown(button)){
+                    newKey = button;
+                    waitingForKeyPress = false;
+                }
+            }
+        }
+
 		if (CrossPlatformInputManager.GetButtonDown(Constants.Vertical))
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
@@ -321,7 +334,6 @@ public class Options : MonoBehaviour {
     //wait for input, then update values and return to the main options menu
     IEnumerator AssignKey(string controlKey)
     {
-
         waitingForKeyPress = true;
         yield return WaitForKey();
 
