@@ -147,7 +147,7 @@ public class CabinLab : MonoBehaviour {
                 //no input allowed during intro
                 if (introPlaying) { return; }
 
-                if (CrossPlatformInputManager.GetButtonOrAxis(Constants.Vertical)){
+                if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical)){
                     float Ymov = CrossPlatformInputManager.GetAxis(Constants.Vertical);
                     //if (Input.GetKeyDown(KeyCode.UpArrow))
                     if (Ymov > 0)

@@ -160,14 +160,14 @@ public class Options : MonoBehaviour {
             }
         }
 
-		if (CrossPlatformInputManager.GetButtonOrAxis(Constants.Vertical))
+		if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
             Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
         }
 
         //adjust sliders if a slider is selected
-        if (CrossPlatformInputManager.GetButtonOrAxis(Constants.Horizontal))
+        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
         {
             Slider sliderSelect = selectedButton.GetComponent<Slider>();
             if (sliderSelect != null) {

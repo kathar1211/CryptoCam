@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput.PlatformSpecific;
 
@@ -29,6 +30,13 @@ namespace UnityStandardAssets.CrossPlatformInput
 			activeInput = s_HardwareInput;
 #endif
 		}
+
+		private static Dictionary<string, float> previousAxisValues = new Dictionary<string, float>
+		{
+			{ "Vertical", 0f },
+			{"Horizontal", 0f }
+		};
+		private static float axisDownThreshold = .75f;
 
 		public static void SwitchActiveInputMethod(ActiveInputMethod activeInputMethod)
 		{
@@ -163,12 +171,18 @@ namespace UnityStandardAssets.CrossPlatformInput
 			activeInput.SetAxis(name, value);
 		}
 
-		public static bool GetButtonOrAxis(string name)
+		public static bool GetButtonOrAxisDown(string name)
         {
-			if (GetButtonDown(name)) { return true; }
-			if (GetAxis(name) != 0) { return true; } //todo: need to track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+			bool toReturn = false;
+			if (GetButtonDown(name)) { toReturn = true; }
 
-			return false;
+			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+			float previousValue = previousAxisValues[name];
+			float currentValue = GetAxis(name);
+			if (Mathf.Abs(previousValue) < axisDownThreshold && Mathf.Abs(currentValue) >= axisDownThreshold) { toReturn = true; }
+
+			previousAxisValues[name] = currentValue;
+			return toReturn;
         }
 
 

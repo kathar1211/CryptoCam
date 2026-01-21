@@ -74,7 +74,7 @@ public class CryptidNomicon : MonoBehaviour {
             {
                 TurnPage(true);
             }*/
-            if (CrossPlatformInputManager.GetButtonOrAxis(Constants.Horizontal)){
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal)){
                 TurnPage(CrossPlatformInputManager.GetAxis(Constants.Horizontal) > 0);
             }
         }

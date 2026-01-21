@@ -62,7 +62,7 @@ public class TitleScreen : MonoBehaviour {
             if (animationDone && animationDonePevFrame)
             {
                 float dir = 0;
-                if (CrossPlatformInputManager.GetButtonOrAxis(Constants.Vertical))
+                if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
                 {
                     dir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
                     Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
