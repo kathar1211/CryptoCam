@@ -82,6 +82,9 @@ public class Photography : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //dont do any of this if we're paused
+        if (Time.timeScale == 0) { return; }
+
         //if (Input.GetMouseButtonDown(0))
         if (CustomController.GetButtonDown(Constants.TakePicture))
         {
