@@ -34,7 +34,9 @@ namespace UnityStandardAssets.CrossPlatformInput
 		private static Dictionary<string, float> previousAxisValues = new Dictionary<string, float>
 		{
 			{ "Vertical", 0f },
-			{"Horizontal", 0f }
+			{"Horizontal", 0f },
+			{ "9th Axis", 0f },
+			{"10th Axis", 0f },
 		};
 		private static float axisDownThreshold = .75f;
 

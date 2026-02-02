@@ -158,6 +158,14 @@ public class Options : MonoBehaviour {
                     waitingForKeyPress = false;
                 }
             }
+
+            foreach(string axis in CustomController.AllGamepadAxesAsButtons)
+            {
+                if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
+                {
+                    waitingForKeyPress = false;
+                }
+            }
         }
 
 		if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))

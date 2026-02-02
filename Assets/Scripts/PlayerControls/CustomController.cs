@@ -1,7 +1,34 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
+
+[Serializable]
+public struct ButtonOrAxis
+{
+    public bool IsButton;
+    public KeyCode Key;
+    public string AxisName;
+    public string PlayerFacingName;
+
+    public ButtonOrAxis(KeyCode key)
+    {
+        IsButton = true;
+        Key = key;
+        AxisName = "";
+        PlayerFacingName = CustomController.GetButtonDisplayName(key);
+    }
+
+    public ButtonOrAxis(string axis)
+    {
+        IsButton = false;
+        Key = KeyCode.None;
+        AxisName = axis;
+        PlayerFacingName = CustomController.GetAxisDisplayName(axis);
+    }
+}
 
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
 public class CustomController : MonoBehaviour {
@@ -9,33 +36,33 @@ public class CustomController : MonoBehaviour {
     //https://discussions.unity.com/t/xbox-one-controller-mapping-solved/187077/7
 
     //map names to inputs here
-    static Dictionary<string, KeyCode> buttons = new Dictionary<string, KeyCode>();
+    static Dictionary<string, ButtonOrAxis> buttons = new Dictionary<string, ButtonOrAxis>();
 
     //store default inputs
-    static Dictionary<string, KeyCode> defaultButtons = new Dictionary<string, KeyCode>
+    static Dictionary<string, ButtonOrAxis> defaultButtons = new Dictionary<string, ButtonOrAxis>
     {
-        {Constants.ReadyCamera, KeyCode.Mouse1 },
-        {Constants.TakePicture, KeyCode.Mouse0 },
-        {Constants.ThrowObject, KeyCode.Q },
-        {Constants.Pause, KeyCode.Escape },
-        {Constants.CrouchButton, KeyCode.LeftControl },
-        {Constants.RunButton, KeyCode.LeftShift }
+        {Constants.ReadyCamera, new ButtonOrAxis(KeyCode.Mouse1) },
+        {Constants.TakePicture, new ButtonOrAxis(KeyCode.Mouse0) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.Q) },
+        {Constants.Pause, new ButtonOrAxis(KeyCode.Escape) },
+        {Constants.CrouchButton, new ButtonOrAxis(KeyCode.LeftControl) },
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.LeftShift) }
     };
 
-    static Dictionary<string, KeyCode> defaultGamepadButtons = new Dictionary<string, KeyCode>
+    static Dictionary<string, ButtonOrAxis> defaultGamepadButtons = new Dictionary<string, ButtonOrAxis>
     {
-        {Constants.ReadyCamera, KeyCode.Joystick1Button11 },
-        {Constants.TakePicture, KeyCode.Joystick1Button14 },
-        {Constants.ThrowObject, KeyCode.Joystick1Button10 },
-        {Constants.Pause, KeyCode.Joystick1Button0 },
-        {Constants.CrouchButton, KeyCode.LeftControl },
-        {Constants.RunButton, KeyCode.LeftShift }
+        {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxis) },
+        {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxis) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.Joystick1Button10) },
+        {Constants.Pause, new ButtonOrAxis(KeyCode.Joystick1Button0) },
+        {Constants.CrouchButton, new ButtonOrAxis(KeyCode.LeftControl) },
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.LeftShift) }
     };
 
     //need this for detecting input from a gamepad during remapping
     public static ReadOnlyCollection<KeyCode> AllGamepadButtons = new ReadOnlyCollection<KeyCode>(new List<KeyCode> 
     {
-         KeyCode.JoystickButton19,
+        KeyCode.JoystickButton19,
         KeyCode.JoystickButton0,
         KeyCode.JoystickButton1,
         KeyCode.JoystickButton2,
@@ -58,6 +85,12 @@ public class CustomController : MonoBehaviour {
        
     });
 
+    public static ReadOnlyCollection<String> AllGamepadAxesAsButtons = new ReadOnlyCollection<string>(new List<string>
+    {
+        Constants.LTAxis,
+        Constants.RTAxis
+    });
+
     // Use this for initialization
     void Start () {
 		
@@ -73,7 +106,9 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKeyDown(buttons[buttonName]);
+            ButtonOrAxis input = buttons[buttonName];
+            if (input.IsButton) { return Input.GetKeyDown(input.Key); }
+            else { return CrossPlatformInputManager.GetButtonOrAxisDown(input.AxisName); }
         }
         return false;
     }
@@ -138,23 +173,84 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(name))
         {
-            
-            switch (buttons[name])
-            {
-                //convert mouse0 mouse1 etc to names humans understand better
-                case KeyCode.Mouse0:
-                    return "Left Click";
-                case KeyCode.Mouse1:
-                    return "Right Click";
-
-                //same for joystick buttons
-                case KeyCode.JoystickButton0:
-                    return "button 0";
-                default:;
-                    return buttons[name].ToString();
-            }
+            return GetButtonDisplayName(buttons[name]);
         }
         return null;
+    }
+
+    public static string GetButtonDisplayName(KeyCode key)
+    {
+        switch (key)
+        {
+            //convert mouse0 mouse1 etc to names humans understand better
+            case KeyCode.Mouse0:
+                return "Left Click";
+            case KeyCode.Mouse1:
+                return "Right Click";
+
+            //these mappings are different on mac   
+            //https://discussions.unity.com/t/xbox-one-controller-mapping-solved/187077/7
+#if UNITY_STANDALONE_OSX
+                //same for joystick buttons
+                 case KeyCode.JoystickButton16:
+                    return "A";
+                case KeyCode.JoystickButton17:
+                    return "B";
+                case KeyCode.JoystickButton18:
+                    return "X";
+                case KeyCode.JoystickButton19:
+                    return "Y";
+                case KeyCode.JoystickButton13:
+                    return "LB";
+                case KeyCode.JoystickButton14:
+                    return "RB";
+                case KeyCode.JoystickButton10:
+                    return "Select";
+                case KeyCode.JoystickButton9:
+                    return "Start";
+                case KeyCode.JoystickButton11:
+                    return "Left Stick Button";
+                case KeyCode.JoystickButton12:
+                    return "Right Stick Button";
+#else
+            //same for joystick buttons
+            case KeyCode.JoystickButton0:
+                return "A";
+            case KeyCode.JoystickButton1:
+                return "B";
+            case KeyCode.JoystickButton2:
+                return "X";
+            case KeyCode.JoystickButton3:
+                return "Y";
+            case KeyCode.JoystickButton4:
+                return "LB";
+            case KeyCode.JoystickButton5:
+                return "RB";
+            case KeyCode.JoystickButton6:
+                return "Select";
+            case KeyCode.JoystickButton7:
+                return "Start";
+            case KeyCode.JoystickButton8:
+                return "Left Stick Button";
+            case KeyCode.JoystickButton9:
+                return "Right Stick Button";
+#endif
+            default:
+                return key.ToString();
+        }
+    }
+
+    public static string GetAxisDisplayName(string axis)
+    {
+        switch (axis)
+        {
+            case Constants.RTAxis:
+                return "RT";
+            case Constants.LTAxis:
+                return "LT";
+            default:
+                return axis;
+        }
     }
 
     //update button mapping for a given key
