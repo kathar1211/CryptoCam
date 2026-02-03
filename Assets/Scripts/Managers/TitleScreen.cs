@@ -24,7 +24,7 @@ public class TitleScreen : MonoBehaviour {
 
     //need a short 1 frame buffer for key presses;
     //keep track of whether the animation is done as well as whether it was done 1 frame ago
-    bool animationDone;
+    public bool animationDone;
     bool animationDonePevFrame;
 
     [SerializeField]
@@ -93,11 +93,6 @@ public class TitleScreen : MonoBehaviour {
     {
         animationDone = true;
 
-        //todo: prompt for error tracking consent if no playerpref is stored
-        if (!PlayerPrefs.HasKey(Constants.ErrorTrackingConsent))
-        {
-
-        }
     }
 
     //todo: if player selects continue, load sava data

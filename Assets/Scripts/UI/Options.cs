@@ -68,7 +68,7 @@ public class Options : MonoBehaviour {
     //true when waiting for user to register a key
     bool waitingForKeyPress = false;
     //store new input here
-    KeyCode newKey;
+    ButtonOrAxis newKey;
     //store event here
     Event keyEvent;
 
@@ -154,7 +154,7 @@ public class Options : MonoBehaviour {
             foreach(KeyCode button in CustomController.AllGamepadButtons)
             {
                 if (Input.GetKeyDown(button)){
-                    newKey = button;
+                    newKey = new ButtonOrAxis(button);
                     waitingForKeyPress = false;
                 }
             }
@@ -163,6 +163,7 @@ public class Options : MonoBehaviour {
             {
                 if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
                 {
+                    newKey = new ButtonOrAxis(axis);
                     waitingForKeyPress = false;
                 }
             }
@@ -289,7 +290,7 @@ public class Options : MonoBehaviour {
             if (keyEvent.keyCode != KeyCode.None)
             {
 
-                newKey = keyEvent.keyCode; //Assigns newKey to the key user presses
+                newKey = new ButtonOrAxis(keyEvent.keyCode); //Assigns newKey to the key user presses
 
                 //make sure it was pressed this frame 
                 if (Input.GetKeyDown(keyEvent.keyCode))
@@ -303,7 +304,8 @@ public class Options : MonoBehaviour {
             else if (keyEvent.isMouse)
             {
                 //convert mouse button number (0 left click, 1 right click) to mouse keycode (323 left click, 324 right click)
-                newKey = (KeyCode)((int)KeyCode.Mouse0 + keyEvent.button);
+                KeyCode mouseKey = (KeyCode)((int)KeyCode.Mouse0 + keyEvent.button);
+                newKey = new ButtonOrAxis(mouseKey);
 
                 //make sure it was pressed this frame
                 if (Input.GetMouseButtonDown(keyEvent.button)) {
@@ -346,7 +348,14 @@ public class Options : MonoBehaviour {
         waitingForKeyPress = true;
         yield return WaitForKey();
 
-        CustomController.SetButton(controlKey, newKey);
+        if (newKey.IsButton)
+        {
+            CustomController.SetButton(controlKey, newKey.Key);
+        }
+        else
+        {
+            CustomController.SetAxis(controlKey, newKey.AxisName);
+        }
         CustomController.SaveAllKeys();
         UpdateButtonText();
         KeyPressSubMenu.SetActive(false);

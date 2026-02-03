@@ -118,7 +118,10 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKey(buttons[buttonName]);
+            ButtonOrAxis input = buttons[buttonName];
+
+            if (input.IsButton) { return Input.GetKey(input.Key); ; }
+            else { return CrossPlatformInputManager.GetAxis(input.AxisName) != 0; }
         }
         return false;
     }
@@ -128,7 +131,9 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(buttonName))
         {
-            return Input.GetKeyUp(buttons[buttonName]);
+            ButtonOrAxis input = buttons[buttonName];
+            if (input.IsButton) { return Input.GetKeyUp(input.Key); }
+            else { return CrossPlatformInputManager.GetButtonOrAxisUp(input.AxisName); }
         }
         return false;
     }
@@ -141,9 +146,9 @@ public class CustomController : MonoBehaviour {
     //write current values to playerprefs
     public static void SaveAllKeys()
     {
-        foreach (KeyValuePair<string,KeyCode> button in buttons)
+        foreach (KeyValuePair<string,ButtonOrAxis> button in buttons)
         {
-            PlayerPrefs.SetInt(button.Key, (int)button.Value);
+            PlayerPrefs.SetString(button.Key, JsonUtility.ToJson(button.Value));
         }
     }
 
@@ -153,11 +158,18 @@ public class CustomController : MonoBehaviour {
         //restore defaults first so if any buttons are skipped in playerprefs we still have values for them
         RestoreDefaults();
         //expected button names are stored as keys in the default button dictionary
-        foreach (KeyValuePair<string,KeyCode> button in defaultButtons)
+        foreach (KeyValuePair<string,ButtonOrAxis> button in defaultButtons)
         {
             if (PlayerPrefs.HasKey(button.Key))
             {
-                buttons[button.Key] = (KeyCode)PlayerPrefs.GetInt(button.Key);
+                try
+                {
+                    buttons[button.Key] = JsonUtility.FromJson<ButtonOrAxis>(PlayerPrefs.GetString(button.Key));
+                }
+                catch
+                {
+                    continue;
+                }
             }
         }
     }
@@ -165,7 +177,7 @@ public class CustomController : MonoBehaviour {
     //restore default control settings
     public static void RestoreDefaults()
     {
-        buttons = new Dictionary<string, KeyCode>(defaultButtons);
+        buttons = new Dictionary<string, ButtonOrAxis>(defaultButtons);
     }
 
     //used for displaying what the current input settings are
@@ -173,7 +185,9 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(name))
         {
-            return GetButtonDisplayName(buttons[name]);
+            ButtonOrAxis button = buttons[name];
+            if (button.IsButton) { return GetButtonDisplayName(button.Key); }
+            else { return GetAxisDisplayName(button.AxisName); }
         }
         return null;
     }
@@ -258,11 +272,23 @@ public class CustomController : MonoBehaviour {
     {
         if (buttons.ContainsKey(name))
         {
-            buttons[name] = key;
+            buttons[name] = new ButtonOrAxis(key);
         }
         else //this shouldn't happen- added controls won't be loaded later
         {
-            buttons.Add(name, key);
+            buttons.Add(name, new ButtonOrAxis(key));
+        }
+    }
+
+    public static void SetAxis(string controlName, string axisName)
+    {
+        if (buttons.ContainsKey(controlName))
+        {
+            buttons[controlName] = new ButtonOrAxis(axisName);
+        }
+        else //this shouldn't happen- added controls won't be loaded later
+        {
+            buttons.Add(controlName, new ButtonOrAxis(axisName));
         }
     }
 

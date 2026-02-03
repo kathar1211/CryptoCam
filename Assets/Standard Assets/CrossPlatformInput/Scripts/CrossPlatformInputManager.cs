@@ -177,6 +177,7 @@ namespace UnityStandardAssets.CrossPlatformInput
         {
 			bool toReturn = false;
 			if (GetButtonDown(name)) { toReturn = true; }
+			if (!previousAxisValues.ContainsKey(name)) { return toReturn; }
 
 			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
 			float previousValue = previousAxisValues[name];
@@ -186,6 +187,22 @@ namespace UnityStandardAssets.CrossPlatformInput
 			previousAxisValues[name] = currentValue;
 			return toReturn;
         }
+
+		public static bool GetButtonOrAxisUp(string name)
+        {
+			bool toReturn = false;
+			if (GetButtonUp(name)) { toReturn = true; }
+			if (!previousAxisValues.ContainsKey(name)) { return toReturn; }
+
+			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+			float previousValue = previousAxisValues[name];
+			float currentValue = GetAxis(name);
+			if (Mathf.Abs(previousValue) >= axisDownThreshold && Mathf.Abs(currentValue) < axisDownThreshold) { toReturn = true; }
+			Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
+
+			previousAxisValues[name] = currentValue;
+			return toReturn;
+		}
 
 
 		public static Vector3 mousePosition
