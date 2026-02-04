@@ -86,23 +86,29 @@ public class Photography : MonoBehaviour {
         if (Time.timeScale == 0) { return; }
 
         //if (Input.GetMouseButtonDown(0))
-        if (CustomController.GetButtonDown(Constants.TakePicture))
+        if (CameraReady)
         {
-            if (cameraSnap == null || CameraReady == false) { return; }
-            cameraSnap.SnapShutter();
-            TakePicture();
-            if (cameraSFX != null) { cameraSFX.Play(); }
-            if (picText != null) picText.text = (allPics.Length - picIndex).ToString();
+            if (CustomController.GetButtonDown(Constants.TakePicture))
+            {
+                if (cameraSnap == null) { return; }
+                cameraSnap.SnapShutter();
+                TakePicture();
+                if (cameraSFX != null) { cameraSFX.Play(); }
+                if (picText != null) picText.text = (allPics.Length - picIndex).ToString();
+            }
+
+            if (CustomController.GetButtonUp(Constants.ReadyCamera))
+            {
+                UnReadyCamera();
+            }
         }
-        if (CustomController.GetButtonDown(Constants.ReadyCamera))
+        else
         {
-            ReadyCamera();
+            if (CustomController.GetButtonDown(Constants.ReadyCamera))
+            {
+                ReadyCamera();
+            }
         }
-        if (CustomController.GetButtonUp(Constants.ReadyCamera))
-        {
-            UnReadyCamera();
-        }
- 
 	}
 
     //ready camera by zooming and bringing up camera overlay

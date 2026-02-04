@@ -39,8 +39,6 @@ public class TitleScreen : MonoBehaviour {
 
         currentButton = 0;
         MoveSelector(buttons[0]);
-        animationDone = false;
-        animationDonePevFrame = false;
 
         //check if continue is allowed- diable it if not
         if (!Save.SaveFileExists() && continueButton != null)
