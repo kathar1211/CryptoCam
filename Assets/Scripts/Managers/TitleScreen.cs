@@ -53,7 +53,6 @@ public class TitleScreen : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        animationDonePevFrame = animationDone;
         if (!optionsActive)
         {
             //only accept input once buttons have appeared on screen
@@ -85,6 +84,8 @@ public class TitleScreen : MonoBehaviour {
                 }
             }
         }
+
+        animationDonePevFrame = animationDone;
     }
 
     public void OnIntroAnimDone()

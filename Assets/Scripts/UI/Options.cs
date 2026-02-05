@@ -13,24 +13,24 @@ using Sentry.Unity;
 public class Options : MonoBehaviour {
 
     //buttons screen 1
-    public GameObject ReadyCameraControl;
-    public GameObject TakePictureControl;
-    public GameObject ThrowObjectControl;
-    public GameObject PauseControl;
-    public GameObject CrouchControl;
-    public GameObject RunControl;    
-    public GameObject RestoreDefaultsControl;
+    public UIControlWithHighlight ReadyCameraControl;
+    public UIControlWithHighlight TakePictureControl;
+    public UIControlWithHighlight ThrowObjectControl;
+    public UIControlWithHighlight PauseControl;
+    public UIControlWithHighlight CrouchControl;
+    public UIControlWithHighlight RunControl;    
+    public UIControlWithHighlight RestoreDefaultsControl;
 
     //buttons screen 2
-    public Slider TextSpeedSlider;
-    public Toggle FullScreenToggle;
-    public Slider BGMSlider;
-    public Slider SFXSlider;
-    public Toggle ErrorTrackingToggle;
+    public SliderWithLabel TextSpeedSlider;
+    public ToggleWithHighlight FullScreenToggle;
+    public SliderWithLabel BGMSlider;
+    public SliderWithLabel SFXSlider;
+    public ToggleWithHighlight ErrorTrackingToggle;
 
     //buttons on all screens
-    public GameObject Exit;
-    public GameObject More;
+    public UIControlWithHighlight Exit;
+    public UIControlWithHighlight More;
 
     //screen handling
     bool isScrolling = false;
@@ -54,12 +54,10 @@ public class Options : MonoBehaviour {
     public Text sfxVol;
     AudioManager audioManager;
 
-    //select buttons with arrow keys/controller and highlight selected
-    public GameObject buttonHighlight;
     //hold buttons in an array that represents the order theyre in on screen
-    private GameObject[] controlbuttonArray;
-    private GameObject[] settingsButtonArray;
-    private GameObject selectedButton;
+    private UIControlWithHighlight[] controlbuttonArray;
+    private UIControlWithHighlight[] settingsButtonArray;
+    private UIControlWithHighlight selectedButton;
     private int selectedButtonIndex;
 
     //submenu to tell users to register an input
@@ -84,11 +82,11 @@ public class Options : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        controlbuttonArray = new GameObject[] { ReadyCameraControl, TakePictureControl,
+        controlbuttonArray = new UIControlWithHighlight[] { ReadyCameraControl, TakePictureControl,
             ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, Exit };
 
-        settingsButtonArray = new GameObject[] { TextSpeedSlider.gameObject,
-            BGMSlider.gameObject, SFXSlider.gameObject ,FullScreenToggle.gameObject, RestoreDefaultsControl, Exit, };
+        settingsButtonArray = new UIControlWithHighlight[] { TextSpeedSlider,
+            BGMSlider, SFXSlider ,FullScreenToggle, RestoreDefaultsControl, Exit, };
 
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
@@ -217,7 +215,9 @@ public class Options : MonoBehaviour {
     public 
     void ChangeSelectButton(float input)
     {
-        GameObject[] buttonArray = new GameObject[] { };
+        UIControlWithHighlight prevSelectedButton = selectedButton;
+
+        UIControlWithHighlight[] buttonArray = new UIControlWithHighlight[] { };
         //scroll through approproate buttons depending on which screen is active
         switch (currentScreen)
         {
@@ -248,12 +248,8 @@ public class Options : MonoBehaviour {
         selectedButton = buttonArray[selectedButtonIndex];
 
         //update highlight
-        buttonHighlight.SetActive(true);
-        buttonHighlight.transform.position = selectedButton.transform.position;
-        float width = selectedButton.GetComponent<RectTransform>().rect.width;
-        float height = selectedButton.GetComponent<RectTransform>().rect.height;
-        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width + 5);
-        buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height + 5);
+        if (prevSelectedButton != null) { prevSelectedButton.HideHighlight(); }
+        if (selectedButton != null) { selectedButton.ShowHighlight(); }
 
     }
 
@@ -492,13 +488,14 @@ public class Options : MonoBehaviour {
     }
 
     //if selector is activated it still needs to reflect mouseover options
-    public void MoveSelector(GameObject button)
+    public void MoveSelector(UIControlWithHighlight button)
     {
         if (!isScrolling)
         {
+            UIControlWithHighlight prevSelectedButton = selectedButton;
             selectedButton = button;
             //selectedButtonIndex = ArrayUtility.IndexOf<GameObject>(buttonArray, button);
-            GameObject[] buttonArray = new GameObject[] { };
+            UIControlWithHighlight[] buttonArray = new UIControlWithHighlight[] { };
             //scroll through approproate buttons depending on which screen is active
             switch (currentScreen)
             {
@@ -511,11 +508,8 @@ public class Options : MonoBehaviour {
             }
             selectedButtonIndex = Array.IndexOf(buttonArray, button);
             //set hover to match dimensions of selected button
-            buttonHighlight.transform.position = selectedButton.transform.position;
-            float width = selectedButton.GetComponent<RectTransform>().rect.width;
-            float height = selectedButton.GetComponent<RectTransform>().rect.height;
-            buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width + 5);
-            buttonHighlight.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height + 5);
+            if (prevSelectedButton != null) { prevSelectedButton.HideHighlight(); }
+            if (selectedButton != null) { selectedButton.ShowHighlight(); }
         }
     }
 

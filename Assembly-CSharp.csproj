@@ -102,7 +102,9 @@
     <Compile Include="Assets\Scripts\UI\Ted.cs" />
     <Compile Include="Assets\Scripts\UI\TedConvos.cs" />
     <Compile Include="Assets\Scripts\UI\TextBox.cs" />
+    <Compile Include="Assets\Scripts\UI\ToggleWithHighlight.cs" />
     <Compile Include="Assets\Scripts\UI\TrackErrorsPrompt.cs" />
+    <Compile Include="Assets\Scripts\UI\UIControlWithHighlight.cs" />
     <Compile Include="Assets\Scripts\Util\Constants.cs" />
     <Compile Include="Assets\Scripts\Util\EnableDepthTexture.cs" />
     <Compile Include="Assets\Scripts\Util\Move.cs" />

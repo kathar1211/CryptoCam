@@ -4,13 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SliderWithLabel : MonoBehaviour { 
+public class SliderWithLabel : UIControlWithHighlight { 
 
     public Slider slider;
     public TextMeshProUGUI label;
 
     public string formatString = "{0}<size=90%>{1}<size=75%>%";
     public bool isPercentBased;
+
+    public float value { get { return slider.value; } set { slider.value = value; } }
 
     // Start is called before the first frame update
     void Awake()
