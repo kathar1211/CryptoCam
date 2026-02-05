@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class GradeManager : MonoBehaviour {
 
     [SerializeField]
-    Image[] thumbnails;
+    SelectableImage[] thumbnails;
     [SerializeField]
     TextBox textbox; //this is the textbox that prompts to select photos
     [SerializeField]
     Image bigThumbnail;
-    Image selectedImage;
+    SelectableImage selectedImage;
 
-    public GameObject YesButton;
-    public GameObject NoButton;
-    public GameObject AutoButton;
-    public GameObject DoneButton;
+    [SerializeField]
+    int columns; //need to know what the grid layout is to navigate thumbnails via controller
+    UIControlWithHighlight highlightedUIcontrol;
+
+    public UIControlWithHighlight YesButton;
+    public UIControlWithHighlight NoButton;
+    public UIControlWithHighlight AutoButton;
+    public UIControlWithHighlight DoneButton;
 
     GameObject gameManager;
 
@@ -45,7 +50,7 @@ public class GradeManager : MonoBehaviour {
     public Dictionary<string, Photograph> finalSelection = new Dictionary<string, Photograph>();
 
     //store photograph information that corresponds with each thumbnail
-    Dictionary<Image, Photograph> allPhotos = new Dictionary<Image, Photograph>();
+    Dictionary<SelectableImage, Photograph> allPhotos = new Dictionary<SelectableImage, Photograph>();
 
     //sound effects
     [SerializeField]
@@ -84,8 +89,8 @@ public class GradeManager : MonoBehaviour {
         DoneButton = GameObject.Find("Done");
         AutoButton = GameObject.Find("Auto");*/
 
-        YesButton.SetActive(false);
-        NoButton.SetActive(false);
+        YesButton.gameObject.SetActive(false);
+        NoButton.gameObject.SetActive(false);
 
         
 
@@ -102,24 +107,61 @@ public class GradeManager : MonoBehaviour {
 
         currentState = GradeState.allThumbs;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        //handle controller input to select ui elements
+        float horizontalDir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+        if (horizontalDir != 0)
+        {
+            switch (currentState)
+            {
+                case GradeState.allThumbs:
+                    //navigate among thumbnails
+                    break;
+
+                case GradeState.bigThumb:
+                    //navigate between the yes/no buttons
+                    if (highlightedUIcontrol != YesButton) { MoveHighlight(YesButton); }
+                    else { MoveHighlight(NoButton); }
+                    break;
+
+ 
+            }
+
+
+            //positive value is right, negative value is left
+            if (horizontalDir < 0)
+            { 
+                
+
+            }
+        }
+
+        float verticalDir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+        if (verticalDir != 0)
+        {
+            //positive value is up (?), negative value is down (?)
+            if (verticalDir < 0)
+            {
+            }
+        }
+    }
 
     //yes/no buttons show up when user needs to enter input, disappear after
     void ToggleInputButtons(bool showYesNo)
     {
-        YesButton.SetActive(showYesNo);
-        NoButton.SetActive(showYesNo);
+        YesButton.gameObject.SetActive(showYesNo);
+        NoButton.gameObject.SetActive(showYesNo);
 
-        DoneButton.SetActive(!showYesNo);
-        AutoButton.SetActive(!showYesNo);
+        DoneButton.gameObject.SetActive(!showYesNo);
+        AutoButton.gameObject.SetActive(!showYesNo);
     }
 
     //bring up image on click
-    public void Enlarge(Image src)
+    public void Enlarge(SelectableImage src)
     {
         if (!bigThumbnail.IsActive() && currentState == GradeState.allThumbs)
         {
@@ -145,7 +187,7 @@ public class GradeManager : MonoBehaviour {
             if (ConfirmSFX != null) { ConfirmSFX.Play(); }
 
             //indicate selection
-            selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+            selectedImage.SelectedIndicator.SetActive(true);
 
             //add photo to dictionary
             Photograph picToAdd = allPhotos[selectedImage];
@@ -173,11 +215,11 @@ public class GradeManager : MonoBehaviour {
     //for when an entry in the dictionary of final selected photos needs to be replaced
     void UpdatePhoto(Photograph pic)
     {
-        Image deselect = null;
+        SelectableImage deselect = null;
         Photograph toRemove = finalSelection[pic.subjectName];
         //looping through dictionary to find image is a hit to performance, 
         //but preferable to hit to memory from an inverse dictionary of hd photos
-        foreach (KeyValuePair<Image, Photograph> pair in allPhotos)
+        foreach (KeyValuePair<SelectableImage, Photograph> pair in allPhotos)
         {
             if (pair.Value.Equals(toRemove))
             {
@@ -188,7 +230,7 @@ public class GradeManager : MonoBehaviour {
 
         if (deselect != null)
         {
-            deselect.gameObject.transform.Find("Selected").gameObject.SetActive(false);
+            deselect.SelectedIndicator.SetActive(false);
         }
         finalSelection[pic.subjectName] = pic;
     }
@@ -200,7 +242,7 @@ public class GradeManager : MonoBehaviour {
         if (CancelSFX != null) { CancelSFX.Play(); }
 
         //if photo has been added remove it
-        selectedImage.gameObject.transform.Find("Selected").gameObject.SetActive(false);
+        selectedImage.SelectedIndicator.gameObject.SetActive(false);
         Photograph picToRemove = allPhotos[selectedImage];
         if (finalSelection.ContainsKey(picToRemove.subjectName) && finalSelection[picToRemove.subjectName].Equals(picToRemove)){
             finalSelection.Remove(picToRemove.subjectName);
@@ -232,7 +274,7 @@ public class GradeManager : MonoBehaviour {
             allPhotos.Add(thumbnails[i], pics[i]);
 
             //set icon to appropriate cryptid
-            GameObject selector = thumbnails[i].transform.Find("Selected").gameObject;
+            GameObject selector = thumbnails[i].SelectedIndicator;
             Image icon = selector.transform.Find("icon").GetComponent<Image>();
             switch (pics[i].subjectName)
             {
@@ -288,9 +330,9 @@ public class GradeManager : MonoBehaviour {
         if (ClickSFX != null) { ClickSFX.Play(); }
 
 
-        foreach (KeyValuePair<Image, Photograph> pair in allPhotos)
+        foreach (KeyValuePair<SelectableImage, Photograph> pair in allPhotos)
         {
-            Image img = pair.Key;
+            SelectableImage img = pair.Key;
             Photograph photo = pair.Value;
 
             if (finalSelection.ContainsKey(photo.subjectName))
@@ -300,13 +342,13 @@ public class GradeManager : MonoBehaviour {
                 if(photo.finalScore > compareTo.finalScore)
                 {
                     UpdatePhoto(photo);
-                    img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+                    img.SelectedIndicator.SetActive(true);
                 }
             }
             else if (photo.finalScore > 0)
             {
                 finalSelection.Add(photo.subjectName, photo);
-                img.gameObject.transform.Find("Selected").gameObject.SetActive(true);
+                img.SelectedIndicator.gameObject.SetActive(true);
             }
 
             //reflect selection in icons
@@ -324,8 +366,8 @@ public class GradeManager : MonoBehaviour {
 
             ConfirmScreen.SetActive(true);
             ConfirmText.text = Constants.ProceedPhotos.Replace(Constants.ParameterSTR, finalSelection.Count.ToString());
-            AutoButton.SetActive(false);
-            DoneButton.SetActive(false);
+            AutoButton.gameObject.SetActive(false);
+            DoneButton.gameObject.SetActive(false);
             currentState = GradeState.doneConfirm;
         }
         
@@ -352,8 +394,8 @@ public class GradeManager : MonoBehaviour {
         if (CancelSFX != null) { CancelSFX.Play(); }
 
         ConfirmScreen.SetActive(false);
-        AutoButton.SetActive(true);
-        DoneButton.SetActive(true);
+        AutoButton.gameObject.SetActive(true);
+        DoneButton.gameObject.SetActive(true);
         currentState = GradeState.allThumbs;
     }
 
@@ -378,5 +420,15 @@ public class GradeManager : MonoBehaviour {
 
             cryptidIcons.Add(go.name, cryptoIcon);
         }
+    }
+
+    public void MoveHighlight(UIControlWithHighlight button)
+    {
+        UIControlWithHighlight prevSelectedButton = highlightedUIcontrol;
+        highlightedUIcontrol = button;
+
+        //set hover to match dimensions of selected button
+        if (prevSelectedButton != null) { prevSelectedButton.HideHighlight(); }
+        if (highlightedUIcontrol != null) { highlightedUIcontrol.ShowHighlight(); }
     }
 }
