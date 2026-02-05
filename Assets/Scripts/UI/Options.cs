@@ -13,6 +13,7 @@ using Sentry.Unity;
 public class Options : MonoBehaviour {
 
     //buttons screen 1
+    public UIControlWithHighlight CloseOptionsScreen1;
     public UIControlWithHighlight ReadyCameraControl;
     public UIControlWithHighlight TakePictureControl;
     public UIControlWithHighlight ThrowObjectControl;
@@ -22,14 +23,15 @@ public class Options : MonoBehaviour {
     public UIControlWithHighlight RestoreDefaultsControl;
 
     //buttons screen 2
+    public UIControlWithHighlight CloseOptionsScreen2;
     public SliderWithLabel TextSpeedSlider;
     public ToggleWithHighlight FullScreenToggle;
     public SliderWithLabel BGMSlider;
     public SliderWithLabel SFXSlider;
     public ToggleWithHighlight ErrorTrackingToggle;
+    public UIControlWithHighlight RestoreDefaultsSettings;
 
     //buttons on all screens
-    public UIControlWithHighlight Exit;
     public UIControlWithHighlight More;
 
     //screen handling
@@ -83,10 +85,10 @@ public class Options : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         controlbuttonArray = new UIControlWithHighlight[] { ReadyCameraControl, TakePictureControl,
-            ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, Exit };
+            ThrowObjectControl, PauseControl, RunControl, CrouchControl, RestoreDefaultsControl, CloseOptionsScreen1 };
 
         settingsButtonArray = new UIControlWithHighlight[] { TextSpeedSlider,
-            BGMSlider, SFXSlider ,FullScreenToggle, RestoreDefaultsControl, Exit, };
+            BGMSlider, SFXSlider ,FullScreenToggle, ErrorTrackingToggle, RestoreDefaultsSettings, CloseOptionsScreen2, };
 
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
@@ -174,7 +176,8 @@ public class Options : MonoBehaviour {
         }
 
         //adjust sliders if a slider is selected
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
+        float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+        if (dir != 0)
         {
             Slider sliderSelect = selectedButton.GetComponent<Slider>();
             if (sliderSelect != null) {
@@ -184,10 +187,26 @@ public class Options : MonoBehaviour {
                 increment = Mathf.Abs(increment);
 
                 //positive value is right, negative value is left
-                float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
                 if (dir < 0) { increment *= -1; }
 
                 AdjustSliderValue(sliderSelect, increment);
+            }
+
+            else
+            {
+                
+                switch (currentScreen)
+                {
+                    case ScreenState.Controls:
+                        if (dir > 0) { MoveSelector(More); }
+                        else { MoveSelector(controlbuttonArray[selectedButtonIndex]); }
+                        break;
+                    case ScreenState.Settings:
+                        if (dir < 0) { MoveSelector(More); }
+                        else { MoveSelector(settingsButtonArray[selectedButtonIndex]); }
+                        break;
+                }
+                
             }
         }
 
@@ -506,7 +525,9 @@ public class Options : MonoBehaviour {
                     buttonArray = settingsButtonArray;
                     break;
             }
-            selectedButtonIndex = Array.IndexOf(buttonArray, button);
+
+            int newButtonIndex = Array.IndexOf(buttonArray, button);
+           if (newButtonIndex != -1) { selectedButtonIndex = newButtonIndex; }
             //set hover to match dimensions of selected button
             if (prevSelectedButton != null) { prevSelectedButton.HideHighlight(); }
             if (selectedButton != null) { selectedButton.ShowHighlight(); }
