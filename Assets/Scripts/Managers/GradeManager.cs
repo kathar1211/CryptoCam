@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
+using System;
 
 public class GradeManager : MonoBehaviour {
 
@@ -111,43 +112,7 @@ public class GradeManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
-        //handle controller input to select ui elements
-        float horizontalDir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
-        if (horizontalDir != 0)
-        {
-            switch (currentState)
-            {
-                case GradeState.allThumbs:
-                    //navigate among thumbnails
-                    break;
-
-                case GradeState.bigThumb:
-                    //navigate between the yes/no buttons
-                    if (highlightedUIcontrol != YesButton) { MoveHighlight(YesButton); }
-                    else { MoveHighlight(NoButton); }
-                    break;
-
- 
-            }
-
-
-            //positive value is right, negative value is left
-            if (horizontalDir < 0)
-            { 
-                
-
-            }
-        }
-
-        float verticalDir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
-        if (verticalDir != 0)
-        {
-            //positive value is up (?), negative value is down (?)
-            if (verticalDir < 0)
-            {
-            }
-        }
+        HandleControllerNavigation();
     }
 
     //yes/no buttons show up when user needs to enter input, disappear after
@@ -419,6 +384,95 @@ public class GradeManager : MonoBehaviour {
             }
 
             cryptidIcons.Add(go.name, cryptoIcon);
+        }
+    }
+
+    public void HandleControllerNavigation()
+    {
+        HandleHorizontalControllerNavigation();
+        HandleVerticalControllerNavigation();
+    }
+
+    private void HandleHorizontalControllerNavigation()
+    {
+        //handle controller input to select ui elements
+
+        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
+        {
+            float horizontalDir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+            switch (currentState)
+            {
+                case GradeState.allThumbs:
+                    //navigate among thumbnails
+                    if (highlightedUIcontrol == AutoButton || highlightedUIcontrol == DoneButton) { break; }
+
+                    int thumbnailIndex = Array.IndexOf(thumbnails, highlightedUIcontrol);
+                    if (thumbnailIndex == -1) { MoveHighlight(thumbnails[0]); break; }
+
+                    //positive value is right, negative value is left
+                    if (horizontalDir < 0)
+                    {
+                        if (thumbnailIndex != 0) { MoveHighlight(thumbnails[thumbnailIndex - 1]); }
+                    }
+                    else
+                    {
+                        if (thumbnailIndex != thumbnails.Length - 1) { MoveHighlight(thumbnails[thumbnailIndex + 1]); }
+                    }
+
+                    break;
+
+                case GradeState.bigThumb:
+                    //navigate between the yes/no buttons
+                    if (highlightedUIcontrol != YesButton) { MoveHighlight(YesButton); }
+                    else { MoveHighlight(NoButton); }
+                    break;
+            }
+        }
+    }
+
+    private void HandleVerticalControllerNavigation()
+    {
+        
+        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+        {
+            float verticalDir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+            switch (currentState)
+            {
+                case GradeState.allThumbs:
+
+                    //positive value is up (?), negative value is down (?)
+                    if (verticalDir < 0)
+                    {
+                        if (highlightedUIcontrol == AutoButton) { MoveHighlight(DoneButton); break; }
+                        if (highlightedUIcontrol == DoneButton) { break; }
+                    }
+                    else
+                    {
+                        if (highlightedUIcontrol == AutoButton) { MoveHighlight(thumbnails[thumbnails.Length - 1]); break; }
+                        if (highlightedUIcontrol == DoneButton) { MoveHighlight(AutoButton); break; }
+                    }
+
+
+                    //navigate among thumbnails
+                    if (highlightedUIcontrol == AutoButton || highlightedUIcontrol == DoneButton) { break; }
+
+                    int thumbnailIndex = Array.IndexOf(thumbnails, highlightedUIcontrol);
+                    if (thumbnailIndex == -1) { MoveHighlight(thumbnails[0]); break; }
+
+
+                    //positive value is up, negative value is down
+                    if (verticalDir < 0)
+                    {
+                        if (thumbnailIndex < thumbnails.Length - columns) { MoveHighlight(thumbnails[thumbnailIndex + columns]); }
+                        else { MoveHighlight(AutoButton); }
+                    }
+                    else
+                    {
+                        if (thumbnailIndex >= columns) { MoveHighlight(thumbnails[thumbnailIndex - columns]); }
+                    }
+
+                    break;
+            }
         }
     }
 
