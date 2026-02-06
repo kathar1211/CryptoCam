@@ -19,6 +19,7 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     int columns; //need to know what the grid layout is to navigate thumbnails via controller
     UIControlWithHighlight highlightedUIcontrol;
+    int activeThumbnailCount; //how many of these thumbnail objects are actually showing images
 
     public UIControlWithHighlight YesButton;
     public UIControlWithHighlight NoButton;
@@ -233,6 +234,7 @@ public class GradeManager : MonoBehaviour {
         {
             if (i >= pics.Length) { thumbnails[i].gameObject.SetActive(false); continue; }
             if (pics[i].pic == null) { thumbnails[i].gameObject.SetActive(false); continue; }
+            activeThumbnailCount++;
 
             //displayIm.sprite = Sprite.Create(pic, new Rect(0.0f, 0.0f, pic.width, pic.height), new Vector2(0.5f, 0.5f));
             thumbnails[i].sprite = Sprite.Create(pics[i].pic, new Rect(0f, 0f, pics[i].pic.width, pics[i].pic.height), new Vector2(.5f, .5f));
@@ -416,7 +418,7 @@ public class GradeManager : MonoBehaviour {
                     }
                     else
                     {
-                        if (thumbnailIndex != thumbnails.Length - 1) { MoveHighlight(thumbnails[thumbnailIndex + 1]); }
+                        if (thumbnailIndex != thumbnails.Length - 1 && thumbnails[thumbnailIndex +1].gameObject.activeInHierarchy) { MoveHighlight(thumbnails[thumbnailIndex + 1]); }
                     }
 
                     break;
@@ -448,7 +450,7 @@ public class GradeManager : MonoBehaviour {
                     }
                     else
                     {
-                        if (highlightedUIcontrol == AutoButton) { MoveHighlight(thumbnails[thumbnails.Length - 1]); break; }
+                        if (highlightedUIcontrol == AutoButton) { MoveHighlight(thumbnails[activeThumbnailCount-1]); break; }
                         if (highlightedUIcontrol == DoneButton) { MoveHighlight(AutoButton); break; }
                     }
 
@@ -463,7 +465,7 @@ public class GradeManager : MonoBehaviour {
                     //positive value is up, negative value is down
                     if (verticalDir < 0)
                     {
-                        if (thumbnailIndex < thumbnails.Length - columns) { MoveHighlight(thumbnails[thumbnailIndex + columns]); }
+                        if (thumbnailIndex < thumbnails.Length - columns && thumbnails[thumbnailIndex + columns].gameObject.activeInHierarchy) { MoveHighlight(thumbnails[thumbnailIndex + columns]); }
                         else { MoveHighlight(AutoButton); }
                     }
                     else
