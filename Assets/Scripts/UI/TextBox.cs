@@ -69,7 +69,7 @@ public class TextBox : MonoBehaviour {
         else if (!progressLocked)
         {
             //if theres no text in the queue we're done talking or on the last line
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
             {
                 
                 if (talking)

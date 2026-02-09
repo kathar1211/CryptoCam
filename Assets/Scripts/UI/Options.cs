@@ -147,28 +147,6 @@ public class Options : MonoBehaviour {
             return;// dont handle input or do anything else while scrolling
         }
 
-        //gamepad buttons dont have an event like keypresses, we have to check them all ourselves
-        //https://discussions.unity.com/t/find-out-if-any-button-on-any-gamepad-has-been-pressed-and-which-one/65089
-        if (waitingForKeyPress)
-        {
-            foreach(KeyCode button in CustomController.AllGamepadButtons)
-            {
-                if (Input.GetKeyDown(button)){
-                    newKey = new ButtonOrAxis(button);
-                    waitingForKeyPress = false;
-                }
-            }
-
-            foreach(string axis in CustomController.AllGamepadAxesAsButtons)
-            {
-                if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
-                {
-                    newKey = new ButtonOrAxis(axis);
-                    waitingForKeyPress = false;
-                }
-            }
-        }
-
 		if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
@@ -328,8 +306,28 @@ public class Options : MonoBehaviour {
                 }
             }
 
-            //https://forum.unity.com/threads/how-can-i-know-that-any-button-on-gamepad-is-pressed.757322/
-           // var gamepadButtonPressed = Gamepad.current.allControls.Any(x => x is ButtonControl button && x.isPressed && !x.synthetic);
+
+            //gamepad buttons dont have an event like keypresses, we have to check them all ourselves
+            //https://discussions.unity.com/t/find-out-if-any-button-on-any-gamepad-has-been-pressed-and-which-one/65089
+            foreach (KeyCode button in CustomController.AllGamepadButtons)
+            {
+                if (Input.GetKeyDown(button))
+                {
+                    newKey = new ButtonOrAxis(button);
+                    waitingForKeyPress = false;
+                }
+            }
+
+            //allowing axis input from gamepad as well
+            foreach (string axis in CustomController.AllGamepadAxesAsButtons)
+            {
+                if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
+                {
+                    newKey = new ButtonOrAxis(axis);
+                    waitingForKeyPress = false;
+                }
+            }
+
         }
     }
 

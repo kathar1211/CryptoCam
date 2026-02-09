@@ -31,7 +31,7 @@ public struct ButtonOrAxis
 }
 
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
-public class CustomController : MonoBehaviour {
+public class CustomController {
 
     //https://discussions.unity.com/t/xbox-one-controller-mapping-solved/187077/7
 
@@ -91,15 +91,7 @@ public class CustomController : MonoBehaviour {
         Constants.RTAxis
     });
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public static bool UsingController;
 
     //true if a saved button was pressed down this frame (false if button does not exist)
     public static bool GetButtonDown(string buttonName)
@@ -177,7 +169,14 @@ public class CustomController : MonoBehaviour {
     //restore default control settings
     public static void RestoreDefaults()
     {
-        buttons = new Dictionary<string, ButtonOrAxis>(defaultButtons);
+        if (UsingController)
+        {
+            buttons = new Dictionary<string, ButtonOrAxis>(defaultGamepadButtons);
+        }
+        else
+        {
+            buttons = new Dictionary<string, ButtonOrAxis>(defaultButtons);
+        }
     }
 
     //used for displaying what the current input settings are
@@ -292,7 +291,7 @@ public class CustomController : MonoBehaviour {
         }
     }
 
-    public bool IsControllerConnected()
+    public static bool IsControllerConnected()
     {
         string[] controllerNames = Input.GetJoystickNames();
         if (controllerNames.Length == 0) { return false; }

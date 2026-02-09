@@ -80,6 +80,7 @@ public class TitleScreen : MonoBehaviour {
 
                 if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
                 {
+                    CustomController.UsingController = true;
                     buttons[currentButton].GetComponent<Button>().onClick.Invoke();
                 }
             }

@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\PlayerControls\FirstPersonController.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\Photography.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\ThrowObject.cs" />
+    <Compile Include="Assets\Scripts\UI\ControllerNavigableConfirmationWindow.cs" />
     <Compile Include="Assets\Scripts\UI\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\UI\HelpPrompt.cs" />
     <Compile Include="Assets\Scripts\UI\LogoAnimation.cs" />
