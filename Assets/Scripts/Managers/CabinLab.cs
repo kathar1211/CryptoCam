@@ -233,6 +233,10 @@ public class CabinLab : MonoBehaviour {
                 }
                 break;
         }
+
+        //tracking input mode
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit)){ CustomController.UsingController = true; }
+        if (Input.GetMouseButtonDown(0)) { CustomController.UsingController = false; }
     }
 
     

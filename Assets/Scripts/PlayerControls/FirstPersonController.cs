@@ -221,7 +221,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (!IsCrouching)
             {
                 // m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
-                m_IsWalking = !CustomController.GetButton(Constants.RunButton);
+                //m_IsWalking = !CustomController.GetButton(Constants.RunButton);
+
+                if (CustomController.GetButtonDown(Constants.RunButton))
+                {
+                    m_IsWalking = !m_IsWalking;
+                }
             }
             else
             {
@@ -271,7 +276,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         }
 
         //add on method to support crouching
-        //reduce height if player pressed crouch button, return to normal on release
+        //reduce height if player pressed crouch button, return to normal on second press
         private void HandleCrouch()
         {
             if (CustomController.GetButtonDown(Constants.CrouchButton) && !IsCrouching)
@@ -282,7 +287,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_WalkSpeed /= 2.0f;
             }
 
-            if (CustomController.GetButtonUp(Constants.CrouchButton) && IsCrouching)
+            if (CustomController.GetButtonDown(Constants.CrouchButton) && IsCrouching)
             {
                 transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 2.0f, transform.localScale.z);
                 IsCrouching = false;

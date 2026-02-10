@@ -87,6 +87,8 @@ public class TitleScreen : MonoBehaviour {
         }
 
         animationDonePevFrame = animationDone;
+
+        if (Input.GetMouseButtonDown(0)) { CustomController.UsingController = false; }
     }
 
     public void OnIntroAnimDone()

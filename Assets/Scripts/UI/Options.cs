@@ -90,6 +90,15 @@ public class Options : MonoBehaviour {
         settingsButtonArray = new UIControlWithHighlight[] { TextSpeedSlider,
             BGMSlider, SFXSlider ,FullScreenToggle, ErrorTrackingToggle, RestoreDefaultsSettings, CloseOptionsScreen2, };
 
+        //assuming we're starting with controls screen on
+        offScreenPos = SettingsScreenHolder.transform.localPosition.x;
+
+        gameManager = GameManager.Instance;
+
+    }
+
+    private void OnEnable()
+    {
         //if controls are saved in playerprefs load them
         CustomController.LoadAllKeys();
         LoadTextSpeed();
@@ -98,19 +107,10 @@ public class Options : MonoBehaviour {
 
         UpdateButtonText();
         UpdateSettingsText();
-
-        //assuming we're starting with controls screen on
-        offScreenPos = SettingsScreenHolder.transform.localPosition.x;
-
-        gameManager = GameManager.Instance;
-
-        //make sure sliders all show the right initial value
-
-        
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         if (isScrolling)
         {
          /*   switch (currentScreen)
@@ -147,7 +147,31 @@ public class Options : MonoBehaviour {
             return;// dont handle input or do anything else while scrolling
         }
 
-		if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+        if (waitingForKeyPress)
+        {
+            //gamepad buttons dont have an event like keypresses, we have to check them all ourselves
+            //https://discussions.unity.com/t/find-out-if-any-button-on-any-gamepad-has-been-pressed-and-which-one/65089
+            foreach (KeyCode button in CustomController.AllGamepadButtons)
+            {
+                if (Input.GetKeyDown(button))
+                {
+                    newKey = new ButtonOrAxis(button);
+                    waitingForKeyPress = false;
+                }
+            }
+
+            //allowing axis input from gamepad as well
+            foreach (string axis in CustomController.AllGamepadAxesAsButtons)
+            {
+                if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
+                {
+                    newKey = new ButtonOrAxis(axis);
+                    waitingForKeyPress = false;
+                }
+            }
+        }
+
+        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
             Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
@@ -206,11 +230,12 @@ public class Options : MonoBehaviour {
                 }
                 //could also be a slider but those dont do anything if you select
             }
+
+            CustomController.UsingController = true;
         }
 	}
 
-    public 
-    void ChangeSelectButton(float input)
+    public void ChangeSelectButton(float input)
     {
         UIControlWithHighlight prevSelectedButton = selectedButton;
 
@@ -306,28 +331,6 @@ public class Options : MonoBehaviour {
                 }
             }
 
-
-            //gamepad buttons dont have an event like keypresses, we have to check them all ourselves
-            //https://discussions.unity.com/t/find-out-if-any-button-on-any-gamepad-has-been-pressed-and-which-one/65089
-            foreach (KeyCode button in CustomController.AllGamepadButtons)
-            {
-                if (Input.GetKeyDown(button))
-                {
-                    newKey = new ButtonOrAxis(button);
-                    waitingForKeyPress = false;
-                }
-            }
-
-            //allowing axis input from gamepad as well
-            foreach (string axis in CustomController.AllGamepadAxesAsButtons)
-            {
-                if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
-                {
-                    newKey = new ButtonOrAxis(axis);
-                    waitingForKeyPress = false;
-                }
-            }
-
         }
     }
 
@@ -369,7 +372,7 @@ public class Options : MonoBehaviour {
         {
             CustomController.SetAxis(controlKey, newKey.AxisName);
         }
-        CustomController.SaveAllKeys();
+        CustomController.SaveKey(controlKey);
         UpdateButtonText();
         KeyPressSubMenu.SetActive(false);
         if (gameManager != null) { gameManager.DontAllowPause = false; }
@@ -401,7 +404,7 @@ public class Options : MonoBehaviour {
         if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         CustomController.RestoreDefaults();
         UpdateButtonText();
-        CustomController.SaveAllKeys();
+        CustomController.ClearAllKeys();
     }
 
     public void RestoreSettingDefaults()

@@ -114,6 +114,19 @@ public class GradeManager : MonoBehaviour {
     void Update()
     {
         HandleControllerNavigation();
+
+        //allow user to actually select things with controller
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+        {
+            if (highlightedUIcontrol != null)
+            {
+                Button buttonSelect = highlightedUIcontrol.GetComponent<Button>();
+                if (buttonSelect != null)
+                {
+                    buttonSelect.onClick.Invoke();
+                }
+            }
+        }
     }
 
     //yes/no buttons show up when user needs to enter input, disappear after

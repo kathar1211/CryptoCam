@@ -53,10 +53,10 @@ public class CustomController {
     {
         {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxis) },
         {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxis) },
-        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.Joystick1Button10) },
-        {Constants.Pause, new ButtonOrAxis(KeyCode.Joystick1Button0) },
-        {Constants.CrouchButton, new ButtonOrAxis(KeyCode.LeftControl) },
-        {Constants.RunButton, new ButtonOrAxis(KeyCode.LeftShift) }
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton2) },
+        {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton7) },
+        {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton9) },
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton8) }
     };
 
     //need this for detecting input from a gamepad during remapping
@@ -141,6 +141,22 @@ public class CustomController {
         foreach (KeyValuePair<string,ButtonOrAxis> button in buttons)
         {
             PlayerPrefs.SetString(button.Key, JsonUtility.ToJson(button.Value));
+        }
+    }
+
+    public static void ClearAllKeys()
+    {
+        foreach (KeyValuePair<string, ButtonOrAxis> button in buttons)
+        {
+            PlayerPrefs.DeleteKey(button.Key);
+        }
+    }
+
+    public static void SaveKey(string keyName)
+    {
+        if (buttons.ContainsKey(keyName))
+        {
+            PlayerPrefs.SetString(keyName, JsonUtility.ToJson(buttons[keyName]));
         }
     }
 
