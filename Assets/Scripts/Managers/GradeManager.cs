@@ -113,20 +113,25 @@ public class GradeManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        HandleControllerNavigation();
 
-        //allow user to actually select things with controller
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+        if (currentState != GradeState.doneConfirm) //this state is handled with a controller navigable confirmation window
         {
-            if (highlightedUIcontrol != null)
+            HandleControllerNavigation();
+
+            //allow user to actually select things with controller
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
             {
-                Button buttonSelect = highlightedUIcontrol.GetComponent<Button>();
-                if (buttonSelect != null)
+                if (highlightedUIcontrol != null)
                 {
-                    buttonSelect.onClick.Invoke();
+                    Button buttonSelect = highlightedUIcontrol.GetComponent<Button>();
+                    if (buttonSelect != null)
+                    {
+                        buttonSelect.onClick.Invoke();
+                    }
                 }
             }
         }
+       
     }
 
     //yes/no buttons show up when user needs to enter input, disappear after
