@@ -227,7 +227,7 @@ public class CabinLab : MonoBehaviour {
                 break;
             case MenuState.Credits:
                 //exit credits on click
-                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
+                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0) || CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
                 {
                     Return(credits);
                 }

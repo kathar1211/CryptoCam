@@ -18,6 +18,7 @@ public static class Constants {
     public const string ThrowObject = "ThrowObject";
     public const string Pause = "Pause";
     public const string Submit = "Submit";
+    public const string Cancel = "Cancel";
     public const string Horizontal = "Horizontal";
     public const string Vertical = "Vertical";
     public const string CrouchButton = "CrouchButton";

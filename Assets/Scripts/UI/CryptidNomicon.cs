@@ -67,22 +67,27 @@ public class CryptidNomicon : MonoBehaviour {
         //handle page turning if not viewing a photo
         if (!viewing)
         {
-            /*if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                TurnPage(false);
-            }
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                TurnPage(true);
-            }*/
             if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal)){
                 TurnPage(CrossPlatformInputManager.GetAxis(Constants.Horizontal) > 0);
+            }
+
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Submit))
+            {
+                if (currentPage != 0 && currentPage != pageContents.Count + 1) //not applicable on front and back cover
+                {
+                    EnlargePhoto();
+                }
+            }
+
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Cancel))
+            {
+                Close();
             }
         }
         //close out of viewing a photo on any input
         else
         {
-            if (Input.anyKeyDown)
+            if (Input.anyKeyDown || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Submit) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Cancel))
             {
                 DelargePhoto();
             }
@@ -241,5 +246,10 @@ public class CryptidNomicon : MonoBehaviour {
 
         PageContent empty = new PageContent();
         return empty;
+    }
+
+    public void Close()
+    {
+        ReadyToClose = true;
     }
 }
