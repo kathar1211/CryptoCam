@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
@@ -24,9 +25,9 @@ public class CryptidNomicon : MonoBehaviour {
     int currentPage;
 
     public Image thumbnail;
-    public Text scoreDesc;
-    public Text imageDesc;
-    public Text nameDesc;
+    public TextMeshProUGUI scoreDesc;
+    public TextMeshProUGUI imageDesc;
+    public TextMeshProUGUI nameDesc;
     public Image aboutTheAuthor;
     public Image largeThumbnail;
     public Image largeThumbnailOverlay;
