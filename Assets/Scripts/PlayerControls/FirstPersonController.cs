@@ -221,12 +221,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (!IsCrouching)
             {
                 // m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
-                //m_IsWalking = !CustomController.GetButton(Constants.RunButton);
+                m_IsWalking = !CustomController.GetButton(Constants.RunButton);
 
-                if (CustomController.GetButtonDown(Constants.RunButton))
+               /* if (CustomController.GetButtonDown(Constants.RunButton))
                 {
                     m_IsWalking = !m_IsWalking;
-                }
+                }*/
             }
             else
             {
