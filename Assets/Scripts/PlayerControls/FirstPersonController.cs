@@ -279,20 +279,22 @@ namespace UnityStandardAssets.Characters.FirstPerson
         //reduce height if player pressed crouch button, return to normal on second press
         private void HandleCrouch()
         {
-            if (CustomController.GetButtonDown(Constants.CrouchButton) && !IsCrouching)
+            if (CustomController.GetButtonDown(Constants.CrouchButton))
             {
-                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y / 2.0f, transform.localScale.z);
-                IsCrouching = true;
-                //reduce speed while crouching
-                m_WalkSpeed /= 2.0f;
-            }
-
-            if (CustomController.GetButtonDown(Constants.CrouchButton) && IsCrouching)
-            {
-                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 2.0f, transform.localScale.z);
-                IsCrouching = false;
-                //return to normal speed
-                m_WalkSpeed *= 2.0f;
+                if (!IsCrouching)
+                {
+                    transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y / 2.0f, transform.localScale.z);
+                    IsCrouching = true;
+                    //reduce speed while crouching
+                    m_WalkSpeed /= 2.0f;
+                }
+                else
+                {
+                    transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * 2.0f, transform.localScale.z);
+                    IsCrouching = false;
+                    //return to normal speed
+                    m_WalkSpeed *= 2.0f;
+                }
             }
         }
     }

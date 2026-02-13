@@ -233,6 +233,11 @@ public class Options : MonoBehaviour {
 
             CustomController.UsingController = true;
         }
+
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+        {
+            Close();
+        }
 	}
 
     public void ChangeSelectButton(float input)
@@ -584,5 +589,10 @@ public class Options : MonoBehaviour {
     public void ThrowFakeError()
     {
         Debug.LogError("This error was thrown on purpose at " + DateTime.Now);
+    }
+
+    private void Close()
+    {
+        CloseOptionsScreen1.GetComponent<Button>().onClick.Invoke();
     }
 }

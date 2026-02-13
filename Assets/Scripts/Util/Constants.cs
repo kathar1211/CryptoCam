@@ -58,7 +58,7 @@ public static class Constants {
     public static string FoundPoints = "That's worth {0} points.";
     public static string FacingAway = "Oh, but it's facing away from the camera. \nI'm afraid that's minus {0} points.";
     public static string GoodVisibility = "And you can see it perfectly clearly! \n100% visibility, well done.";
-    public static string OKVisibility = "You can see most of it clearly, but some of it is blocked \nby obstacles in the shot.";
+    public static string OKVisibility = "You can see most of it clearly, but some of it is \nblocked by obstacles in the shot.";
     public static string PoorVisibility = "You can't see it very clearly at all. A lot of it is blocked \nby obstacles in the shot.";
     public static string GoodCenter = "Very nice! It's perfectly centered in the shot. \nThat's plus {0} points!";
     public static string OKCenter = "It's a little off center, but not too bad. \nThat's plus {0} points.";
@@ -91,7 +91,7 @@ public static class Constants {
         "Shouldn't you already know that? I'm sure it was in the \nemail I sent. ...You are the photographer I hired, right?",
         "Well, it doesn't matter who you are, as long as you can \ntake pictures. That's your job, to take pictures of \ncryptids for me.",
         "I'll be using your photos for my upcoming book, the \nCryptid-Nomicon. Not the Cryptonomicon. That's \nsomething else.",
-        "You shouldn't have much trouble finding cryptids in the \nwoods nearby. They seem to like it around here.",
+        "You shouldn't have much trouble finding cryptids in \nthe woods nearby. They seem to like it around here.",
         "When you're ready to head out, just select \"Embark\" \nor click on the camera. But no rush of course.",
 
         //not really part of the intro, just a sample line to give approximate max length

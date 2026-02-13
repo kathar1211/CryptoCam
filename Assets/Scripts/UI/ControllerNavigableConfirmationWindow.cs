@@ -36,7 +36,7 @@ public class ControllerNavigableConfirmationWindow : MonoBehaviour
             if (currentSelectedButton != null)
             {
                 Button buttonSelect = currentSelectedButton.GetComponent<Button>();
-                if (buttonSelect != null)
+                if (buttonSelect != null && buttonSelect.enabled)
                 {
                     buttonSelect.onClick.Invoke();
                 }
