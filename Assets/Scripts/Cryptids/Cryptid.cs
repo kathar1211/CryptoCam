@@ -440,6 +440,8 @@ public class Cryptid : MonoBehaviour {
     {
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
+        nav.updatePosition = true;
+        nav.updateRotation = true;
     }
 
     //navmesh handles rotation and movement independently

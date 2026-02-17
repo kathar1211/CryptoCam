@@ -10,6 +10,7 @@ public class LovelandFrogman : Cryptid {
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
     enum MoveState { swim, walk, edgeLeap, sit, flee, stand, floating}
     [SerializeField] MoveState currentState;
+    MoveState previousState;
 
     //amount position needs to be adjusted after a leap
     [SerializeField]
@@ -127,14 +128,22 @@ public class LovelandFrogman : Cryptid {
                 //Leap(leapSpeed, 0);
                 break;
             case MoveState.flee:
-
                 Flee(fleeFromTarget, targetMinDistance, fleeSpeed, rotateSpeed);
                 if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                 {
-                    
-                    currentState = MoveState.walk;
-                    nav.speed = walkSpeed;
-                    nav.baseOffset = 0;
+                    if (previousState == MoveState.walk)
+                    {
+                        currentState = MoveState.walk;
+                        nav.speed = walkSpeed;
+                        nav.baseOffset = 0;
+                    }
+
+                    if (previousState == MoveState.swim)
+                    {
+                        currentState = MoveState.swim;
+                        nav.speed = swimSpeed;
+                        nav.baseOffset = swimBaseOffset;
+                    }
                 }
                 break;
         }
@@ -228,13 +237,15 @@ public class LovelandFrogman : Cryptid {
         {
             if (!other.gameObject.GetComponent<FirstPersonController>().IsCrouching)
             {
+                previousState = MoveState.walk;
                 currentState = MoveState.flee;
                 fleeFromTarget = other.gameObject.transform;
                 KillNavMeshMovement();
             }
         }
-        else if (other.tag == Constants.AvoidTag && currentState == MoveState.walk)
+        else if (other.tag == Constants.AvoidTag && (currentState == MoveState.walk || currentState == MoveState.swim))
         {
+            previousState = currentState;
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
             KillNavMeshMovement();
