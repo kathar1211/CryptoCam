@@ -180,13 +180,13 @@ public class Cryptid : MonoBehaviour {
         fleeFromTargetPos.y = transform.position.y;
         Vector3 oppositeDirection = transform.position - fleeFromTargetPos;
         oppositeDirection.Normalize();
-
+       
 
         //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
         //get a random position on the navmesh by sampling a few times at a small radius
         for (int i = 0; i < 10; i++)
         {
-            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(10,200)); //lets make sure this works before getting overly concerned about values
+            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(25,200)); //lets make sure this works before getting overly concerned about values
 
             NavMeshHit hit;
             if (NavMesh.SamplePosition(positionAwayFromTarget, out hit, 2, NavMesh.AllAreas))

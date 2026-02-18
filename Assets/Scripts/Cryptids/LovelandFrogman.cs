@@ -128,26 +128,41 @@ public class LovelandFrogman : Cryptid {
                 //Leap(leapSpeed, 0);
                 break;
             case MoveState.flee:
-                Flee(fleeFromTarget, targetMinDistance, fleeSpeed, rotateSpeed);
-                if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
+                if (fleeFromTarget != null)
                 {
-                    if (previousState == MoveState.walk)
+                    Flee(fleeFromTarget, targetMinDistance, fleeSpeed, rotateSpeed);
+                    if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                     {
-                        currentState = MoveState.walk;
-                        nav.speed = walkSpeed;
-                        nav.baseOffset = 0;
+                        ReturnToPreviousState();
                     }
-
-                    if (previousState == MoveState.swim)
+                }
+                else if (nav.enabled)
+                {
+                    if ((nav.destination - transform.position).magnitude <= targetMinDistance)
                     {
-                        currentState = MoveState.swim;
-                        nav.speed = swimSpeed;
-                        nav.baseOffset = swimBaseOffset;
+                        ReturnToPreviousState();
                     }
                 }
                 break;
         }
 
+    }
+
+    private void ReturnToPreviousState()
+    {
+        if (previousState == MoveState.walk)
+        {
+            currentState = MoveState.walk;
+            nav.speed = walkSpeed;
+            nav.baseOffset = 0;
+        }
+
+        if (previousState == MoveState.swim)
+        {
+            currentState = MoveState.swim;
+            nav.speed = swimSpeed;
+            nav.baseOffset = swimBaseOffset;
+        }
     }
 
     //event for when frog leap animation is finished
@@ -244,6 +259,13 @@ public class LovelandFrogman : Cryptid {
             }
         }
         else if (other.tag == Constants.AvoidTag && (currentState == MoveState.walk || currentState == MoveState.swim))
+        {
+            previousState = currentState;
+            currentState = MoveState.flee;
+            fleeFromTarget = other.gameObject.transform;
+            KillNavMeshMovement();
+        }
+        else if (other.tag == Constants.SplashFXTag && currentState == MoveState.swim) //frogman swims away from splashes in the water
         {
             previousState = currentState;
             currentState = MoveState.flee;
