@@ -130,13 +130,13 @@ public class LovelandFrogman : Cryptid {
             case MoveState.flee:
                 if (fleeFromTarget != null)
                 {
-                    Flee(fleeFromTarget, targetMinDistance, fleeSpeed, rotateSpeed);
+                    Flee(fleeFromTarget, targetMinDistance);
                     if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                     {
                         ReturnToPreviousState();
                     }
                 }
-                else if (nav.enabled)
+                else
                 {
                     if ((nav.destination - transform.position).magnitude <= targetMinDistance)
                     {
@@ -263,14 +263,16 @@ public class LovelandFrogman : Cryptid {
             previousState = currentState;
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
-            KillNavMeshMovement();
+            SetNavmeshFleeTarget(fleeFromTarget);
+            //KillNavMeshMovement();
         }
         else if (other.tag == Constants.SplashFXTag && currentState == MoveState.swim) //frogman swims away from splashes in the water
         {
             previousState = currentState;
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
-            KillNavMeshMovement();
+            SetNavmeshFleeTarget(fleeFromTarget, Constants.NavMeshWater);
+            //KillNavMeshMovement();
         }
 
         base.OnTriggerEnter(other);

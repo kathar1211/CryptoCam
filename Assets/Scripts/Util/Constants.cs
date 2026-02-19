@@ -41,6 +41,11 @@ public static class Constants {
     public const string CryptidContainerTag = "CryptidContainer";
     public const string SplashFXTag = "SplashFX";
 
+    //navmesh areas
+    public const string NavMeshLargeCryptids = "LargeCryptids";
+    public const string NavMeshSmallCryptidsOnly = "SmallCryptidsOnly";
+    public const string NavMeshWater = "Water";
+
 
     //grading page text
     public static string ShowTed = "Select pictures to show to Ted";

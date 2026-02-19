@@ -172,24 +172,31 @@ public class Cryptid : MonoBehaviour {
     }
 
     //set the navmesh target to a point in the opposite direction of the thing to flee from
-    protected void SetNavmeshFleeTarget(Transform fleeFromTarget)
+    protected void SetNavmeshFleeTarget(Transform fleeFromTarget, string navMeshAreaName = null)
     {
         if (fleeFromTarget == null) { return; }
 
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
-        fleeFromTargetPos.y = transform.position.y;
+        fleeFromTargetPos.y = transform.position.y + nav.baseOffset;
         Vector3 oppositeDirection = transform.position - fleeFromTargetPos;
         oppositeDirection.Normalize();
-       
+
+        int navMeshArea = NavMesh.AllAreas;
+        if (navMeshAreaName != null)
+        {
+            navMeshArea = NavMesh.GetAreaFromName(navMeshAreaName);
+        }
 
         //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
         //get a random position on the navmesh by sampling a few times at a small radius
         for (int i = 0; i < 10; i++)
         {
-            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(25,200)); //lets make sure this works before getting overly concerned about values
+            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(25, 100)); //lets make sure this works before getting overly concerned about values
+            Debug.DrawLine(transform.position, positionAwayFromTarget, Color.gray);
 
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(positionAwayFromTarget, out hit, 2, NavMesh.AllAreas))
+
+            if (NavMesh.SamplePosition(positionAwayFromTarget, out hit, 2, navMeshArea))
             {
                 movementTimer = 0;
                 nav.destination = hit.position;
