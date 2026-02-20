@@ -158,14 +158,13 @@ public class FlatwoodsMonster : Cryptid
 
                 break;
             case MoveState.flee:
-               // if (!AvoidObstacles(rotateSpeed))
-                //{ 
+                if (avoidTarget != null)
+                {
                     Flee(avoidTarget, minDistance, runSpeed, rotateSpeed);
-                //}
-               // Move(runSpeed);
+                }
 
                 //stop fleeing once we get far enough away
-                if ((avoidTarget.position - transform.position).magnitude > fleeDistance)
+                else if ( avoidTarget == null || (avoidTarget.position - transform.position).magnitude > fleeDistance)
                 {
                     if (poseCooldownTimer <= 0)
                     {
@@ -212,6 +211,8 @@ public class FlatwoodsMonster : Cryptid
             animator.SetBool(MoveBool, true);
             currentState = MoveState.flee;
             SetNavmeshFleeTarget(avoidTarget);
+
+            Debug.Log("flatwoods fleeing from" + other.gameObject.name);
         }
 
 

@@ -191,7 +191,7 @@ public class Cryptid : MonoBehaviour {
         //get a random position on the navmesh by sampling a few times at a small radius
         for (int i = 0; i < 10; i++)
         {
-            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(25, 100)); //lets make sure this works before getting overly concerned about values
+            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(10, 50)); //lets make sure this works before getting overly concerned about values
             Debug.DrawLine(transform.position, positionAwayFromTarget, Color.gray);
 
             NavMeshHit hit;

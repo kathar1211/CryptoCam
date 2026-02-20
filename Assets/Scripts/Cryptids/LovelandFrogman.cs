@@ -142,6 +142,7 @@ public class LovelandFrogman : Cryptid {
                     {
                         ReturnToPreviousState();
                     }
+                    else { Debug.Log("frogman distance from nav destination: " + (nav.destination - transform.position).magnitude.ToString()); }
                 }
                 break;
         }
@@ -266,9 +267,9 @@ public class LovelandFrogman : Cryptid {
             SetNavmeshFleeTarget(fleeFromTarget);
             //KillNavMeshMovement();
         }
-        else if (other.tag == Constants.SplashFXTag && currentState == MoveState.swim) //frogman swims away from splashes in the water
+        else if (other.tag == Constants.SplashFXTag && (currentState == MoveState.swim || currentState == MoveState.flee)) //frogman swims away from splashes in the water
         {
-            previousState = currentState;
+            previousState = MoveState.swim;
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;
             SetNavmeshFleeTarget(fleeFromTarget, Constants.NavMeshWater);
