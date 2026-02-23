@@ -237,6 +237,10 @@ public class LovelandFrogman : Cryptid {
             animator.SetBool("climb", true);
             KillNavMeshMovement();
             nav.enabled = false;
+
+            //todo: snap rotate towards the surface to make sure we actually land on it
+            
+
             //add extra "oomph" to the leap
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
