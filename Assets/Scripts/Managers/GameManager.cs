@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
     public bool DontAllowPause = false;
 
     bool paused = false;
+    public bool Paused { get { return paused; } private set { paused = value; } }
 
     [SerializeField]
     bool debug;

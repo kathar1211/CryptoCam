@@ -157,6 +157,7 @@ public class Options : MonoBehaviour {
                 {
                     newKey = new ButtonOrAxis(button);
                     waitingForKeyPress = false;
+                    if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = false; }
                 }
             }
 
@@ -167,6 +168,7 @@ public class Options : MonoBehaviour {
                 {
                     newKey = new ButtonOrAxis(axis);
                     waitingForKeyPress = false;
+                    if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = false; }
                 }
             }
         }
@@ -319,6 +321,7 @@ public class Options : MonoBehaviour {
                 if (Input.GetKeyDown(keyEvent.keyCode))
                 {
                     waitingForKeyPress = false;
+                    if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = false; }
                 }
 
             }
@@ -333,6 +336,7 @@ public class Options : MonoBehaviour {
                 //make sure it was pressed this frame
                 if (Input.GetMouseButtonDown(keyEvent.button)) {
                     waitingForKeyPress = false;
+                    if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = false; }
                 }
             }
 
@@ -367,6 +371,7 @@ public class Options : MonoBehaviour {
     IEnumerator AssignKey(string controlKey)
     {
         waitingForKeyPress = true;
+        if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = true; }
         yield return WaitForKey();
 
         if (newKey.IsButton)

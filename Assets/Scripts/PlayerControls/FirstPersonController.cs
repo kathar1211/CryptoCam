@@ -68,7 +68,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = CustomController.GetButtonDown("Jump");
+                m_Jump = !GameManager.Instance.Paused && CustomController.GetButtonDown("Jump");
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -279,7 +279,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         //reduce height if player pressed crouch button, return to normal on second press
         private void HandleCrouch()
         {
-            if (CustomController.GetButtonDown(Constants.CrouchButton))
+            if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.CrouchButton))
             {
                 if (!IsCrouching)
                 {

@@ -230,7 +230,7 @@ public class LovelandFrogman : Cryptid {
             rb.useGravity = false;
         }
         //frogman approaches shore
-        else if (other.tag == Constants.ShoreTag && currentState == MoveState.swim)
+        else if (other.tag == Constants.ShoreTag && (currentState == MoveState.swim || currentState == MoveState.flee))
         {
            // transform.Translate(preleapOffset);
             currentState = MoveState.edgeLeap;
@@ -238,17 +238,15 @@ public class LovelandFrogman : Cryptid {
             KillNavMeshMovement();
             nav.enabled = false;
 
-            //todo: snap rotate towards the surface to make sure we actually land on it
-            
+            //snap rotate towards the surface to make sure we actually land on it
+            RotateToward(other.transform.position, 100);
 
             //add extra "oomph" to the leap
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
             rb.AddForce(Vector3.up * leapHeight);
             rb.AddForce(Vector3.forward * leapSpeed);
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
             
 
-            //debug
-            GameObject.Instantiate(new GameObject(), this.transform);
         }
 
 
