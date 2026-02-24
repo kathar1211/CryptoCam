@@ -46,11 +46,12 @@ public class FlatwoodsMonster : Cryptid
     {
         baseScore = 175;
         cryptidType = Constants.Flatwoods;
-        StartUp();
-
+        
         HoverChance = new RandomChanceInterval(2, .4f);
         LookAroundChance = new RandomChanceInterval(1, .1f);
         WanderChance = new RandomChanceInterval(1, .3f);
+
+        StartUp();
     }
 
     // Update is called once per frame
@@ -90,7 +91,7 @@ public class FlatwoodsMonster : Cryptid
                // Move(runSpeed);
 
                 //random chance to hover ominously
-                if (HoverChance.UpdateTimerAndCheckSuccess()) {
+                if (HoverChance != null && HoverChance.UpdateTimerAndCheckSuccess()) {
                     animator.SetBool(MoveBool, false);
                     currentState = MoveState.hover;
                     KillNavMeshMovement();

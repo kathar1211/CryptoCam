@@ -175,6 +175,7 @@ public class Cryptid : MonoBehaviour {
     protected void SetNavmeshFleeTarget(Transform fleeFromTarget, string navMeshAreaName = null)
     {
         if (fleeFromTarget == null) { return; }
+        if (!nav.enabled) { return; }
 
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
         fleeFromTargetPos.y = transform.position.y + nav.baseOffset;

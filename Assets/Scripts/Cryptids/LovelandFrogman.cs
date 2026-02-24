@@ -8,7 +8,7 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, edgeLeap, sit, flee, stand, floating}
+    enum MoveState { swim, walk, walkforward, edgeLeap, sit, lilypadsit, flee, stand, floating}
     [SerializeField] MoveState currentState;
     MoveState previousState;
 
@@ -101,6 +101,9 @@ public class LovelandFrogman : Cryptid {
                 Wander(targetMaxDistance, targetMinDistance);
 
                 break;
+            case MoveState.walkforward:
+                Move(walkSpeed);
+                break;
             case MoveState.stand:
             case MoveState.sit:
                 timer += Time.deltaTime;
@@ -111,6 +114,15 @@ public class LovelandFrogman : Cryptid {
                     currentState = MoveState.walk;
                     nav.speed = walkSpeed;
                     nav.baseOffset = 0;
+                }
+                break;
+            case MoveState.lilypadsit:
+                timer += Time.deltaTime;
+                if (timer > timeToSit)
+                {
+                    timer = 0;
+                    animator.SetBool("creep", true);
+                    currentState = MoveState.walkforward;
                 }
                 break;
             case MoveState.floating:
@@ -172,7 +184,7 @@ public class LovelandFrogman : Cryptid {
         animator.SetBool("creep", false);
         animator.SetBool("climb", false);
         animator.SetBool("swim", false);
-        currentState = MoveState.sit;
+        currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
     }
@@ -209,6 +221,10 @@ public class LovelandFrogman : Cryptid {
         else {
             transform.position -= totalMove;
         }
+
+        //sometimes he ends up rotated weird
+        Vector3 clearedRotation = new Vector3(0, transform.eulerAngles.y, 0);
+        transform.eulerAngles = clearedRotation;
     }
 
     public override void OnTriggerEnter(Collider other)
@@ -218,7 +234,7 @@ public class LovelandFrogman : Cryptid {
         if (animator.GetBool("climb")) { return; }
 
         //frogman leaves shore, returns to water
-        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.sit)//somethings happening here
+        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit)//somethings happening here
         {
             currentState = MoveState.swim;
             nav.speed = swimSpeed;
@@ -291,9 +307,12 @@ public class LovelandFrogman : Cryptid {
 
     public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
+        base.GetBonked(leftImpact, bonked);
+
        switch (currentState)
         {
             case MoveState.sit:
+            case MoveState.lilypadsit:
                 //sit looks for forward and back rather than left/right, so we have to calculate impact direction again
                 //line from cryptid to carrot
                 Vector3 bonkDistance = this.gameObject.transform.position - bonked.gameObject.transform.position;
