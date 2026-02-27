@@ -173,7 +173,7 @@ public class Options : MonoBehaviour {
             }
         }
 
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical) && !waitingForKeyPress)
         {
             ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
             Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
@@ -181,7 +181,7 @@ public class Options : MonoBehaviour {
 
         //adjust sliders if a slider is selected
         float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
-        if (dir != 0)
+        if (dir != 0 && !waitingForKeyPress)
         {
             Slider sliderSelect = selectedButton.GetComponent<Slider>();
             if (sliderSelect != null) {
@@ -214,7 +214,7 @@ public class Options : MonoBehaviour {
             }
         }
 
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0) && !waitingForKeyPress) //ignore clicks to avoid invoking buttons twice
         {
             if (selectedButton != null) {
                 Button buttonSelect = selectedButton.GetComponent<Button>();
@@ -236,7 +236,7 @@ public class Options : MonoBehaviour {
             CustomController.UsingController = true;
         }
 
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel) && !waitingForKeyPress)
         {
             Close();
         }

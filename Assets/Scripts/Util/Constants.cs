@@ -23,8 +23,12 @@ public static class Constants {
     public const string Vertical = "Vertical";
     public const string CrouchButton = "CrouchButton";
     public const string RunButton = "RunButton";
+    public const string JumpButton = "Jump";
     public const string LTAxis = "9th Axis";
     public const string RTAxis = "10th Axis";
+    public const string LTAxisMac = "5th Axis";
+    public const string RTAxisMac = "6th Axis";
+
 
     //tags
     public const string PlayerTag = "Player";

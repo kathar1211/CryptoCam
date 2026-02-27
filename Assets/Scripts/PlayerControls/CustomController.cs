@@ -46,18 +46,36 @@ public class CustomController {
         {Constants.ThrowObject,new ButtonOrAxis( KeyCode.Q) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.Escape) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.LeftControl) },
-        {Constants.RunButton, new ButtonOrAxis(KeyCode.LeftShift) }
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.LeftShift) },
+        {Constants.JumpButton, new ButtonOrAxis(KeyCode.Space) }
     };
-
+#if UNITY_STANDALONE_OSX
+     //mac
+    static Dictionary<string, ButtonOrAxis> defaultGamepadButtons = new Dictionary<string, ButtonOrAxis>
+    {
+        {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxisMac) },
+        {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxisMac) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton13) },
+        {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton9) },
+        {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton12) },
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton18) },
+        {Constants.JumpButton, new ButtonOrAxis(KeyCode.JoystickButton16) }
+    };
+#else
+    //windows
     static Dictionary<string, ButtonOrAxis> defaultGamepadButtons = new Dictionary<string, ButtonOrAxis>
     {
         {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxis) },
         {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxis) },
-        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton2) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton4) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton7) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton9) },
-        {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton8) }
+        {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton8) },
+        {Constants.JumpButton, new ButtonOrAxis(KeyCode.JoystickButton0) }
     };
+
+#endif
+
 
     //need this for detecting input from a gamepad during remapping
     public static ReadOnlyCollection<KeyCode> AllGamepadButtons = new ReadOnlyCollection<KeyCode>(new List<KeyCode> 
@@ -88,7 +106,9 @@ public class CustomController {
     public static ReadOnlyCollection<String> AllGamepadAxesAsButtons = new ReadOnlyCollection<string>(new List<string>
     {
         Constants.LTAxis,
-        Constants.RTAxis
+        Constants.RTAxis,
+        Constants.LTAxisMac,
+        Constants.RTAxisMac
     });
 
     public static bool UsingController;
@@ -276,6 +296,10 @@ public class CustomController {
             case Constants.RTAxis:
                 return "RT";
             case Constants.LTAxis:
+                return "LT";
+            case Constants.RTAxisMac:
+                return "RT";
+            case Constants.LTAxisMac:
                 return "LT";
             default:
                 return axis;
