@@ -113,37 +113,6 @@ public class Options : MonoBehaviour {
     void Update () {
         if (isScrolling)
         {
-         /*   switch (currentScreen)
-            {
-                case ScreenState.Controls:
-                    More.transform.Translate(-1 * scrollSpeed * Time.unscaledDeltaTime, 0, 0);
-                    if (More.transform.localPosition.x <= moreButtonPos * -1)
-                    {
-                        isScrolling = false;
-                        currentScreen = ScreenState.Settings;
-                        //More.GetComponent<Image>().sprite = triangleFlipped;
-                        Vector3 localScale = More.transform.localScale;
-                        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
-                        //snap to position
-                        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
-                    }
-                    break;
-                case ScreenState.Settings:
-                    More.transform.Translate(1 * scrollSpeed * Time.unscaledDeltaTime, 0, 0);
-                    if (More.transform.localPosition.x >= moreButtonPos * -1)
-                    {
-                        isScrolling = false;
-                        currentScreen = ScreenState.Controls;
-                        //More.GetComponent<Image>().sprite = triangle;
-                        //flip sprite
-                        Vector3 localScale = More.transform.localScale;
-                        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
-                        //snap to position
-                        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
-                    }
-                    break;
-            }*/
-            
             return;// dont handle input or do anything else while scrolling
         }
 
@@ -172,74 +141,97 @@ public class Options : MonoBehaviour {
                 }
             }
         }
-
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical) && !waitingForKeyPress)
+        else //only navigate options screen if we're not waiting for input to be assigned
         {
-            ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
-            Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
-        }
-
-        //adjust sliders if a slider is selected
-        float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
-        if (dir != 0 && !waitingForKeyPress)
-        {
-            Slider sliderSelect = selectedButton.GetComponent<Slider>();
-            if (sliderSelect != null) {
-
-                //increment should be a function of the min/max of the slider
-                float increment = (sliderSelect.maxValue - sliderSelect.minValue) / 100f;
-                increment = Mathf.Abs(increment);
-
-                //positive value is right, negative value is left
-                if (dir < 0) { increment *= -1; }
-
-                AdjustSliderValue(sliderSelect, increment);
-            }
-
-            else
+            //allow using bumpers to navigate screens
+            if (currentScreen == ScreenState.Controls)
             {
-                
-                switch (currentScreen)
+                if (CrossPlatformInputManager.GetAxis(Constants.RTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.RTAxisMac) != 0)
                 {
-                    case ScreenState.Controls:
-                        if (dir > 0) { MoveSelector(More); }
-                        else { MoveSelector(controlbuttonArray[selectedButtonIndex]); }
-                        break;
-                    case ScreenState.Settings:
-                        if (dir < 0) { MoveSelector(More); }
-                        else { MoveSelector(settingsButtonArray[selectedButtonIndex]); }
-                        break;
+                    ShowMore();
                 }
-                
             }
-        }
-
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0) && !waitingForKeyPress) //ignore clicks to avoid invoking buttons twice
-        {
-            if (selectedButton != null) {
-                Button buttonSelect = selectedButton.GetComponent<Button>();
-                if (buttonSelect != null) {
-                    buttonSelect.onClick.Invoke(); 
+            else if (currentScreen == ScreenState.Settings)
+            {
+                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0)
+                {
+                    ShowMore();
                 }
-                //this could be a toggle rather than a button
+            }
+
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+            {
+                ChangeSelectButton(CrossPlatformInputManager.GetAxis(Constants.Vertical));
+                Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
+            }
+
+            //adjust sliders if a slider is selected
+            float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+            if (dir != 0 && selectedButton != null)
+            {
+                Slider sliderSelect = selectedButton.GetComponent<Slider>();
+                if (sliderSelect != null)
+                {
+
+                    //increment should be a function of the min/max of the slider
+                    float increment = (sliderSelect.maxValue - sliderSelect.minValue) / 100f;
+                    increment = Mathf.Abs(increment);
+
+                    //positive value is right, negative value is left
+                    if (dir < 0) { increment *= -1; }
+
+                    AdjustSliderValue(sliderSelect, increment);
+                }
+
                 else
                 {
-                    Toggle toggleSelect = selectedButton.GetComponent<Toggle>();
-                    if (toggleSelect != null)
+
+                    switch (currentScreen)
                     {
-                        toggleSelect.isOn = !toggleSelect.isOn;
+                        case ScreenState.Controls:
+                            if (dir > 0) { MoveSelector(More); }
+                            else { MoveSelector(controlbuttonArray[selectedButtonIndex]); }
+                            break;
+                        case ScreenState.Settings:
+                            if (dir < 0) { MoveSelector(More); }
+                            else { MoveSelector(settingsButtonArray[selectedButtonIndex]); }
+                            break;
                     }
+
                 }
-                //could also be a slider but those dont do anything if you select
             }
 
-            CustomController.UsingController = true;
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+            {
+                if (selectedButton != null)
+                {
+                    Button buttonSelect = selectedButton.GetComponent<Button>();
+                    if (buttonSelect != null)
+                    {
+                        buttonSelect.onClick.Invoke();
+                    }
+                    //this could be a toggle rather than a button
+                    else
+                    {
+                        Toggle toggleSelect = selectedButton.GetComponent<Toggle>();
+                        if (toggleSelect != null)
+                        {
+                            toggleSelect.isOn = !toggleSelect.isOn;
+                        }
+                    }
+                    //could also be a slider but those dont do anything if you select
+                }
+
+                CustomController.UsingController = true;
+            }
+
+            if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+            {
+                Close();
+            }
         }
 
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel) && !waitingForKeyPress)
-        {
-            Close();
-        }
+       
 	}
 
     public void ChangeSelectButton(float input)

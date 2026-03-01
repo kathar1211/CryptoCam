@@ -338,4 +338,14 @@ public class CustomController {
         return true;
     }
 
+    //return true if there is any mouse movement
+    public static bool HasMouseMoved()
+    {
+        float yRot = CrossPlatformInputManager.GetAxis("Mouse X");
+        float xRot = CrossPlatformInputManager.GetAxis("Mouse Y");
+
+        if (yRot == 0 && xRot == 0) { return false; }
+        return true;
+    }
+
 }

@@ -57,8 +57,7 @@ public class CabinLab : MonoBehaviour {
         Application.backgroundLoadingPriority = ThreadPriority.Low;
 
         //make sure cursor settings are right
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        SetCursorState.UnlockCursor();
 
         MoveSelector(textButtons[0]);
         currentState = MenuState.Main;

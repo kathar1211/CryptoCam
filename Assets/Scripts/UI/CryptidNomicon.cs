@@ -71,6 +71,16 @@ public class CryptidNomicon : MonoBehaviour {
                 TurnPage(CrossPlatformInputManager.GetAxis(Constants.Horizontal) > 0);
             }
 
+            //allow shoulder button navigation as well
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxisMac))
+            {
+                TurnPage(true);
+            }
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis))
+            {
+                TurnPage(false);
+            }
+
             if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Submit))
             {
                 if (currentPage != 0 && currentPage != pageContents.Count + 1) //not applicable on front and back cover

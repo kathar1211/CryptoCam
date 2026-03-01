@@ -67,8 +67,7 @@ public class GameManager : MonoBehaviour {
         Object.DontDestroyOnLoad(this.gameObject);
         endprompt.SetActive(false);
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        SetCursorState.LockCursor();
 
         //initialize controls
         CustomController.LoadAllKeys();
@@ -85,16 +84,14 @@ public class GameManager : MonoBehaviour {
                 paused = false;
                 Time.timeScale = 1;
                 pauseText.SetActive(false);
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                SetCursorState.LockCursor();
             }
             else if (!paused)
             {
                 paused = true;
                 Time.timeScale = 0;
                 pauseText.SetActive(true);
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
+                SetCursorState.UnlockCursor();
             }
            // SceneManager.LoadScene("Lab");
         }
@@ -118,8 +115,7 @@ public class GameManager : MonoBehaviour {
         paused = false;
         Time.timeScale = 1;
         pauseText.SetActive(false);
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        SetCursorState.LockCursor();
     }
 
     //ask the user if they would like to end the course
@@ -130,8 +126,7 @@ public class GameManager : MonoBehaviour {
         {
             Time.timeScale = 0;
 
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            SetCursorState.UnlockCursor();
             endprompt.SetActive(true);
 
         }
@@ -148,8 +143,7 @@ public class GameManager : MonoBehaviour {
             endPromptText.text = txt;
             endprompt.SetActive(true);
 
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+            SetCursorState.UnlockCursor();
         }
     }
 
