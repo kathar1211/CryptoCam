@@ -9,6 +9,7 @@ using System;
 using DG.Tweening;
 using TMPro;
 using Sentry.Unity;
+using XboxCtrlrInput;
 
 public class Options : MonoBehaviour {
 
@@ -131,7 +132,7 @@ public class Options : MonoBehaviour {
             }
 
             //allowing axis input from gamepad as well
-            foreach (string axis in CustomController.AllGamepadAxesAsButtons)
+            foreach (XboxAxis axis in CustomController.AllXboxAxes)
             {
                 if (CrossPlatformInputManager.GetButtonOrAxisDown(axis))
                 {
@@ -153,7 +154,7 @@ public class Options : MonoBehaviour {
             }
             else if (currentScreen == ScreenState.Settings)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0)
+                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
                 {
                     ShowMore();
                 }
@@ -380,7 +381,7 @@ public class Options : MonoBehaviour {
         }
         else
         {
-            CustomController.SetAxis(controlKey, newKey.AxisName);
+            CustomController.SetAxis(controlKey, newKey.Axis);
         }
         CustomController.SaveKey(controlKey);
         UpdateButtonText();

@@ -387,6 +387,9 @@
     <Reference Include="Sentry.Unity.Native">
       <HintPath>Library\PackageCache\io.sentry.unity@0a73dc1315\Runtime\Sentry.Unity.Native.dll</HintPath>
     </Reference>
+    <Reference Include="XInputDotNetPure">
+      <HintPath>Assets\Plugins\XInputDotNetPure.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.41f2\Editor\Data\NetStandard\ref\2.0.0\netstandard.dll</HintPath>
     </Reference>

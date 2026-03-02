@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput.PlatformSpecific;
+using XboxCtrlrInput;
 
 namespace UnityStandardAssets.CrossPlatformInput
 {
@@ -177,7 +178,10 @@ namespace UnityStandardAssets.CrossPlatformInput
         {
 			bool toReturn = false;
 			if (GetButtonDown(name)) { toReturn = true; }
-			if (!previousAxisValues.ContainsKey(name)) { return toReturn; }
+			if (!previousAxisValues.ContainsKey(name)) {
+				previousAxisValues.Add(name, 0);
+				return toReturn; 
+			}
 
 			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
 			float previousValue = previousAxisValues[name];
@@ -189,15 +193,59 @@ namespace UnityStandardAssets.CrossPlatformInput
 			return toReturn;
         }
 
+		public static bool GetButtonOrAxisDown(XboxAxis axis)
+        {
+			bool toReturn = false;
+			string axisName = axis.ToString();
+			if (!previousAxisValues.ContainsKey(axisName))
+			{
+				previousAxisValues.Add(axisName, 0);
+				return toReturn;
+			}
+
+			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+			float previousValue = previousAxisValues[axisName];
+			float currentValue = XCI.GetAxis(axis);
+			if (Mathf.Abs(previousValue) < axisDownThreshold && Mathf.Abs(currentValue) >= axisDownThreshold) { toReturn = true; }
+			Debug.Log("checking axis " + axisName + "down-- prev value: " + previousValue + ", current value: " + currentValue + ", axis down: " + toReturn);
+
+			previousAxisValues[axisName] = currentValue;
+			return toReturn;
+		}
+
 		public static bool GetButtonOrAxisUp(string name)
         {
 			bool toReturn = false;
 			if (GetButtonUp(name)) { toReturn = true; }
-			if (!previousAxisValues.ContainsKey(name)) { return toReturn; }
+			if (!previousAxisValues.ContainsKey(name))
+			{
+				previousAxisValues.Add(name, 0);
+				return toReturn;
+			}
 
 			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
 			float previousValue = previousAxisValues[name];
 			float currentValue = GetAxis(name);
+			if (Mathf.Abs(previousValue) >= axisDownThreshold && Mathf.Abs(currentValue) < axisDownThreshold) { toReturn = true; }
+			Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
+
+			previousAxisValues[name] = currentValue;
+			return toReturn;
+		}
+
+		public static bool GetButtonOrAxisUp(XboxAxis axis)
+		{
+			bool toReturn = false;
+			string name = axis.ToString();
+			if (!previousAxisValues.ContainsKey(name))
+			{
+				previousAxisValues.Add(name, 0);
+				return toReturn;
+			}
+
+			//track axis state so i can give the equivalent of buttondown: ie only true if state changed this frame
+			float previousValue = previousAxisValues[name];
+			float currentValue = XCI.GetAxis(axis);
 			if (Mathf.Abs(previousValue) >= axisDownThreshold && Mathf.Abs(currentValue) < axisDownThreshold) { toReturn = true; }
 			Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
 

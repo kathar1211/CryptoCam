@@ -4,30 +4,32 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using XboxCtrlrInput;
 
 [Serializable]
 public struct ButtonOrAxis
 {
     public bool IsButton;
     public KeyCode Key;
-    public string AxisName;
+    public XboxAxis Axis;
     public string PlayerFacingName;
 
     public ButtonOrAxis(KeyCode key)
     {
         IsButton = true;
         Key = key;
-        AxisName = "";
+        Axis = XboxAxis.LeftStickX;
         PlayerFacingName = CustomController.GetButtonDisplayName(key);
     }
 
-    public ButtonOrAxis(string axis)
+    public ButtonOrAxis(XboxAxis axis)
     {
         IsButton = false;
         Key = KeyCode.None;
-        AxisName = axis;
-        PlayerFacingName = CustomController.GetAxisDisplayName(axis);
+        Axis = axis;
+        PlayerFacingName = Axis.ToString();
     }
+
 }
 
 //alternative to custominputemanager because it doesn't let me programatically edit the keys
@@ -53,8 +55,8 @@ public class CustomController {
      //mac
     static Dictionary<string, ButtonOrAxis> defaultGamepadButtons = new Dictionary<string, ButtonOrAxis>
     {
-        {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxisMac) },
-        {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxisMac) },
+        {Constants.ReadyCamera, new ButtonOrAxis(XboxAxis.LeftTrigger) },
+        {Constants.TakePicture, new ButtonOrAxis(XboxAxis.RightTrigger) },
         {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton14) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton9) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton12) },
@@ -65,8 +67,8 @@ public class CustomController {
     //windows
     static Dictionary<string, ButtonOrAxis> defaultGamepadButtons = new Dictionary<string, ButtonOrAxis>
     {
-        {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxis) },
-        {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxis) },
+        {Constants.ReadyCamera, new ButtonOrAxis(XboxAxis.LeftTrigger) },
+        {Constants.TakePicture, new ButtonOrAxis(XboxAxis.RightTrigger) },
         {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton5) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton7) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton9) },
@@ -119,6 +121,12 @@ public class CustomController {
         Constants.Vertical,
     });
 
+    public static ReadOnlyCollection<XboxAxis> AllXboxAxes = new ReadOnlyCollection<XboxAxis>(new List<XboxAxis>
+    {
+       XboxAxis.LeftTrigger,
+       XboxAxis.RightTrigger
+    });
+
     public static bool UsingController;
 
     //true if a saved button was pressed down this frame (false if button does not exist)
@@ -128,7 +136,7 @@ public class CustomController {
         {
             ButtonOrAxis input = buttons[buttonName];
             if (input.IsButton) { return Input.GetKeyDown(input.Key); }
-            else { return CrossPlatformInputManager.GetButtonOrAxisDown(input.AxisName); }
+            else { return CrossPlatformInputManager.GetButtonOrAxisDown(input.Axis); }
         }
         return false;
     }
@@ -141,7 +149,7 @@ public class CustomController {
             ButtonOrAxis input = buttons[buttonName];
 
             if (input.IsButton) { return Input.GetKey(input.Key); ; }
-            else { return CrossPlatformInputManager.GetAxis(input.AxisName) != 0; }
+            else { return XCI.GetAxis(input.Axis) != 0; }
         }
         return false;
     }
@@ -153,7 +161,7 @@ public class CustomController {
         {
             ButtonOrAxis input = buttons[buttonName];
             if (input.IsButton) { return Input.GetKeyUp(input.Key); }
-            else { return CrossPlatformInputManager.GetButtonOrAxisUp(input.AxisName); }
+            else { return CrossPlatformInputManager.GetButtonOrAxisUp(input.Axis); }
         }
         return false;
     }
@@ -230,7 +238,7 @@ public class CustomController {
         {
             ButtonOrAxis button = buttons[name];
             if (button.IsButton) { return GetButtonDisplayName(button.Key); }
-            else { return GetAxisDisplayName(button.AxisName); }
+            else { return GetAxisDisplayName(button.Axis); }
         }
         return null;
     }
@@ -314,6 +322,19 @@ public class CustomController {
         }
     }
 
+    public static string GetAxisDisplayName(XboxAxis axis)
+    {
+        switch (axis)
+        {
+            case XboxAxis.LeftTrigger:
+                return "LT";
+            case XboxAxis.RightTrigger:
+                return "RT";
+            default:
+                return axis.ToString();
+        }
+    }
+
     //update button mapping for a given key
     public static void SetButton(string name, KeyCode key)
     {
@@ -327,7 +348,7 @@ public class CustomController {
         }
     }
 
-    public static void SetAxis(string controlName, string axisName)
+    public static void SetAxis(string controlName, XboxAxis axisName)
     {
         if (buttons.ContainsKey(controlName))
         {
