@@ -322,14 +322,22 @@ public class Options : MonoBehaviour {
             else if (keyEvent.isMouse)
             {
                 //convert mouse button number (0 left click, 1 right click) to mouse keycode (323 left click, 324 right click)
-                KeyCode mouseKey = (KeyCode)((int)KeyCode.Mouse0 + keyEvent.button);
-                newKey = new ButtonOrAxis(mouseKey);
-
+                int keycode = (int)KeyCode.Mouse0 + keyEvent.button;
+                try
+                {
+                    KeyCode mouseKey = (KeyCode)(keycode);
+                    newKey = new ButtonOrAxis(mouseKey);
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError("encountered error " + e.Message + "after attempting to convert input " + keyEvent.button + " to a mouse keycode");
+                }
                 //make sure it was pressed this frame
                 if (Input.GetMouseButtonDown(keyEvent.button)) {
                     waitingForKeyPress = false;
                     if (GameManager.Instance != null) { GameManager.Instance.DontAllowPause = false; }
                 }
+                
             }
 
         }

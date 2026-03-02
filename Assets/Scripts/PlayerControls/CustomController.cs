@@ -55,7 +55,7 @@ public class CustomController {
     {
         {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxisMac) },
         {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxisMac) },
-        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton13) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton14) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton9) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton12) },
         {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton18) },
@@ -67,7 +67,7 @@ public class CustomController {
     {
         {Constants.ReadyCamera, new ButtonOrAxis(Constants.LTAxis) },
         {Constants.TakePicture, new ButtonOrAxis(Constants.RTAxis) },
-        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton4) },
+        {Constants.ThrowObject,new ButtonOrAxis( KeyCode.JoystickButton5) },
         {Constants.Pause, new ButtonOrAxis(KeyCode.JoystickButton7) },
         {Constants.CrouchButton, new ButtonOrAxis(KeyCode.JoystickButton9) },
         {Constants.RunButton, new ButtonOrAxis(KeyCode.JoystickButton8) },
@@ -108,7 +108,15 @@ public class CustomController {
         Constants.LTAxis,
         Constants.RTAxis,
         Constants.LTAxisMac,
-        Constants.RTAxisMac
+        Constants.RTAxisMac,
+        "3rd Axis",
+        "4th Axis",
+        "7th Axis",
+        "8th Axis",
+        "11th Axis",
+        "12th Axis",
+        Constants.Horizontal,
+        Constants.Vertical,
     });
 
     public static bool UsingController;
