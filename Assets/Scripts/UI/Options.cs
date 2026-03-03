@@ -153,7 +153,7 @@ public class Options : MonoBehaviour {
             }
             else if (currentScreen == ScreenState.Settings)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0)
+                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
                 {
                     ShowMore();
                 }

@@ -37,6 +37,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 			{"Horizontal", 0f },
 			{ "9th Axis", 0f },
 			{"10th Axis", 0f },
+			{ "5th Axis", 0f },
+			{"6th Axis", 0f },
 		};
 		private static float axisDownThreshold = .75f;
 

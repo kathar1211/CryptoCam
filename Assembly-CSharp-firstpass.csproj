@@ -109,6 +109,7 @@
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\DOTween\readme.txt" />
     <None Include="Assets\Standard Assets\DOTween\DOTween.dll" />
+    <None Include="Assets\Plugins\x86_64\XInputInterface.dll" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\DOTween\DOTween.XML" />
   </ItemGroup>
