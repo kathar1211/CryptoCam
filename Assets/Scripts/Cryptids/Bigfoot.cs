@@ -205,8 +205,8 @@ public class Bigfoot : Cryptid
                 RotateToward(targetPos, rotateSpeed);
 
                 //do a little math to see if we're within a few degrees of where we want to be
-                Vector3 targetForward = (targetPos - transform.position);
-                float cos = Vector3.Dot(targetForward, transform.forward);
+                Vector3 targetForward = (transform.position - targetPos);
+                float cos = Vector3.Dot(targetForward.normalized, transform.forward);
                 if (Mathf.Abs(cos) >= .9f)
                 {
                     //once we're facing the right way, sit
@@ -298,7 +298,10 @@ public class Bigfoot : Cryptid
     protected override void DoActionAtPathPoint(CryptidPathPoint triggerPoint)
     {
         currentState = MoveState.pointReached;
-        targetPos = this.transform.position + triggerPoint.transform.forward;
+        Transform direction = triggerPoint.transform.Find("direction");
+        targetPos = direction.position;
         KillNavMeshMovement();
+        nav.updatePosition = false;
+        nav.updateRotation = false;
     }
 }

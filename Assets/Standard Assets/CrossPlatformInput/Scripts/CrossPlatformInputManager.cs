@@ -185,7 +185,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			float previousValue = previousAxisValues[name];
 			float currentValue = GetAxis(name);
 			if (Mathf.Abs(previousValue) < axisDownThreshold && Mathf.Abs(currentValue) >= axisDownThreshold) { toReturn = true; }
-			Debug.Log("checking axis " + name + "down-- prev value: " + previousValue + ", current value: " + currentValue + ", axis down: " + toReturn);
+			//Debug.Log("checking axis " + name + "down-- prev value: " + previousValue + ", current value: " + currentValue + ", axis down: " + toReturn);
 
 			previousAxisValues[name] = currentValue;
 			return toReturn;
@@ -201,7 +201,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			float previousValue = previousAxisValues[name];
 			float currentValue = GetAxis(name);
 			if (Mathf.Abs(previousValue) >= axisDownThreshold && Mathf.Abs(currentValue) < axisDownThreshold) { toReturn = true; }
-			Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
+			//Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
 
 			previousAxisValues[name] = currentValue;
 			return toReturn;
