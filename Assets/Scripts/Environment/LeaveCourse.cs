@@ -16,7 +16,10 @@ public class LeaveCourse : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.EndPrompt(Constants.LeaveCoursePrompt);
+		if (other.tag == Constants.PlayerTag)
+		{
+			GameManager.Instance.EndPrompt(Constants.LeaveCoursePrompt);
+		}
     }
 
 
