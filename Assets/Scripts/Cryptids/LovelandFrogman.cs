@@ -95,6 +95,12 @@ public class LovelandFrogman : Cryptid {
                 {
                     transform.Translate(Vector3.up * (swimHeight - transform.position.y) * swimSpeed * Time.deltaTime);
                 }
+
+                //prevent frogman from sliding around
+                if (rb.velocity != Vector3.zero)
+                {
+                    rb.velocity = Vector3.zero;
+                }
                 break;
             case MoveState.walk:
 
