@@ -21,6 +21,8 @@ public class TedConvos : MonoBehaviour {
 
     //all stored blurbs read in from file
     List<Blurb> allBlurbs = new List<Blurb>();
+    //keep track of what ted has already said to reduce the amount he repeats himself
+    List<Blurb> readBlurbs = new List<Blurb>(); 
 
 	// Use this for initialization
 	void Start () {
@@ -35,72 +37,24 @@ public class TedConvos : MonoBehaviour {
     //grab a random saved blurb for display
     public void Talk()
     {
-        int blurbIndex = Random.Range(0, allBlurbs.Count-1);
-        tedBox.GetComponent<TextBox>().FeedText(allBlurbs[blurbIndex].dialogue, allBlurbs[blurbIndex].sprites);
-        tedBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
-    }
-    /*DEPRECATED - now reading from text asset instead of external file
-    //read script in from text file and save lines to blurbs
-    //expected format for a blurb:
-    ///STARTBLURB/
-    //int representing sprite/"dialogue in quotes"
-    ///ENDBLURB/
-    ///
-    void ReadConvos()
-    {
-        string path = "Assets/Resources/tedconvo.txt";
-        StreamReader reader = new StreamReader(path);
-
-        string startKey = "/STARTBLURB/";
-        string endKey = "/ENDBLURB/";
-
-        //keep track of whether the line we're reading is part of a blurb
-        bool readingBlurb = false;
-        //keep track of lines encountered while reading a blurb
-        List<string> blurbLines = new List<string>();
-
-        
-        //read the first line and start looping
-        string currentLine = reader.ReadLine();
-        while (currentLine != null)
+        //if we've already said all the blurbs, restore them
+        if (allBlurbs.Count == 0)
         {
-            //if we find the start key, start paying attention and do nothing else
-            if (currentLine == startKey)
-            {
-                readingBlurb = true;
-                currentLine = reader.ReadLine();
-                continue;
-            }
-
-            //if we find the stop key, stop paying attention and create a blurb from what we have saved
-            if (currentLine == endKey)
-            {
-                readingBlurb = false;
-                allBlurbs.Add(ParseBlurbFromText(blurbLines));
-                blurbLines.Clear();
-                currentLine = reader.ReadLine();
-                continue;
-            }
-
-            //if we're reading a blurb save the line
-            if (readingBlurb)
-            {
-                blurbLines.Add(currentLine);
-            }
-
-            //read next line to continue the loop
-            currentLine = reader.ReadLine();
+            allBlurbs = new List<Blurb>(readBlurbs);
+            readBlurbs.Clear();
         }
 
-        //close reader when finished
-        reader.Close();
-    }*/
+        //grab a random blurb
+        int blurbIndex = Random.Range(0, allBlurbs.Count-1);
+        Blurb nextblurb = allBlurbs[blurbIndex];
+        tedBox.GetComponent<TextBox>().FeedText(nextblurb.dialogue, nextblurb.sprites);
+        tedBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
 
-    //read script in from text asset and save lines to blurbs
-    //expected format for a blurb:
-    ///STARTBLURB/
-    //int representing sprite/"dialogue in quotes"
-    ///ENDBLURB/
+        //mark that ted has now said this already
+        allBlurbs.RemoveAt(blurbIndex);
+        readBlurbs.Add(nextblurb);
+    }
+    
     ///
     void ReadConvos()
     {
