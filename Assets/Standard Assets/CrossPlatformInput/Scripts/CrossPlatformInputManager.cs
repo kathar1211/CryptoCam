@@ -38,6 +38,8 @@ namespace UnityStandardAssets.CrossPlatformInput
 			{"Horizontal", 0f },
 			{ "9th Axis", 0f },
 			{"10th Axis", 0f },
+			{ "5th Axis", 0f },
+			{"6th Axis", 0f },
 		};
 		private static float axisDownThreshold = .75f;
 
@@ -187,7 +189,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			float previousValue = previousAxisValues[name];
 			float currentValue = GetAxis(name);
 			if (Mathf.Abs(previousValue) < axisDownThreshold && Mathf.Abs(currentValue) >= axisDownThreshold) { toReturn = true; }
-			Debug.Log("checking axis " + name + "down-- prev value: " + previousValue + ", current value: " + currentValue + ", axis down: " + toReturn);
+			//Debug.Log("checking axis " + name + "down-- prev value: " + previousValue + ", current value: " + currentValue + ", axis down: " + toReturn);
 
 			previousAxisValues[name] = currentValue;
 			return toReturn;
@@ -227,7 +229,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			float previousValue = previousAxisValues[name];
 			float currentValue = GetAxis(name);
 			if (Mathf.Abs(previousValue) >= axisDownThreshold && Mathf.Abs(currentValue) < axisDownThreshold) { toReturn = true; }
-			Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
+			//Debug.Log("checking axis " + name + "up-- prev value: " + previousValue + ", current value: " + currentValue + ", axis up: " + toReturn);
 
 			previousAxisValues[name] = currentValue;
 			return toReturn;

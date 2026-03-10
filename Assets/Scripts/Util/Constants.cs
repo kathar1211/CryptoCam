@@ -80,7 +80,7 @@ public static class Constants {
     public static string DoubleCryptid = "Oh! And there's more than one cryptid in the shot! \nExcellent work, that's worth double.";
     public static string EndGrading = "Let's see, overall I give this photo... {0} points.";
     public static string ExistingEntry = "Oh, it looks like you already have an entry for this \ncryptid. Your last photo was worth {0} points.";
-    public static string OverwritePrompt = "Which photo would you like to keep for the \nCryptidNomicon?";
+    public static string OverwritePrompt = "Which photo would you like to keep for the \nCryptid-Nomicon?";
     public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
     public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
 
