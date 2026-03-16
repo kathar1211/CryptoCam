@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour {
 	void Update () {
 
 		//toggle pause
-        if (CustomController.GetButtonDown(Constants.Pause) && !DontAllowPause)
+        if (InputManager.Instance.GetButtonDown(Constants.Pause) && !DontAllowPause)
         {
             if (paused)
             {

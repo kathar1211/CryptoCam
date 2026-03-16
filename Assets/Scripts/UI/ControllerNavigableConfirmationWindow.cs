@@ -31,7 +31,7 @@ public class ControllerNavigableConfirmationWindow : MonoBehaviour
         }
 
         //check for input to press the selected button
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+        if (InputManager.Instance.GetButtonDown(Constants.Submit) && !InputManager.Instance.GetButtonDown(Constants.Click)) //ignore clicks to avoid invoking buttons twice
         {
             if (currentSelectedButton != null)
             {

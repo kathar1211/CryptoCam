@@ -21,13 +21,16 @@ public static class Constants {
     public const string Cancel = "Cancel";
     public const string Horizontal = "Horizontal";
     public const string Vertical = "Vertical";
-    public const string CrouchButton = "CrouchButton";
-    public const string RunButton = "RunButton";
+    public const string CrouchButton = "Crouch";
+    public const string RunButton = "Run";
     public const string JumpButton = "Jump";
     public const string LTAxis = "9th Axis";
     public const string RTAxis = "10th Axis";
     public const string LTAxisMac = "5th Axis";
     public const string RTAxisMac = "6th Axis";
+    public const string Click = "Click";
+    public const string Move = "Move";
+    public const string Look = "Look";
 
 
     //tags

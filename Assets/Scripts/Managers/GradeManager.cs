@@ -119,7 +119,7 @@ public class GradeManager : MonoBehaviour {
             HandleControllerNavigation();
 
             //allow user to actually select things with controller
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit))
+            if (InputManager.Instance.GetButtonDown(Constants.Submit))
             {
                 if (highlightedUIcontrol != null)
                 {

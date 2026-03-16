@@ -201,7 +201,7 @@ public class Options : MonoBehaviour {
                 }
             }
 
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) && !Input.GetMouseButtonDown(0)) //ignore clicks to avoid invoking buttons twice
+            if (InputManager.Instance.GetButtonDown(Constants.Submit)) //ignore clicks to avoid invoking buttons twice
             {
                 if (selectedButton != null)
                 {
@@ -225,7 +225,7 @@ public class Options : MonoBehaviour {
                 CustomController.UsingController = true;
             }
 
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+            if (InputManager.Instance.GetButtonDown(Constants.Cancel))
             {
                 Close();
             }

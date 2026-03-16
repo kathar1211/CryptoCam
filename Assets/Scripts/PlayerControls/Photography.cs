@@ -88,7 +88,7 @@ public class Photography : MonoBehaviour {
         //if (Input.GetMouseButtonDown(0))
         if (CameraReady)
         {
-            if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.TakePicture))
+            if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.TakePicture))
             {
                 if (cameraSnap == null) { return; }
                 cameraSnap.SnapShutter();
@@ -97,14 +97,14 @@ public class Photography : MonoBehaviour {
                 if (picText != null) picText.text = (allPics.Length - picIndex).ToString();
             }
 
-            if (!GameManager.Instance.Paused && CustomController.GetButtonUp(Constants.ReadyCamera))
+            if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonUp(Constants.ReadyCamera))
             {
                 UnReadyCamera();
             }
         }
         else
         {
-            if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.ReadyCamera))
+            if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.ReadyCamera))
             {
                 ReadyCamera();
             }

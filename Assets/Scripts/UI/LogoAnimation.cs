@@ -65,7 +65,7 @@ public class LogoAnimation : MonoBehaviour {
         if (AnimationDone) { this.enabled = false; }
 
         //option to skip animation stuff by pressing enter
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
+        if (InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Click))
         {
             moon.GetComponent<CanvasGroup>().alpha = 1;
             leftCloud.GetComponent<CanvasGroup>().alpha = 1;

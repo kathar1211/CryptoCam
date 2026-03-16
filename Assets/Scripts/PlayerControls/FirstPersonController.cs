@@ -68,7 +68,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = !GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.JumpButton);
+                m_Jump = !GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.JumpButton);
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -209,8 +209,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+            float horizontal = InputManager.Instance.MoveVector.x;
+            float vertical = InputManager.Instance.MoveVector.y;
 
             bool waswalking = m_IsWalking;
 
@@ -279,7 +279,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         //reduce height if player pressed crouch button, return to normal on second press
         private void HandleCrouch()
         {
-            if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.CrouchButton))
+            if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.CrouchButton))
             {
                 if (!IsCrouching)
                 {

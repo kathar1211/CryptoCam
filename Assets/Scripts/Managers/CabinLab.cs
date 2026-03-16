@@ -165,7 +165,7 @@ public class CabinLab : MonoBehaviour {
                     }
                 }
                 //don't count clicks unless user is clicking directly on something
-                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
+                if (InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Click))
                 {
                     if (currentButton >= 0 && currentButton < textButtons.Length)
                     {
@@ -226,7 +226,7 @@ public class CabinLab : MonoBehaviour {
                 break;
             case MenuState.Credits:
                 //exit credits on click
-                if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0) || CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+                if (InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Click) || InputManager.Instance.GetButtonDown(Constants.Cancel))
                 {
                     Return(credits);
                 }
@@ -234,8 +234,8 @@ public class CabinLab : MonoBehaviour {
         }
 
         //tracking input mode
-        if (CrossPlatformInputManager.GetButtonDown(Constants.Submit)){ CustomController.UsingController = true; }
-        if (Input.GetMouseButtonDown(0)) { CustomController.UsingController = false; }
+        if (InputManager.Instance.GetButtonDown(Constants.Submit)){ CustomController.UsingController = true; }
+        if (InputManager.Instance.GetButtonDown(Constants.Click)) { CustomController.UsingController = false; }
     }
 
     

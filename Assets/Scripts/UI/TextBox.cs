@@ -61,7 +61,7 @@ public class TextBox : MonoBehaviour {
         //scroll through text if there is text in the queue
         if (allText!= null && allText.Count != 0 && !progressLocked)
         {
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Click))
             {
                 Continue();
             }
@@ -69,7 +69,7 @@ public class TextBox : MonoBehaviour {
         else if (!progressLocked)
         {
             //if theres no text in the queue we're done talking or on the last line
-            if (CrossPlatformInputManager.GetButtonDown(Constants.Submit) || Input.GetMouseButtonDown(0))
+            if (InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Click))
             {
                 
                 if (talking)

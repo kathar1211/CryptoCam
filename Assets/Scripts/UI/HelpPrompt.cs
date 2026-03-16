@@ -42,11 +42,11 @@ public class HelpPrompt : MonoBehaviour {
         gameTimer += Time.deltaTime;
 
         //if player uses a function they don't need help
-        if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.TakePicture))
+        if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.TakePicture))
         {
             needsPhotoHelp = false;
         }
-        if (!GameManager.Instance.Paused && CustomController.GetButtonDown(Constants.ThrowObject))
+        if (!GameManager.Instance.Paused && InputManager.Instance.GetButtonDown(Constants.ThrowObject))
         {
             needsObjectHelp = false;
         }
