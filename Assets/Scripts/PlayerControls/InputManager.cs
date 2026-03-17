@@ -13,10 +13,13 @@ public class InputManager : MonoBehaviour
     public Vector2 NavigateVector { get; private set; }
     private Vector2 PreviousNavigateVector;
 
+    private static float axisDownThreshold = .75f;
+
     // Start is called before the first frame update
     void Start()
     {
         Instance = this;
+        DontDestroyOnLoad(this);
     }
 
     // Update is called once per frame
@@ -51,6 +54,15 @@ public class InputManager : MonoBehaviour
         return Input.actions[buttonName].WasReleasedThisFrame();
     }
 
+    public void EnablePlayerActionMap()
+    {
+        Input.SwitchCurrentActionMap(Constants.PlayerActionMap);
+    }
+
+    public void EnableUIActionMap()
+    {
+        Input.SwitchCurrentActionMap(Constants.UIActionMap);
+    }
 
     /*
     public void OnTakePicture(InputValue value)

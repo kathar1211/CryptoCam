@@ -31,6 +31,10 @@ public static class Constants {
     public const string Click = "Click";
     public const string Move = "Move";
     public const string Look = "Look";
+    public const string Navigate = "Navigate";
+
+    public const string PlayerActionMap = "Player";
+    public const string UIActionMap = "UI";
 
 
     //tags

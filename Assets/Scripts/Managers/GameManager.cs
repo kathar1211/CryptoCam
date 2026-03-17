@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour {
                 Time.timeScale = 1;
                 pauseText.SetActive(false);
                 SetCursorState.LockCursor();
+                InputManager.Instance.EnableUIActionMap();
             }
             else if (!paused)
             {
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour {
                 Time.timeScale = 0;
                 pauseText.SetActive(true);
                 SetCursorState.UnlockCursor();
+                InputManager.Instance.EnablePlayerActionMap();
             }
            // SceneManager.LoadScene("Lab");
         }

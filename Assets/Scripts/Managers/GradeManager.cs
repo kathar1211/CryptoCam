@@ -417,9 +417,9 @@ public class GradeManager : MonoBehaviour {
     {
         //handle controller input to select ui elements
 
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
+        if (InputManager.Instance.GetButtonDown(Constants.Navigate))
         {
-            float horizontalDir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+            float horizontalDir = InputManager.Instance.NavigateVector.x;
             switch (currentState)
             {
                 case GradeState.allThumbs:

@@ -40,6 +40,7 @@ namespace UnityStandardAssets.CrossPlatformInput
 			{ "5th Axis", 0f },
 			{"6th Axis", 0f },
 		};
+
 		private static float axisDownThreshold = .75f;
 
 		public static void SwitchActiveInputMethod(ActiveInputMethod activeInputMethod)

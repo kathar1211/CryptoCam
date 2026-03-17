@@ -25,7 +25,7 @@ public class ControllerNavigableConfirmationWindow : MonoBehaviour
         if (!this.gameObject.activeInHierarchy) { return; }
 
         //check for input to select a different button
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
+        if (InputManager.Instance.GetButtonDown(Constants.Navigate))
         {
             ChangeSelectedButton();
         }

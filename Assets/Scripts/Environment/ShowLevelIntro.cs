@@ -78,6 +78,7 @@ public class ShowLevelIntro : MonoBehaviour
         introFinished = true;
         canvas.SetActive(true);
         fps.enabled = true;
+        InputManager.Instance.EnablePlayerActionMap();
     }
 
     //iterate through cameras, setting them active for their active duration

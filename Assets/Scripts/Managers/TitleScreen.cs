@@ -59,10 +59,10 @@ public class TitleScreen : MonoBehaviour {
             if (animationDone && animationDonePevFrame)
             {
                 float dir = 0;
-                if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+                if (InputManager.Instance.GetButtonDown(Constants.Navigate))
                 {
-                    dir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
-                    Debug.Log("axis value: " + CrossPlatformInputManager.GetAxis(Constants.Vertical));
+                    dir = InputManager.Instance.NavigateVector.y;
+                    Debug.Log("axis value: " + dir);
                 }
                 if (dir > 0)
                 {
@@ -88,7 +88,7 @@ public class TitleScreen : MonoBehaviour {
 
         animationDonePevFrame = animationDone;
 
-        if (Input.GetMouseButtonDown(0)) { CustomController.UsingController = false; }
+        if (InputManager.Instance.GetButtonDown(Constants.Click)) { CustomController.UsingController = false; }
     }
 
     public void OnIntroAnimDone()
