@@ -56,7 +56,7 @@ public class ThrowObject : MonoBehaviour {
         timer += Time.deltaTime;
 
         //if enough time has passed and the object limit is not exceeded, create object and throw when button is pressed
-		if (CustomController.GetButton(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
+		if (InputManager.Instance.GetButton(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
             throwMeter.gameObject.SetActive(true);
             throwForce += forceIncreaseRate * Time.deltaTime;
@@ -64,7 +64,7 @@ public class ThrowObject : MonoBehaviour {
 
             throwMeter.fillAmount = (throwForce - throwForceMin) / ((throwForceMax * 1f) - (throwForceMin *1f));
         }
-        if (CustomController.GetButtonUp(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
+        if (InputManager.Instance.GetButtonUp(Constants.ThrowObject) && timer >= coolDownTime && currentObjects < objectLimit)
         {
             throwMeter.gameObject.SetActive(false);
             ThrowCarrot();

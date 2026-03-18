@@ -67,21 +67,21 @@ public class CryptidNomicon : MonoBehaviour {
         //handle page turning if not viewing a photo
         if (!viewing)
         {
-            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal)){
-                TurnPage(CrossPlatformInputManager.GetAxis(Constants.Horizontal) > 0);
+            if (InputManager.Instance.GetButtonDown(Constants.Navigate)){
+                TurnPage(InputManager.Instance.NavigateVector.x > 0);
             }
 
             //allow shoulder button navigation as well
-            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxisMac))
+           /* if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxisMac))
             {
                 TurnPage(true);
             }
             if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis))
             {
                 TurnPage(false);
-            }
+            }*/
 
-            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Submit))
+            if (InputManager.Instance.GetButtonDown(Constants.Submit))
             {
                 if (currentPage != 0 && currentPage != pageContents.Count + 1) //not applicable on front and back cover
                 {
@@ -89,7 +89,7 @@ public class CryptidNomicon : MonoBehaviour {
                 }
             }
 
-            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Cancel))
+            if (InputManager.Instance.GetButtonDown(Constants.Cancel))
             {
                 Close();
             }
@@ -97,7 +97,7 @@ public class CryptidNomicon : MonoBehaviour {
         //close out of viewing a photo on any input
         else
         {
-            if (Input.anyKeyDown || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Submit) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Cancel))
+            if (InputManager.Instance.AnyKeyDown() || InputManager.Instance.GetButtonDown(Constants.Submit) || InputManager.Instance.GetButtonDown(Constants.Cancel))
             {
                 DelargePhoto();
             }

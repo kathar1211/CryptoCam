@@ -32,8 +32,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             if (Time.timeScale == 0) { return; } //freeze looking when game is paused
 
-            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+           // float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
+           // float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+            float yRot = InputManager.Instance.LookVector.x;
+            float xRot = InputManager.Instance.LookVector.y;
+
             Debug.Log("xrot: " + xRot);
 
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);

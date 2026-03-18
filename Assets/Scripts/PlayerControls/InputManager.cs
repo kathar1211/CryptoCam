@@ -49,6 +49,11 @@ public class InputManager : MonoBehaviour
         return Input.actions[buttonName].WasPressedThisFrame();
     }
 
+    public bool GetButton(string buttonName)
+    {
+        return Input.actions[buttonName].IsPressed();
+    }
+
     public bool GetButtonUp(string buttonName)
     {
         return Input.actions[buttonName].WasReleasedThisFrame();
@@ -62,6 +67,11 @@ public class InputManager : MonoBehaviour
     public void EnableUIActionMap()
     {
         Input.SwitchCurrentActionMap(Constants.UIActionMap);
+    }
+
+    public bool AnyKeyDown()
+    {
+        return Keyboard.current.anyKey.wasPressedThisFrame;
     }
 
     /*

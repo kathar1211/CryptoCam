@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour {
                 Time.timeScale = 1;
                 pauseText.SetActive(false);
                 SetCursorState.LockCursor();
-                InputManager.Instance.EnableUIActionMap();
+                InputManager.Instance.EnablePlayerActionMap();
             }
             else if (!paused)
             {
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour {
                 Time.timeScale = 0;
                 pauseText.SetActive(true);
                 SetCursorState.UnlockCursor();
-                InputManager.Instance.EnablePlayerActionMap();
+                InputManager.Instance.EnableUIActionMap();
             }
            // SceneManager.LoadScene("Lab");
         }
@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour {
         Time.timeScale = 1;
         pauseText.SetActive(false);
         SetCursorState.LockCursor();
+        InputManager.Instance.EnablePlayerActionMap();
     }
 
     //ask the user if they would like to end the course
@@ -129,6 +130,7 @@ public class GameManager : MonoBehaviour {
             Time.timeScale = 0;
 
             SetCursorState.UnlockCursor();
+            InputManager.Instance.EnableUIActionMap();
             endprompt.SetActive(true);
 
         }
@@ -144,7 +146,7 @@ public class GameManager : MonoBehaviour {
             txt = System.Text.RegularExpressions.Regex.Unescape(txt);
             endPromptText.text = txt;
             endprompt.SetActive(true);
-
+            InputManager.Instance.EnableUIActionMap();
             SetCursorState.UnlockCursor();
         }
     }

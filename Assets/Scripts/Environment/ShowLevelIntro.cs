@@ -53,7 +53,7 @@ public class ShowLevelIntro : MonoBehaviour
     void Update()
     {
         //skip intro on just about any input
-        if (Input.anyKeyDown && !introFinished)
+        if (InputManager.Instance.AnyKeyDown() && !introFinished)
         {
             FinishIntro();
         }

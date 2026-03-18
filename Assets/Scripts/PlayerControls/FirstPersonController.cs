@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
 
@@ -221,7 +220,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (!IsCrouching)
             {
                 // m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
-                m_IsWalking = !CustomController.GetButton(Constants.RunButton);
+                m_IsWalking = !InputManager.Instance.GetButton(Constants.RunButton);
 
                /* if (CustomController.GetButtonDown(Constants.RunButton))
                 {

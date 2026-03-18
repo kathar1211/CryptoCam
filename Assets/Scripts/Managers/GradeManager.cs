@@ -453,9 +453,9 @@ public class GradeManager : MonoBehaviour {
     private void HandleVerticalControllerNavigation()
     {
         
-        if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
+        if (InputManager.Instance.GetButtonDown(Constants.Navigate))
         {
-            float verticalDir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
+            float verticalDir = InputManager.Instance.NavigateVector.y;
             switch (currentState)
             {
                 case GradeState.allThumbs:

@@ -92,6 +92,7 @@
     <Compile Include="Assets\Scripts\PlayerControls\CustomController.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\FirstPersonController.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\InputManager.cs" />
+    <Compile Include="Assets\Scripts\PlayerControls\MouseLook.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\Photography.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\ThrowObject.cs" />
     <Compile Include="Assets\Scripts\UI\ControllerNavigableConfirmationWindow.cs" />
