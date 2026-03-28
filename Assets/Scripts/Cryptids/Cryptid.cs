@@ -253,6 +253,7 @@ public class Cryptid : MonoBehaviour {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
+        target.y = transform.position.y; //remove up/down from the equation
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (transform.position - target), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir, transform.up);
         //Move(forwardSpeed, 0);
