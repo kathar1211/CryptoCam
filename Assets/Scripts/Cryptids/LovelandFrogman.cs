@@ -156,6 +156,7 @@ public class LovelandFrogman : Cryptid {
                 }
                 else
                 {
+                    UnKillNavMeshMovement();
                     if ((nav.destination - transform.position).magnitude <= targetMinDistance)
                     {
                         ReturnToPreviousState();
