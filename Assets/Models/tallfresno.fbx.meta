@@ -1,55 +1,158 @@
 fileFormatVersion: 2
 guid: 8184955579f45f340a7e5b4521924686
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Armature.001
-    100002: Bone
-    100004: Bone.001
-    100006: Bone.002
-    100008: Bone.002_end
-    100010: Bone.003
-    100012: Bone.004
-    100014: Bone.005
-    100016: Bone.005_end
-    100018: Bone.006
-    100020: Bone.006_end
-    100022: Sphere.001
-    100024: //RootNode
-    400000: Armature.001
-    400002: Bone
-    400004: Bone.001
-    400006: Bone.002
-    400008: Bone.002_end
-    400010: Bone.003
-    400012: Bone.004
-    400014: Bone.005
-    400016: Bone.005_end
-    400018: Bone.006
-    400020: Bone.006_end
-    400022: Sphere.001
-    400024: //RootNode
-    2100000: No Name
-    4300000: Sphere.001
-    7400000: bonk_right
-    7400002: Armature.001|Armature.001Action.001
-    7400004: Armature.001|PoseLib
-    7400006: walk.default
-    7400008: walk.wobble
-    7400010: walk.wobble
-    7400012: charleston
-    7400014: walk.wobble.wobble1
-    7400016: walk.wobble.walk1
-    7400018: walk.wobble.wobble2
-    7400020: walk.wobble.walk2
-    7400022: recede
-    7400024: recede
-    7400026: bonk_left
-    9500000: //RootNode
-    13700000: Sphere.001
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Armature.001
+  - first:
+      1: 100002
+    second: Bone
+  - first:
+      1: 100004
+    second: Bone.001
+  - first:
+      1: 100006
+    second: Bone.002
+  - first:
+      1: 100008
+    second: Bone.002_end
+  - first:
+      1: 100010
+    second: Bone.003
+  - first:
+      1: 100012
+    second: Bone.004
+  - first:
+      1: 100014
+    second: Bone.005
+  - first:
+      1: 100016
+    second: Bone.005_end
+  - first:
+      1: 100018
+    second: Bone.006
+  - first:
+      1: 100020
+    second: Bone.006_end
+  - first:
+      1: 100022
+    second: Sphere.001
+  - first:
+      1: 100024
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Armature.001
+  - first:
+      4: 400002
+    second: Bone
+  - first:
+      4: 400004
+    second: Bone.001
+  - first:
+      4: 400006
+    second: Bone.002
+  - first:
+      4: 400008
+    second: Bone.002_end
+  - first:
+      4: 400010
+    second: Bone.003
+  - first:
+      4: 400012
+    second: Bone.004
+  - first:
+      4: 400014
+    second: Bone.005
+  - first:
+      4: 400016
+    second: Bone.005_end
+  - first:
+      4: 400018
+    second: Bone.006
+  - first:
+      4: 400020
+    second: Bone.006_end
+  - first:
+      4: 400022
+    second: Sphere.001
+  - first:
+      4: 400024
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: No Name
+  - first:
+      43: 4300000
+    second: Sphere.001
+  - first:
+      74: 7400000
+    second: bonk_right
+  - first:
+      74: 7400002
+    second: Armature.001|Armature.001Action.001
+  - first:
+      74: 7400004
+    second: Armature.001|PoseLib
+  - first:
+      74: 7400006
+    second: walk.default
+  - first:
+      74: 7400008
+    second: walk.wobble
+  - first:
+      74: 7400010
+    second: walk.wobble
+  - first:
+      74: 7400012
+    second: charleston
+  - first:
+      74: 7400014
+    second: walk.wobble.wobble1
+  - first:
+      74: 7400016
+    second: walk.wobble.walk1
+  - first:
+      74: 7400018
+    second: walk.wobble.wobble2
+  - first:
+      74: 7400020
+    second: walk.wobble.walk2
+  - first:
+      74: 7400022
+    second: recede
+  - first:
+      74: 7400024
+    second: recede
+  - first:
+      74: 7400026
+    second: bonk_left
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Sphere.001
+  - first:
+      74: 776108238613350812
+    second: Armature.001|Armature.001|Armature.001Action.001
+  - first:
+      74: 2286941478803562890
+    second: Armature.001|Armature.001|Armature.001|PoseLib
+  - first:
+      74: -5252816984213320552
+    second: idle
+  - first:
+      74: -8014630869412518219
+    second: idle_lookdown_transition
+  - first:
+      74: -4771999677819170318
+    second: idle_lookdown
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -77,7 +180,8 @@ ModelImporter:
     clipAnimations:
     - serializedVersion: 16
       name: bonk_right
-      takeName: Armature.001Action.004
+      takeName: Armature.001|Armature.001|Armature.001Action.004
+      internalID: 0
       firstFrame: 0
       lastFrame: 34
       wrapMode: 0
@@ -104,10 +208,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature.001|Armature.001Action.001
-      takeName: Armature.001|Armature.001Action.001
+      name: Armature.001|Armature.001|Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 0
-      lastFrame: 220
+      lastFrame: 273
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -132,10 +237,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature.001|PoseLib
-      takeName: Armature.001|PoseLib
+      name: Armature.001|Armature.001|Armature.001|PoseLib
+      takeName: Armature.001|Armature.001|Armature.001|PoseLib
+      internalID: 0
       firstFrame: 0
-      lastFrame: 7
+      lastFrame: 8
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -161,7 +267,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.default
-      takeName: Armature.001|PoseLib
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 1
       lastFrame: 24
       wrapMode: 0
@@ -189,7 +296,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.wobble
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 50
       lastFrame: 104
       wrapMode: 0
@@ -217,7 +325,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: charleston
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 140
       lastFrame: 219
       wrapMode: 0
@@ -245,7 +354,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.wobble.wobble1
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 50
       lastFrame: 62
       wrapMode: 0
@@ -273,7 +383,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.wobble.walk1
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 63
       lastFrame: 76
       wrapMode: 0
@@ -301,7 +412,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.wobble.wobble2
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 77
       lastFrame: 90
       wrapMode: 0
@@ -329,7 +441,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: walk.wobble.walk2
-      takeName: Armature.001Action.001
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
       firstFrame: 91
       lastFrame: 104
       wrapMode: 0
@@ -357,7 +470,8 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: recede
-      takeName: Armature.001Action.002
+      takeName: Armature.001|Armature.001|Armature.001Action.002
+      internalID: 0
       firstFrame: 0
       lastFrame: 28
       wrapMode: 0
@@ -392,9 +506,97 @@ ModelImporter:
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
       name: bonk_left
-      takeName: Armature.001Action.004
+      takeName: Armature.001|Armature.001|Armature.001Action.004
+      internalID: 0
       firstFrame: 35
       lastFrame: 69
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: idle
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
+      firstFrame: 223
+      lastFrame: 240
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: idle_lookdown_transition
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
+      firstFrame: 240
+      lastFrame: 257
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 1
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: idle_lookdown
+      takeName: Armature.001|Armature.001|Armature.001Action.001
+      internalID: 0
+      firstFrame: 257
+      lastFrame: 273
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -425,25 +627,28 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 1
@@ -452,10 +657,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -465,13 +670,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
