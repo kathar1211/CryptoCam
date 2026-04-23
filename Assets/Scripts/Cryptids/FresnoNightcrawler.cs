@@ -14,15 +14,26 @@ public class FresnoNightcrawler : Cryptid {
     // public float frequency;
     // public float shift;
     // public float forwardShift;
-    string Speed = "Speed";
+    
+
+    //animation  parameters 
+    const string Recede = "Recede";
+    const string Speed = "Speed";
+    const string Idle = "Idle";
+    const string Lookdown = "Lookdown";
+    const string Still = "still";
 
     private Transform fleeFromTarget;
+    private Transform walkTowardTarget;
     public float fleeSpeed;
     public float maxDistance;
     public float seeObstacles;
+    public float walkTowardMinDistance;
 
-    public enum MoveState { Walk, Flee, Dance, Nothing, Wander};
+    public enum MoveState { Walk, Flee, Dance, Nothing, Wander, WalkToward, Look};
     public MoveState currentState = MoveState.Walk;
+
+    RandomChanceInterval DoneLookingChance;
 
     [SerializeField]
     Texture2D shutdownTxt;
@@ -38,6 +49,8 @@ public class FresnoNightcrawler : Cryptid {
         {
             SetNavMeshChaseTarget(PathPoints[0].transform);
         }
+
+        DoneLookingChance = new RandomChanceInterval(1, .25f);
 	}
 
     // Update is called once per frame
@@ -53,7 +66,7 @@ public class FresnoNightcrawler : Cryptid {
         {
             case MoveState.Walk:
                 //dont move during stationary parts of animation
-                if (animator.GetCurrentAnimatorStateInfo(0).IsTag("still"))
+                if (animator.GetCurrentAnimatorStateInfo(0).IsTag(Still))
                 {
                     // MoveToward(targetPos, rotateSpeed);
                     KillNavMeshMovement();
@@ -70,6 +83,42 @@ public class FresnoNightcrawler : Cryptid {
                 break;
             case MoveState.Nothing:
                 //do nothing
+                break;
+            case MoveState.WalkToward:
+                if (animator.GetCurrentAnimatorStateInfo(0).IsTag(Still))
+                {
+                    // MoveToward(targetPos, rotateSpeed);
+                    KillNavMeshMovement();
+                    break;
+                }
+                MoveToward(walkTowardTarget);
+
+                //stop and look once we're in range
+                Vector3 actualWalktowardTarget = new Vector3 (walkTowardTarget.position.x, this.transform.position.y, walkTowardTarget.position.z);
+                if ((actualWalktowardTarget - this.transform.position).magnitude <= walkTowardMinDistance)
+                {
+                    //rotate in the direction of the point
+                    RotateToward(walkTowardTarget.position, rotateSpeed);
+
+                    //do a little math to see if we're within a few degrees of where we want to be
+                    Vector3 targetForward = (transform.position - walkTowardTarget.position);
+                    float cos = Vector3.Dot(targetForward.normalized, transform.forward);
+                    if (Mathf.Abs(cos) >= .9f)
+                    {
+                        KillNavMeshMovement();
+                        currentState = MoveState.Look;
+                        animator.SetBool(Idle, true);
+                        animator.SetBool(Lookdown, true);
+                    }
+                }
+                break;
+            case MoveState.Look:
+                if (DoneLookingChance.UpdateTimerAndCheckSuccess())
+                {
+                    animator.SetBool(Lookdown, false);
+                    animator.SetBool(Idle, false);
+                    currentState = MoveState.Walk;
+                }
                 break;
         }
         
@@ -121,14 +170,13 @@ public class FresnoNightcrawler : Cryptid {
             KillNavMeshMovement();
             nav.enabled = false;
             rb.useGravity = false;
-            animator.SetTrigger("Recede");
+            animator.SetTrigger(Recede);
             currentState = MoveState.Nothing;
             if (shutdownTxt !=null){
                 renderer.material.SetTexture("_MainTex", shutdownTxt);
             }
             
         }
-
         else if (other.tag == Constants.CryptidContainerTag)
         {
             //fresnos turn around and choose new point to walk to directly behind them
@@ -137,6 +185,19 @@ public class FresnoNightcrawler : Cryptid {
 
             timeChasing = 0;
         }
+        else if (other.tag == Constants.CarrotTag)
+        {
+            //we don't need to chase after the new carrot if we've already got our eyes on one
+            //we should also ignore carrots if we're busy running away
+            if (currentState == MoveState.Walk)
+            {
+                currentState = MoveState.WalkToward;
+                walkTowardTarget = other.transform;
+                SetNavMeshChaseTarget(walkTowardTarget);
+            }
+
+        }
+
 
         base.OnTriggerEnter(other);
     }
