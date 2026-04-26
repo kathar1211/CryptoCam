@@ -42,8 +42,8 @@ Happy - 14
 /ENDBLURB/
 
 /STARTBLURB/
-3/The Flatwoods Monster? Ah yes, I hear she's pretty elusive, even by cryptid standards.
-12/If you encounter a cryptid that seems camera shy, you might just need to give it some time to warm up to you.
+3/The Flatwoods Monster? Ah yes, I hear she's pretty \nelusive, even by cryptid standards.
+12/If you encounter a cryptid that seems camera shy, \nyou might just need to give it some time to warm up \nto you.
 14/I'm sure your patience will be rewarded. Probably.
 /ENDBLURB/
 
@@ -51,4 +51,22 @@ Happy - 14
 4/Actually, there's something I've been meaning to ask \nyou about.
 2/I'm... not sure how to bring this up but... why is it that, \nevery time you leave...
 0/...you always climb out through the window? I do have \na door you know.
+/ENDBLURB/
+
+/STARTBLURB/
+4/Most of the cryptids around here are pretty skittish; \nthey'll definitely run off if you get too close.
+12/Nessie doesn't seem easily startled, though. \nShe must be comfortable with her place at the top \nof the food chain.
+3/Maybe if she were smaller, she'd be more inclined \nto swim away from unknown objects splashing in \nthe water. But I guess she doesn't have that problem.
+/ENDBLURB/
+
+/STARTBLURB/
+13/The pet stealing allegations? Well, I'm of the opinion \nthat Mothman isn't actually responsible for that.
+6/If he had done it though, one would wonder what he \ndid with the pets. I guess eat them, most likely.
+5/I prefer to think he's just an animal lover, and \nhe took them in to take care of them. ...If he did it. \n......Which he didn't.
+/ENDBLURB/
+
+/STARTBLURB/
+0/I can't really recommend straying too far from the \npath when you're out exploring the woods around \nthe cabin.
+8/Not because I can't guarantee your safety or anything. \nJust because I can't guarantee you'll find anything \ninteresting.
+4/But you're an independent contractor, not my \nemployee. I can't really tell you how to do your job.
 /ENDBLURB/

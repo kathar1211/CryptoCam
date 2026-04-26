@@ -142,10 +142,13 @@ public static class Constants {
         {Frogman,"These large bipedal frogs are named after Loveland Ohio, the region where they were first spotted lurking out of the water. Some reports claim they wield magic wands that shoot lightning, but that's just silly." },
         {Fresno, "Originally captured on security footage in Fresno, California, Fresno Nightcrawlers are recognizeable by their elongated legs and strange, meandering gait. These suspected extraterrestials seem to come in pairs, not unlike pants." },
         {Jackalope, "Two parts jackrabbit and one part antelope, the Jackalope may seem cute and friendly but is actually known for its incredible strength. Some hunters have been known to go as far as wearing stovepipes on their legs to avoid being impaled by its fearsome horns." },
-        {Bigfoot, "The man, the myth, the legend, Bigfoot himself." },
+        {Bigfoot, "The man, the myth, the legend, Bigfoot himself. Also sometimes known as Sasquatch, this large, hairy, humanoid creature is known to romp about in forests in the Pacific Northwest of North America. Despite his reputation as an elusive loner, he's the single most commonly sighted cryptid." },
         {Flatwoods, "Known for her signature skirt and hood, this stylish creature was first spotted in the town of Flatwoods in 1952 after a mysterious bright light crossed the night sky. Though there were several additional reports shortly after her first appearance, there have been no new sightings since the 50s." },
-        {Mothman, "Alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law" }
+        {Mothman, "Despite the name, Mothman is usually described as a large birdlike creature. Originally spotted in Point Pleasant in 1966, he's alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law." }
     };
+
+    public const string defaultEntry = "Take a photo of this cryptid and submit it to Ted to learn more about them.";
+    public const string demoLockedEntry = "This cryptid will be available in the full release of the game.";
 
     //feedback form
     public const string FeedbackFormURL = "https://forms.gle/TTNtVqNbBSVfdTrU7";
