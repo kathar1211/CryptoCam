@@ -70,3 +70,9 @@ Happy - 14
 8/Not because I can't guarantee your safety or anything. \nJust because I can't guarantee you'll find anything \ninteresting.
 4/But you're an independent contractor, not my \nemployee. I can't really tell you how to do your job.
 /ENDBLURB/
+
+/STARTBLURB/
+3/Huh? Why am I so interested in studying cryptids? \nWell... they're neat, right? Do I need a reason? I just \nlike them.
+13/I guess, if I think harder about it, I've always been fond \nof things that other people find weird or off-putting.
+7/Even the weirdest, most poorly understood creatures \ndeserve to be loved by somebody, right? It might as \nwell be me.
+/ENDBLURB/
