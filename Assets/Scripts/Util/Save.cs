@@ -25,6 +25,7 @@ public class Save
         photos = new List<Photodata>();
         foreach (KeyValuePair<string, PageContent> content in contents)
         {
+            if (content.Value == null) { continue; }
             Photodata data = new Photodata();
             data.photoScore = content.Value.photoScore;
             data.imageData = content.Value.image.GetRawTextureData();

@@ -401,6 +401,7 @@ public class Photography : MonoBehaviour {
                 {
                     hitCounter++;
                     actualHitBoxCount++;
+                    Debug.Log("successfully hit: " + check.transform.ToString());
                 }
                 else if (check.transform.tag == Constants.OptionalTag)
                 {
@@ -415,6 +416,7 @@ public class Photography : MonoBehaviour {
                 }
             }      
         }
+        Debug.Log(mainSubject.name + " has " + hitCounter + " out of " + actualHitBoxCount + " visible hitboxes");
         if (hitboxes.Length != 0) { return (float)hitCounter / (float)actualHitBoxCount; }
 
         return 0;
@@ -436,6 +438,7 @@ public class Photography : MonoBehaviour {
             else { viewPos = cryptoCam.WorldToViewportPoint(centerofMass.position); }
             if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
             {
+                Debug.Log(renderer.name + " is in frame");
                 return true;
             }
         }

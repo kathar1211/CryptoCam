@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityStandardAssets.CrossPlatformInput;
 
 //holds all content needed for a given page of the cryptidnomicon
-public struct PageContent
+public class PageContent
 {
    public int photoScore;
    public Texture2D image;
@@ -16,8 +16,6 @@ public struct PageContent
 }
 
 public class CryptidNomicon : MonoBehaviour {
-
-
 
     //for cryptidnomicon
     GameObject page;
@@ -31,6 +29,8 @@ public class CryptidNomicon : MonoBehaviour {
     public Image aboutTheAuthor;
     public Image largeThumbnail;
     public Image largeThumbnailOverlay;
+    public Image notUnlockedSilhouette;
+    public TextMeshProUGUI totalScoreText;
 
     Dictionary<string, PageContent> pageContents;
     bool isInitialized = false;
@@ -43,13 +43,36 @@ public class CryptidNomicon : MonoBehaviour {
 
     public bool ReadyToClose = false;
 
+    //sprites used for pages where cryptids are not unlocked yet
+    public Sprite JackalopePreview;
+    public Sprite NessiePreview;
+    public Sprite FresnoPreview;
+    public Sprite FrogmanPreview;
+    public Sprite MothmanPreview;
+    public Sprite BigfootPreview;
+    public Sprite FlatwoodsPreview;
+    public Sprite TsuchinokoPreview;
+
+    private Dictionary<string, Sprite> CryptidPreviewTable;
+
     // Use this for initialization
     void Start () {
         if (!isInitialized)
         {
             page = this.transform.GetChild(0).gameObject;
             currentPage = 0;
-            pageContents = new Dictionary<string, PageContent>();
+            pageContents = new Dictionary<string, PageContent>
+            {
+                { Constants.Jackalope, null },
+                { Constants.Tsuchinoko, null },
+                { Constants.Nessie, null },
+                { Constants.Frogman, null },
+                { Constants.Fresno, null },
+                { Constants.Flatwoods, null },
+                { Constants.Bigfoot, null },
+                { Constants.Mothman, null },
+
+            };
             aboutTheAuthor.gameObject.SetActive(false);
 
             //if we have save data, load it up on creating the cryptidnomicon
@@ -59,6 +82,23 @@ public class CryptidNomicon : MonoBehaviour {
             }
 
             isInitialized = true;
+
+            CryptidPreviewTable = new Dictionary<string, Sprite>
+            {
+                {Constants.Jackalope, JackalopePreview },
+                {Constants.Fresno, FresnoPreview },
+                {Constants.Tsuchinoko, TsuchinokoPreview },
+                {Constants.Nessie, NessiePreview },
+                {Constants.Flatwoods, FlatwoodsPreview },
+                {Constants.Bigfoot, BigfootPreview },
+                {Constants.Mothman, MothmanPreview },
+                {Constants.Frogman, FrogmanPreview },
+            };
+
+            //get total score to show at the front
+            int totalScore = CalculateTotalScore(pageContents);
+            if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }
+            else { totalScoreText.text = "Total Score:\n" + totalScore.ToString(); }
         }
     }
 	
@@ -133,32 +173,55 @@ public class CryptidNomicon : MonoBehaviour {
         {
             page.GetComponent<Image>().sprite = pages[0];
             aboutTheAuthor.gameObject.SetActive(false);
+            totalScoreText.gameObject.SetActive(true);
         }
         else if (currentPage > pageContents.Count)
         {
             page.GetComponent<Image>().sprite = pages[2];
             aboutTheAuthor.gameObject.SetActive(true);
+            totalScoreText.gameObject.SetActive(false);
         }
         else
         {
             page.GetComponent<Image>().sprite = pages[1];
             aboutTheAuthor.gameObject.SetActive(false);
+            totalScoreText.gameObject.SetActive(false);
         }
 
         //if we are still in the middle sprite update the content
         if (currentPage > 0 && currentPage <= pageContents.Count )
         {
-            thumbnail.gameObject.SetActive(true);
-            scoreDesc.gameObject.SetActive(true);
-            imageDesc.gameObject.SetActive(true);
-            nameDesc.gameObject.SetActive(true);
-            PageContent content = pageContents.ElementAt(currentPage - 1).Value;
+            KeyValuePair<string, PageContent> entry = pageContents.ElementAt(currentPage - 1);
+            PageContent content = entry.Value;
+            if (content == null) //no entry/ picture not taken
+            {
+                thumbnail.gameObject.SetActive(false);
+                scoreDesc.gameObject.SetActive(false);
+                
+                imageDesc.gameObject.SetActive(true);
+                nameDesc.gameObject.SetActive(false);
+                notUnlockedSilhouette.gameObject.SetActive(true);
 
-            thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
-            //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
-            scoreDesc.text = "Score: " + content.photoScore;
-            imageDesc.text = content.flavorText;
-            nameDesc.text = content.name;
+                imageDesc.text = Constants.defaultEntry;
+                notUnlockedSilhouette.sprite = CryptidPreviewTable[entry.Key];
+                //nameDesc.text = entry.Key;
+            }
+            else //use player's saved image
+            {
+                thumbnail.gameObject.SetActive(true);
+                scoreDesc.gameObject.SetActive(true);
+                imageDesc.gameObject.SetActive(true);
+                nameDesc.gameObject.SetActive(true);
+
+                notUnlockedSilhouette.gameObject.SetActive(false);
+
+                thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
+                //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
+                scoreDesc.text = "Score: " + content.photoScore;
+                imageDesc.text = content.flavorText;
+                nameDesc.text = content.name;
+            }
+           
         }
 
         //otherwise hide it
@@ -168,6 +231,7 @@ public class CryptidNomicon : MonoBehaviour {
             scoreDesc.gameObject.SetActive(false);
             imageDesc.gameObject.SetActive(false);
             nameDesc.gameObject.SetActive(false);
+            notUnlockedSilhouette.gameObject.SetActive(false);
         }
     }
 
@@ -213,6 +277,17 @@ public class CryptidNomicon : MonoBehaviour {
 
         //autosave after updating photos
         SavePhotos();
+    }
+
+    private int CalculateTotalScore(Dictionary<string, PageContent> pagecontents)
+    {
+        int sum = 0;
+        foreach (KeyValuePair<string, PageContent> content in pagecontents)
+        {
+            if (content.Value == null) { continue; }
+            sum += content.Value.photoScore;
+        }
+        return sum;
     }
 
     //select a photo to view it up close
