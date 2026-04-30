@@ -427,7 +427,7 @@ public class Photography : MonoBehaviour {
         return allPics;
     }
 
-    public bool IsInCameraView(Renderer renderer, Transform centerofMass = null)
+    public bool IsInCameraView(Renderer renderer, Transform centerofMass = null, bool suppressDebug = false)
     {
         //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
         //check if cyrptid position is visible by camera
@@ -438,7 +438,7 @@ public class Photography : MonoBehaviour {
             else { viewPos = cryptoCam.WorldToViewportPoint(centerofMass.position); }
             if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
             {
-                Debug.Log(renderer.name + " is in frame");
+                if (!suppressDebug) { Debug.Log(renderer.name + " is in frame"); }
                 return true;
             }
         }

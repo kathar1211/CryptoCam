@@ -101,6 +101,7 @@
     <Compile Include="Assets\Scripts\UI\SelectableImage.cs" />
     <Compile Include="Assets\Scripts\UI\SliderWithLabel.cs" />
     <Compile Include="Assets\Scripts\UI\SpriteWithShadow.cs" />
+    <Compile Include="Assets\Scripts\UI\StarIndicator.cs" />
     <Compile Include="Assets\Scripts\UI\Ted.cs" />
     <Compile Include="Assets\Scripts\UI\TedConvos.cs" />
     <Compile Include="Assets\Scripts\UI\TextBox.cs" />

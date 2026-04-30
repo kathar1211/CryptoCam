@@ -56,7 +56,7 @@ public class Cryptid : MonoBehaviour {
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
         nav = this.gameObject.GetComponent<NavMeshAgent>();
-        renderer = this.gameObject.GetComponentInChildren<Renderer>();
+        renderer = this.gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponent<Animator>();
         obstacles = new List<Collider>();
 	}
