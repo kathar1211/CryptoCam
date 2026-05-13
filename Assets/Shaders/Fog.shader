@@ -64,8 +64,8 @@
 				//set density based on screen position and strength
 				half4 fog = (_Strength * (depth - i.scrPos.w));
 
-				//map 0 to 1 value for fog to a smaller range so we get better gredation
-				fog = map(fog, 0, 1, .25, .4);
+				//map 0 to 1 value for fog to a smaller range so we get better gradation
+				fog = map(fog, 0, 1, .2, .4);
 
 				//apply color
 				half4 col = tex2D(_MainTex, i.uv_MainTex) * _Tint;
