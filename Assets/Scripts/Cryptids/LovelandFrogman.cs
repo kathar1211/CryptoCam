@@ -46,8 +46,11 @@ public class LovelandFrogman : Cryptid {
     private float swimHeight = -1;
     public float swimBaseOffset = -2.75f; //used to scooch navmesh base so frog sits in the water instead of on top of it
 
-	// Use this for initialization
-	void Start () {
+    public CryptidTrigger trigger;
+    public CryptidPathPoint walkTarget;
+
+    // Use this for initialization
+    void Start () {
         StartUp();
         cryptidType = Constants.Frogman;
         baseScore = 35;
@@ -74,6 +77,11 @@ public class LovelandFrogman : Cryptid {
         {
             swimHeight = transform.position.y;
             nav.baseOffset = swimBaseOffset;
+        }
+
+        if (trigger != null)
+        {
+            trigger.TriggerEnterAction += TriggerMove;
         }
     }
 	
@@ -113,6 +121,7 @@ public class LovelandFrogman : Cryptid {
             case MoveState.stand:
             case MoveState.sit:
                 timer += Time.deltaTime;
+                if (timeToSit == -1) { break; }
                 if (timer > timeToSit)
                 {
                     timer = 0;
@@ -274,7 +283,7 @@ public class LovelandFrogman : Cryptid {
 
 
         //flee from player on land
-        if (other.tag == Constants.PlayerTag && currentState == MoveState.walk)
+        if (other.tag == Constants.PlayerTag && (currentState == MoveState.walk || currentState == MoveState.sit))
         {
             if (!other.gameObject.GetComponent<FirstPersonController>().IsCrouching)
             {
@@ -357,5 +366,10 @@ public class LovelandFrogman : Cryptid {
                 }
                 break;
         }
+    }
+
+    private void TriggerMove()
+    {
+
     }
 }
