@@ -8,7 +8,7 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, walkforward, edgeLeap, sit, lilypadsit, flee, stand, floating}
+    enum MoveState { swim, walk, walkforward, walktoward, edgeLeap, sit, lilypadsit, flee, stand, floating}
     [SerializeField] MoveState currentState;
     MoveState previousState;
 
@@ -46,8 +46,11 @@ public class LovelandFrogman : Cryptid {
     private float swimHeight = -1;
     public float swimBaseOffset = -2.75f; //used to scooch navmesh base so frog sits in the water instead of on top of it
 
-    public CryptidTrigger trigger;
-    public CryptidPathPoint walkTarget;
+    public CryptidTrigger trigger1; //intended path to see frogman
+    public CryptidPathPoint trigger1target;
+    public CryptidTrigger trigger2; //fallback if player gets close without activating trigger 1
+    public CryptidPathPoint trigger2target;
+    private CryptidPathPoint currentPathTarget;
 
     // Use this for initialization
     void Start () {
@@ -79,9 +82,13 @@ public class LovelandFrogman : Cryptid {
             nav.baseOffset = swimBaseOffset;
         }
 
-        if (trigger != null)
+        if (trigger1 != null)
         {
-            trigger.TriggerEnterAction += TriggerMove;
+            trigger1.TriggerEnterAction += TriggerMoveToShore;
+        }
+        if (trigger2 != null)
+        {
+            trigger2.TriggerEnterAction += TriggerMoveToWoods;
         }
     }
 	
@@ -117,6 +124,10 @@ public class LovelandFrogman : Cryptid {
                 break;
             case MoveState.walkforward:
                 Move(walkSpeed);
+                break;
+            case MoveState.walktoward:
+                MoveToward(currentPathTarget.transform);
+                CheckPath(currentPathTarget);
                 break;
             case MoveState.stand:
             case MoveState.sit:
@@ -368,8 +379,35 @@ public class LovelandFrogman : Cryptid {
         }
     }
 
-    private void TriggerMove()
+    private void TriggerMoveToShore()
     {
+        trigger1.gameObject.SetActive(false);
+        trigger2.gameObject.SetActive(false);
 
+        currentState = MoveState.walktoward;
+        animator.SetBool("creep", true);
+        nav.speed = walkSpeed;
+        nav.baseOffset = 0;
+
+        currentPathTarget = trigger1target;
+    }
+
+    private void TriggerMoveToWoods()
+    {
+        trigger1.gameObject.SetActive(false);
+        trigger2.gameObject.SetActive(false);
+
+        currentState = MoveState.walktoward;
+        animator.SetBool("creep", true);
+        nav.speed = walkSpeed;
+        nav.baseOffset = 0;
+
+        currentPathTarget = trigger2target;
+    }
+
+    protected override void DoActionAtPathPoint(CryptidPathPoint triggerPoint)
+    {
+        KillNavMeshMovement();
+        currentState = MoveState.walkforward;
     }
 }

@@ -20,6 +20,6 @@ public class CryptidTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (TriggerEnterAction != null) { TriggerEnterAction.Invoke(); }
+        if (TriggerEnterAction != null && other.CompareTag(Constants.PlayerTag)) { TriggerEnterAction.Invoke(); }
     }
 }

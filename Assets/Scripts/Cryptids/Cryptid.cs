@@ -275,6 +275,14 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
+    public void CheckPath(CryptidPathPoint targetOverride)
+    {
+        if ((transform.position - targetOverride.transform.position).magnitude < pathPointMinDist)
+        {
+            if (targetOverride.DoActionAtPoint) { DoActionAtPathPoint(targetOverride); }
+        }
+    }
+
     protected virtual void DoActionAtPathPoint(CryptidPathPoint triggerPoint)
     {
         //specifics should be handled in child class
