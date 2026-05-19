@@ -314,6 +314,10 @@ public class LovelandFrogman : Cryptid {
         }
         else if (other.tag == Constants.SplashFXTag && (currentState == MoveState.swim || currentState == MoveState.flee)) //frogman swims away from splashes in the water
         {
+            //if this cryptid and the splash effect have the same position, its because this splash was spawned by this cryptid entering the water
+            //dont flee from your own splashes
+            if (other.transform.position == this.transform.position) { return; }
+
             previousState = MoveState.swim;
             currentState = MoveState.flee;
             fleeFromTarget = other.gameObject.transform;

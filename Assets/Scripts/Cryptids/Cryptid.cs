@@ -450,6 +450,7 @@ public class Cryptid : MonoBehaviour {
         {
             nav.velocity = Vector3.zero;
             nav.isStopped = true;
+            nav.updatePosition = false;
         }
     }
 
@@ -457,6 +458,7 @@ public class Cryptid : MonoBehaviour {
     {
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
+        if (!nav.updatePosition) { nav.Warp(this.transform.position); }
         nav.updatePosition = true;
         nav.updateRotation = true;
     }
