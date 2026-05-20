@@ -266,6 +266,7 @@ public class LovelandFrogman : Cryptid {
             currentState = MoveState.swim;
             nav.speed = swimSpeed;
             nav.baseOffset = swimBaseOffset;
+            nav.Warp(this.transform.position);
             animator.SetBool("swim", true);
             animator.SetBool("creep", false);
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;

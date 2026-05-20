@@ -94,17 +94,17 @@ public class Cryptid : MonoBehaviour {
     //move randomly in 2d space
     public void Wander(float distance, float minDistance, float runSpeed, float rotateSpeed, bool avoidObstacles = false)
     {
-        Wander(distance, minDistance);
+        Wander(distance, minDistance, false);
 
         //override navmesh movement to keep cryptids from sliding weird
         MoveManuallyAlongNavMeshPath(runSpeed, rotateSpeed, avoidObstacles);
 
     }
 
-    public void Wander(float distance, float minDistance)
+    public void Wander(float distance, float minDistance, bool snapToPosition = true)
     {
         movementTimer += Time.deltaTime;
-        UnKillNavMeshMovement();
+        UnKillNavMeshMovement(snapToPosition);
 
         //change target position once within a certain range or after chasing it for a period of time
         if (targetPos == Vector3.zero || (transform.position - nav.destination).magnitude < minDistance || movementTimer > wanderRepositionInterval)
@@ -454,11 +454,11 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
-    protected void UnKillNavMeshMovement()
+    protected void UnKillNavMeshMovement(bool snapToPosition = true)
     {
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
-        if (!nav.updatePosition) { nav.Warp(this.transform.position); }
+        if (!nav.updatePosition && snapToPosition) { nav.Warp(this.transform.position); }
         nav.updatePosition = true;
         nav.updateRotation = true;
     }
