@@ -74,7 +74,7 @@ public class Tsuchinoko : Cryptid {
             //tsuchinoko moves towards something until he is within a certain range of it
             case MoveState.Seeking:
                 
-                if (nav.destination != target.position) { SetupNavMeshSeek(); }
+                if (nav.destination != target.position) { SetupNavMeshSeek(false); }
 
                 //nvm, handle movement manually
                 MoveManuallyAlongNavMeshPath(speed, rotateSpeed, false);
@@ -178,11 +178,11 @@ public class Tsuchinoko : Cryptid {
         
     }
 
-    private void SetupNavMeshSeek()
+    private void SetupNavMeshSeek(bool snapToPosition = true)
     {
-        UnKillNavMeshMovement();
+        UnKillNavMeshMovement(snapToPosition);
         nav.destination = target.position;
-        nav.speed = fleespeed;
+        nav.speed = speed;
         SetUpright(false);
         animator.SetFloat("Speed", fleespeed / speed);
         SetNavMeshChaseTarget(target);

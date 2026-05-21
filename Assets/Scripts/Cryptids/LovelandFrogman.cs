@@ -302,6 +302,7 @@ public class LovelandFrogman : Cryptid {
                 previousState = MoveState.walk;
                 currentState = MoveState.flee;
                 fleeFromTarget = other.gameObject.transform;
+                ResetNavAgentPosition();
                 KillNavMeshMovement();
             }
         }

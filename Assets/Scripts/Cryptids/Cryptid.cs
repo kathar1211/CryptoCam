@@ -134,7 +134,7 @@ public class Cryptid : MonoBehaviour {
     public void Flee(Transform fleeFromTarget, float minDistance)
     {
         movementTimer += Time.deltaTime;
-        UnKillNavMeshMovement();
+        UnKillNavMeshMovement(false);
 
         if (movementTimer > fleeRepositionInterval || (transform.position - nav.destination).magnitude < minDistance)
         {
@@ -176,6 +176,8 @@ public class Cryptid : MonoBehaviour {
     {
         if (fleeFromTarget == null) { return; }
         if (!nav.enabled) { return; }
+
+        ResetNavAgentPosition();
 
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
         fleeFromTargetPos.y = transform.position.y + nav.baseOffset;
@@ -458,9 +460,14 @@ public class Cryptid : MonoBehaviour {
     {
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
-        if (!nav.updatePosition && snapToPosition) { nav.Warp(this.transform.position); }
+        if (!nav.updatePosition && snapToPosition) { ResetNavAgentPosition(); }
         nav.updatePosition = true;
         nav.updateRotation = true;
+    }
+
+    protected void ResetNavAgentPosition()
+    {
+        nav.Warp(this.transform.position);
     }
 
     //navmesh handles rotation and movement independently

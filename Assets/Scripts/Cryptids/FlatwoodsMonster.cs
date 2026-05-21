@@ -108,6 +108,7 @@ public class FlatwoodsMonster : Cryptid
                 {
                     animator.SetBool(MoveBool, true);
                     currentState = MoveState.wander;
+                    ResetNavAgentPosition();
                     poseTimer = 0;
                 }
 
@@ -198,6 +199,7 @@ public class FlatwoodsMonster : Cryptid
                 {
                     animator.SetBool(MoveBool, true);
                     currentState = MoveState.wander;
+                    ResetNavAgentPosition();
                 }
 
                 break;
