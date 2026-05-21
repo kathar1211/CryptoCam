@@ -143,6 +143,7 @@ public class Cryptid : MonoBehaviour {
 
         // ForceNavMeshToMoveForward();
         Debug.DrawLine(transform.position, nav.destination, Color.red);
+        Debug.DrawLine(transform.position, nav.nextPosition, Color.yellow);
     }
 
     //move in the opposite direction of a given target. uses navmesh agent
@@ -180,8 +181,9 @@ public class Cryptid : MonoBehaviour {
         ResetNavAgentPosition();
 
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
-        fleeFromTargetPos.y = transform.position.y + nav.baseOffset;
+        
         Vector3 oppositeDirection = transform.position - fleeFromTargetPos;
+        oppositeDirection.y = 0;
         oppositeDirection.Normalize();
 
         int navMeshArea = NavMesh.AllAreas;
@@ -241,13 +243,14 @@ public class Cryptid : MonoBehaviour {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
-        Debug.DrawRay(transform.position, transform.forward, Color.red);
+        Debug.DrawRay(transform.position, transform.forward * 10, Color.magenta);
         Debug.DrawLine(target, transform.position, Color.green);
         Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir, transform.up);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
-        Debug.DrawRay(transform.position, newDir, Color.blue);
+        Debug.DrawRay(transform.position, newDir*10, Color.blue);
+        Debug.DrawRay(transform.position, transform.forward * 10, Color.cyan);
     }
 
     public void RotateAway(Vector3 target, float rotateSpeed)
@@ -460,7 +463,7 @@ public class Cryptid : MonoBehaviour {
     {
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
-        if (!nav.updatePosition && snapToPosition) { ResetNavAgentPosition(); }
+       // if (!nav.updatePosition && snapToPosition) { ResetNavAgentPosition(); }
         nav.updatePosition = true;
         nav.updateRotation = true;
     }

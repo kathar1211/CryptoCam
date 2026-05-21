@@ -36,8 +36,8 @@ public class Jackalope : Cryptid {
     string Eat = "Eat";
     public bool startAwake;
 
-    enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward};
-    MoveState currentState;
+    public enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward};
+    public MoveState currentState;
     MoveState nextState;
 
     //jackalope has texture switches
@@ -204,9 +204,8 @@ public class Jackalope : Cryptid {
         }
         else if (other.tag == Constants.CarrotTag)
         {
-            //we don't need to chase after the new carrot if we've already got our eyes on one
             //we should also ignore carrots if we're busy running away
-            if (currentState != MoveState.runtoward && currentState != MoveState.flee)
+            if (currentState != MoveState.flee)
             {
                 if (currentState == MoveState.sleep) { WakeUp(); nextState = MoveState.runtoward; }
                 else if (currentState == MoveState.wake) { nextState = MoveState.runtoward; }
