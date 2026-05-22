@@ -152,6 +152,7 @@ public class Tsuchinoko : Cryptid {
     private void SetupFlee(Transform fleetarget)
     {
         if (nextState == MoveState.Fleeing) { return; }
+        if (currentMovestate == MoveState.Fleeing) { return; }
 
         if (currentMovestate != MoveState.Sleeping)
         {
@@ -182,6 +183,7 @@ public class Tsuchinoko : Cryptid {
     {
         UnKillNavMeshMovement(snapToPosition);
         nav.destination = target.position;
+        Debug.Log("updated nav destination on " + this.name);
         nav.speed = speed;
         SetUpright(false);
         animator.SetFloat("Speed", fleespeed / speed);

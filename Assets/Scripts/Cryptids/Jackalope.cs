@@ -184,6 +184,7 @@ public class Jackalope : Cryptid {
     {
         nav.isStopped = false;
         nav.destination = targetPos;
+        Debug.Log("updated nav destination on " + this.name);
         currentState = MoveState.run;
         animator.SetBool(Eat, false);
     }

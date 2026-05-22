@@ -241,6 +241,7 @@ public class Bigfoot : Cryptid
 
             avoidTarget = other.transform;
             SetNavmeshFleeTarget(avoidTarget);
+            animator.SetBool(WalkBool, true);
             currentState = MoveState.flee;
         }
 

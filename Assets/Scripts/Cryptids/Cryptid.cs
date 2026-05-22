@@ -49,7 +49,7 @@ public class Cryptid : MonoBehaviour {
     protected NavMeshAgent nav;
     private float movementTimer;
     private float wanderRepositionInterval = 10;
-    private float fleeRepositionInterval = 1.5f;
+    private float fleeRepositionInterval = 5f;
     private float chaseRepositionInterval = .5f;
 
     // Use this for initialization- needs to be called manually from base class's "Start" function
@@ -121,6 +121,7 @@ public class Cryptid : MonoBehaviour {
                 {
                     movementTimer = 0;
                     nav.destination = hit.position;
+                    Debug.Log("updated nav destination on " + this.name);
                     break;
                 }
             }
@@ -138,6 +139,8 @@ public class Cryptid : MonoBehaviour {
 
         if (movementTimer > fleeRepositionInterval || (transform.position - nav.destination).magnitude < minDistance)
         {
+            Debug.Log("resetting flee target for " + this.name + ": movementTimer: " + movementTimer + ", fleeRepositionInterval: " + fleeRepositionInterval
+                + ", distance from destination: " + ((transform.position - nav.destination).magnitude) + ", minDistance: " + minDistance);
             SetNavmeshFleeTarget(fleeFromTarget);
         }
 
@@ -205,6 +208,7 @@ public class Cryptid : MonoBehaviour {
             {
                 movementTimer = 0;
                 nav.destination = hit.position;
+                Debug.Log("updated nav destination on " + this.name);
                 break;
             }
         }
@@ -214,6 +218,7 @@ public class Cryptid : MonoBehaviour {
     {
         movementTimer = 0;
         nav.destination = chaseTarget.position;
+        Debug.Log("updated nav destination on " + this.name);
     }
 
     //move in the direction of a given target (transform). utilizes navmesh for pathing but movement is manual
@@ -243,10 +248,14 @@ public class Cryptid : MonoBehaviour {
         rotateSpeed = Mathf.Abs(rotateSpeed);
         //vector3.zero is used in place of a null value
         if (target == Vector3.zero) { return; }
+        if (target == transform.position) { return; }
+        if ((target - transform.position).magnitude < .1f) { return; }
+
         Debug.DrawRay(transform.position, transform.forward * 10, Color.magenta);
-        Debug.DrawLine(target, transform.position, Color.green);
-        Vector3 newDir = Vector3.RotateTowards(transform.forward, (target - transform.position), rotateSpeed * Time.deltaTime, 0);
-        transform.rotation = Quaternion.LookRotation(newDir, transform.up);
+        Debug.DrawLine(target, transform.position, Color.white);
+        Vector3 targetDir = Vector3.Normalize(target - transform.position);
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir, Vector3.up);
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
         Debug.DrawRay(transform.position, newDir*10, Color.blue);
@@ -483,6 +492,9 @@ public class Cryptid : MonoBehaviour {
         //option to do additional obstacle avoidance in the event the navmesh and cryptid get separated (common)
         if (!avoidObstacles || !AvoidObstacles(rotateSpeed))
         {
+            Debug.Log("nav status for " + this.name + ": nav path status: " + nav.pathStatus + 
+                ", nav path pending: " + nav.pathPending + ", current position: " + transform.position + 
+                ", next position: " + nav.nextPosition +  ", destination: " + nav.destination);
             RotateToward(nav.nextPosition, rotateSpeed);
         }
         Move(moveSpeed);
