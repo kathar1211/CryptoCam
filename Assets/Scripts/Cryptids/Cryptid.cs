@@ -181,7 +181,7 @@ public class Cryptid : MonoBehaviour {
         if (fleeFromTarget == null) { return; }
         if (!nav.enabled) { return; }
 
-        ResetNavAgentPosition();
+        //ResetNavAgentPosition();
 
         Vector3 fleeFromTargetPos = fleeFromTarget.position;
         
@@ -254,6 +254,7 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawRay(transform.position, transform.forward * 10, Color.magenta);
         Debug.DrawLine(target, transform.position, Color.white);
         Vector3 targetDir = Vector3.Normalize(target - transform.position);
+        Debug.DrawRay(transform.position, targetDir * 10, Color.white);
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir, Vector3.up);
         //Move(forwardSpeed, 0);
