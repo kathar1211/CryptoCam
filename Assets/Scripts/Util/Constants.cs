@@ -147,6 +147,8 @@ public static class Constants {
         {Mothman, "Despite the name, Mothman is usually described as a large birdlike creature. Originally spotted in Point Pleasant in 1966, he's alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law." }
     };
 
+    public static readonly string[] DemoLockedCryptids = { Bigfoot, Mothman }; //cryptids that arent in the demo
+
     public const string defaultEntry = "Take a photo of this cryptid and submit it to Ted to learn more about them.";
     public const string demoLockedEntry = "This cryptid will be available in the full release of the game.";
 
