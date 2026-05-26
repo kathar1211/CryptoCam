@@ -192,7 +192,9 @@ public class Cryptid : MonoBehaviour {
         int navMeshArea = NavMesh.AllAreas;
         if (navMeshAreaName != null)
         {
-            navMeshArea = NavMesh.GetAreaFromName(navMeshAreaName);
+            navMeshArea = 0;
+            navMeshArea += 1 << NavMesh.GetAreaFromName(navMeshAreaName);
+            
         }
 
         //docs.unity3d.com/540/Documentation/ScriptReference/NavMesh.SamplePosition.html
@@ -200,6 +202,7 @@ public class Cryptid : MonoBehaviour {
         for (int i = 0; i < 10; i++)
         {
             Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(10, 50)); //lets make sure this works before getting overly concerned about values
+            positionAwayFromTarget.y = transform.position.y - (nav.baseOffset * transform.localScale.y);
             Debug.DrawLine(transform.position, positionAwayFromTarget, Color.gray);
 
             NavMeshHit hit;
@@ -257,6 +260,8 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawRay(transform.position, targetDir * 10, Color.white);
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, rotateSpeed * Time.deltaTime, 0);
         transform.rotation = Quaternion.LookRotation(newDir, Vector3.up);
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0); //lock rotation to only rotate about y axis
+
         //Move(forwardSpeed, 0);
         //update: handle forward movement separate from deciding direction with move() in child script
         Debug.DrawRay(transform.position, newDir*10, Color.blue);
