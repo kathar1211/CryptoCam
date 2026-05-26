@@ -436,6 +436,13 @@ public class Photography : MonoBehaviour {
             Vector3 viewPos;
             if (centerofMass == null) viewPos = cryptoCam.WorldToViewportPoint(renderer.transform.position);
             else { viewPos = cryptoCam.WorldToViewportPoint(centerofMass.position); }
+            //setting a maximum distance; if cryptid is too far away it doesnt count as in view
+            if (viewPos.z >= 500)
+            {
+                if (!suppressDebug) { Debug.Log(renderer.name + " is not in frame due to exceeding maximum distance"); }
+                return false;
+            }
+
             if ((viewPos.x >= 0) && (viewPos.x <= 1) && (viewPos.y >= 0) && (viewPos.y <= 1) && (viewPos.z > 0))
             {
                 if (!suppressDebug) { Debug.Log(renderer.name + " is in frame"); }
