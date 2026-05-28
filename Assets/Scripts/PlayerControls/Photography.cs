@@ -46,7 +46,7 @@ public class Photography : MonoBehaviour {
     CameraSnap cameraSnap;
 
     // method for subject- get list of all cryptids and check if visible in frame
-    GameObject[] allCryptids;
+    public GameObject[] allCryptids;
 
     //save field of view for non zoom;
     float defaultFOV;
@@ -75,7 +75,7 @@ public class Photography : MonoBehaviour {
         allPics = new Photograph[maxPics];
 
         //TEMPORARY CODE: once all the cryptids are in define references to them in editor
-        allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
+       // allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = (allPics.Length - picIndex).ToString();
         defaultFOV = cryptoCam.fieldOfView;
 
