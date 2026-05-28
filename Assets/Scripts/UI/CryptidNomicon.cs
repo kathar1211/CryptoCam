@@ -96,9 +96,7 @@ public class CryptidNomicon : MonoBehaviour {
             };
 
             //get total score to show at the front
-            int totalScore = CalculateTotalScore(pageContents);
-            if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }
-            else { totalScoreText.text = "Total Score:\n" + totalScore.ToString(); }
+            UpdateScoreText();
         }
     }
 	
@@ -285,6 +283,14 @@ public class CryptidNomicon : MonoBehaviour {
 
         //autosave after updating photos
         SavePhotos();
+        UpdateScoreText();
+    }
+
+    private void UpdateScoreText()
+    {
+        int totalScore = CalculateTotalScore(pageContents);
+        if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }
+        else { totalScoreText.text = "Total Score:\n" + totalScore.ToString(); }
     }
 
     private int CalculateTotalScore(Dictionary<string, PageContent> pagecontents)
