@@ -340,7 +340,7 @@ public class LovelandFrogman : Cryptid {
     public override bool SpecialPose()
     {
         if (animator.GetBool("climb")){ return true; }
-        else if (currentState == MoveState.sit) { return true; }
+        else if (currentState == MoveState.sit || currentState == MoveState.lilypadsit) { return true; }
         return base.SpecialPose();
     }
 

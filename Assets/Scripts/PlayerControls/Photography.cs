@@ -169,7 +169,11 @@ public class Photography : MonoBehaviour {
             //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
             Cryptid Component = cryptid.GetComponent<Cryptid>();
             //check if cyrptid position is visible by camera
-            if (IsInCameraView(Component.renderer, Component.CenterOfMass))
+            Transform positionInShot = cryptid.transform;
+            if (Component.CenterOfMass != null) { positionInShot = Component.CenterOfMass; }
+            else if (Component.HeadBone != null) { positionInShot = Component.HeadBone.transform; }
+
+            if (IsInCameraView(Component.renderer, positionInShot))
             {
                 //dont add cryptids that are in frame but not visible
                 if (checkVisibility(cryptid) != 0) { subjects.Add(cryptid); }
@@ -220,9 +224,10 @@ public class Photography : MonoBehaviour {
                 //(.5,.5) is the center of the screen: |(x,y)-(.5,.5)| represents distance from center
                 Vector3 viewPos;
                 Cryptid Component = cryptid.GetComponent<Cryptid>();
-                if (Component == null || Component.CenterOfMass == null) { viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position); }
-                else { viewPos = cryptoCam.WorldToViewportPoint(Component.CenterOfMass.position); }
-
+                if (Component != null && Component.CenterOfMass != null) { viewPos = cryptoCam.WorldToViewportPoint(Component.CenterOfMass.position); }
+                else if (Component != null && Component.HeadBone != null) { viewPos = cryptoCam.WorldToViewportPoint(Component.HeadBone.transform.position); }
+                else { viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position); }
+                
                 //don't include cryptids behind the camera 
                 if (viewPos.z < 0) { continue; }
 
@@ -244,12 +249,13 @@ public class Photography : MonoBehaviour {
         }
 
         //once main subject is determined check other score criteria
+        Cryptid cryptidComponent = mainSubject.GetComponent<Cryptid>();
 
         //check if facing forward
         Vector3 cryptidForward = mainSubject.transform.forward;
 
         //if cryptid has a "head bone" (object that represents the head and face) then use the forward of that for a more accurate estimate of which way its facing
-        HeadBone cryptidHead = mainSubject.GetComponentInChildren<HeadBone>();
+        HeadBone cryptidHead = cryptidComponent.HeadBone;
         if (cryptidHead != null)
         {
             cryptidForward = cryptidHead.GetForward();
@@ -263,7 +269,7 @@ public class Photography : MonoBehaviour {
         }
 
         //check for cool animation
-        Cryptid cryptidComponent = mainSubject.GetComponent<Cryptid>();
+        
         pic.coolPose = cryptidComponent.SpecialPose();
 
         //store distance from center and distance from camera

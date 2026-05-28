@@ -34,6 +34,7 @@ public class Cryptid : MonoBehaviour {
 
     //used for determining if cryptid is visible/centered in shot
     public Transform CenterOfMass;
+    public HeadBone HeadBone;
 
     //keep track of obstacles within our path
     private List<Collider> obstacles;
@@ -438,7 +439,7 @@ public class Cryptid : MonoBehaviour {
         //cancel out the force applied from the impact of the carrot. i dont want it actually knocking anyone over
         rb.velocity = Vector3.zero;
         KillNavMeshMovement();
-        nav.enabled = false;
+        if (nav != null) nav.enabled = false;
 
         if (leftImpact && animator.HasState(0, Animator.StringToHash("bonk_left")))
         {
@@ -466,6 +467,8 @@ public class Cryptid : MonoBehaviour {
 
     protected void KillNavMeshMovement()
     {
+        if (nav == null) { return; }
+
         if (nav.enabled)
         {
             nav.velocity = Vector3.zero;
@@ -476,6 +479,7 @@ public class Cryptid : MonoBehaviour {
 
     protected void UnKillNavMeshMovement(bool snapToPosition = true)
     {
+        if (nav == null) { return; }
         if (!nav.enabled) { nav.enabled = true; }
         if (nav.isStopped) { nav.isStopped = false; }
        // if (!nav.updatePosition && snapToPosition) { ResetNavAgentPosition(); }

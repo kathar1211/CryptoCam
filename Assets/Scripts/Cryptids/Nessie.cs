@@ -17,7 +17,6 @@ public class Nessie : Cryptid {
 
     ParticleSystem ripples;
 
-    HeadBone head;
     bool headBonk;
 
     bool justChangedStates;
@@ -33,7 +32,7 @@ public class Nessie : Cryptid {
         cryptidType = Constants.Nessie;
         currentState = MoveState.underWaterSwim;
         ripples = GetComponentInChildren<ParticleSystem>();
-        head = GetComponentInChildren<HeadBone>();
+        HeadBone = GetComponentInChildren<HeadBone>();
 
         DiveChance = new RandomChanceInterval(2, .15f);
         BreachChance = new RandomChanceInterval(3, .2f);
@@ -163,7 +162,7 @@ public class Nessie : Cryptid {
         //detect if this is a headbonk or not
         headBonk = false;
         ContactPoint contact = collision.GetContact(0);
-        Collider headBone = head.GetComponent<Collider>();
+        Collider headBone = HeadBone.GetComponent<Collider>();
         if (headBone != null)
         {
             if (contact.thisCollider == headBone || contact.otherCollider == headBone)
@@ -178,7 +177,7 @@ public class Nessie : Cryptid {
     public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
     {
         //nessie can only be bonked above water
-        if (currentState != MoveState.aboveWaterSwim && currentState != MoveState.look && currentState != MoveState.breach) { return; }
+        if (currentState == MoveState.underWaterSwim) { return; }
 
         //if nessie gets bonked on her head, play the bonk animation
         if (headBonk) { base.GetBonked(leftImpact, bonked); } //bonk transitions into look in animator
