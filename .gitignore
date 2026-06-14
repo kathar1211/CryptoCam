@@ -62,3 +62,5 @@ Assets/Sound/SFX/Ambient/410357__felix-blume__small-wood-at-night-close-to-rio-d
 Assets/Sound/SFX/Ambient/410357__felix-blume_QUIET__small-wood-at-night-close-to-rio-de-janeiro-on-the-way-to-pedra-bonita.ogg
 .vs/CryptoCam/v16/Browse.VC.db
 .vs/CryptoCam/v16/Browse.VC.db-shm
+*.sfk
+*.sfk.meta
