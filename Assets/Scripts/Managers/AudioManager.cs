@@ -7,8 +7,8 @@ public class AudioManager : MonoBehaviour {
 
     /*List<AudioSource> AllSFX = new List<AudioSource>();
     List<AudioSource> AllBGM = new List<AudioSource>();*/
-    float SFXVol;
-    float BGMVol;
+    float SFXVol = -25;
+    float BGMVol = -25;
 
     public AudioMixer Mixer;
     private const string SFX_MIXER_GROUP = "SFX_VOL";
@@ -44,7 +44,7 @@ public class AudioManager : MonoBehaviour {
     }
 
     //set volume for sound effects and save to playerprefs
-    //takes an int 0 to 10, maps to float from 0 to 1
+    //minimum is -80 db, max is 0
     public void UpdateSFXVolume(float volume)
     {
         if (volume < -80 || volume > 0) { return; }
