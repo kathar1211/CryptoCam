@@ -60,7 +60,8 @@ public class Photography : MonoBehaviour {
     public static Photography Instance = null;
 
     // Use this for initialization
-    void Awake () {
+    void Awake()
+    {
 
         if (Instance == null)
         {
@@ -74,10 +75,10 @@ public class Photography : MonoBehaviour {
         picIndex = 0;
         allPics = new Photograph[maxPics];
 
-        //TEMPORARY CODE: once all the cryptids are in define references to them in editor
-       // allCryptids = GameObject.FindGameObjectsWithTag("Cryptid");
         picText.text = (allPics.Length - picIndex).ToString();
-        defaultFOV = cryptoCam.fieldOfView;
+
+        LoadFOV();
+        cryptoCam.fieldOfView = defaultFOV;
 
         //PlayerPrefs.SetInt(Constants.CameraHeight, cryptoCam.pixelHeight);
         //PlayerPrefs.SetInt(Constants.CameraWidth, cryptoCam.pixelWidth);
@@ -458,5 +459,18 @@ public class Photography : MonoBehaviour {
 
         return false;
     }
-   
+
+    public void LoadFOV()
+    {
+        defaultFOV = PlayerPrefs.GetFloat(Constants.CameraFOV, 60f);
+    }
+
+    public void RefreshFOV()
+    {
+        LoadFOV();
+        if (CameraReady) { cryptoCam.fieldOfView = defaultFOV / 2; }
+        else { cryptoCam.fieldOfView = defaultFOV; }
+    }
+
+
 }

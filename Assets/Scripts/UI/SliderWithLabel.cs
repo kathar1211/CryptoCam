@@ -11,6 +11,7 @@ public class SliderWithLabel : UIControlWithHighlight {
 
     public string formatString = "{0}<size=90%>{1}<size=75%>%";
     public bool isPercentBased;
+    public bool displayRawNumber;
 
     public float value { get { return slider.value; } set { slider.value = value; } }
 
@@ -33,6 +34,12 @@ public class SliderWithLabel : UIControlWithHighlight {
 
     public void UpdateLabel(float val)
     {
+        if (displayRawNumber)
+        {
+            label.text = val.ToString();
+            return;
+        }
+
         string hundredsPlace;
         string tensOnesPlace;
         int percent;

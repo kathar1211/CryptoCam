@@ -126,9 +126,9 @@ public static class Constants {
     public static int CameraWidth = 1920;
     public static int CameraHeight = 1080;
     //camera settings
-    public static string CameraSensitivity;
-    public static string CameraFOV;
-    public static string PostProcessingEnabled;
+    public static string CameraSensitivity = "CameraSensitivity";
+    public static string CameraFOV = "CameraFOV";
+    public static string PostProcessingEnabled = "PostProcessingEnabled";
 
     //cryptid names
     public const string Tsuchinoko = "Tsuchinoko";

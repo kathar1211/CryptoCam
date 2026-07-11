@@ -21,19 +21,26 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Quaternion m_CameraTargetRot;
         private bool m_cursorIsLocked = true;
 
+        private float m_sensitivityModifier = 1f;
+
         public void Init(Transform character, Transform camera)
         {
             m_CharacterTargetRot = character.localRotation;
             m_CameraTargetRot = camera.localRotation;
+            LoadSensitivitySetting();
         }
 
+        public void LoadSensitivitySetting()
+        {
+            m_sensitivityModifier = PlayerPrefs.GetFloat("CameraSensitivity", 1f);
+        }
 
         public void LookRotation(Transform character, Transform camera)
         {
             if (Time.timeScale == 0) { return; } //freeze looking when game is paused
 
-            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+            float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity * m_sensitivityModifier;
+            float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity * m_sensitivityModifier;
             //Debug.Log("xrot: " + xRot);
 
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);

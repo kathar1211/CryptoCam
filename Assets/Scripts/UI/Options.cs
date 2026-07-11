@@ -59,12 +59,12 @@ public class Options : MonoBehaviour {
     //camera settings
     private float fov;
     private float sensitivity;
-    CameraManager cameraManager;
+    [SerializeField]CameraManager cameraManager;
 
     //audio
     public Text bgmVol;
     public Text sfxVol;
-    AudioManager audioManager;
+    [SerializeField] AudioManager audioManager;
 
     //hold buttons in an array that represents the order theyre in on screen
     private UIControlWithHighlight[] controlbuttonArray;
@@ -116,9 +116,10 @@ public class Options : MonoBehaviour {
         CustomController.LoadAllKeys();
         LoadTextSpeed();
         LoadErrorTracking();
-        audioManager = FindObjectOfType<AudioManager>();
+        //audioManager = FindObjectOfType<AudioManager>();
         LoadCameraSensitivity();
         LoadFOV();
+        LoadPostProcessing();
 
         UpdateButtonText();
         UpdateSettingsText();
@@ -313,6 +314,13 @@ public class Options : MonoBehaviour {
         Screen.fullScreen = FullScreenToggle.isOn;
     }
 
+    public void OnPostProcessingToggleChanged()
+    {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
+        PlayerPrefs.SetInt(Constants.PostProcessingEnabled, PostProcessing.isOn ? 1 : 0);
+        if (cameraManager != null) { cameraManager.OnPostProcessingSettingChanged(); }
+    }
+
     //https://www.studica.com/blog/custom-input-manager-unity-tutorial
     private void OnGUI()
     {
@@ -435,11 +443,6 @@ public class Options : MonoBehaviour {
         FullScreenToggle.isOn = Screen.fullScreen;
     }
 
-    void UpdateCameraText()
-    {
-       // sens
-    }
-
     public void RestoreControlDefaults()
     {
         if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
@@ -453,6 +456,13 @@ public class Options : MonoBehaviour {
         BGMSlider.value = 0;
         SFXSlider.value = 0;
         TextSpeedSlider.value = 1;
+    }
+
+    public void RestoreCameraDefaults()
+    {
+        CameraFOV.value = 60;
+        CameraSensitivity.value = 1;
+        PostProcessing.isOn = true;
     }
 
 
@@ -474,6 +484,20 @@ public class Options : MonoBehaviour {
     {
         float sfx = SFXSlider.value;
         audioManager.UpdateSFXVolume(sfx);
+    }
+
+    public void OnFOVSliderChanged()
+    {
+        fov = CameraFOV.value;
+        SaveFOV();
+        if (cameraManager != null) { cameraManager.OnUpdateCameraFOV(); }
+    }
+
+    public void OnSensitivitySliderChanged()
+    {
+        sensitivity = CameraSensitivity.value;
+        SaveCameraSensitivity();
+        if (cameraManager != null) { cameraManager.OnUpdateCameraSensitivity(); }
     }
 
    

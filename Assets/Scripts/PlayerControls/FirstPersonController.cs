@@ -297,5 +297,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 }
             }
         }
+
+        public Camera GetCamera()
+        {
+            return m_Camera;
+        }
+
+        public MouseLook GetMouseControls()
+        {
+            return m_MouseLook;
+        }
     }
 }
