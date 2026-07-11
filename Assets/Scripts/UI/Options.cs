@@ -45,7 +45,7 @@ public class Options : MonoBehaviour {
     //screen handling
     bool isScrolling = false;
     public float scrollSpeed;
-    float moreButtonPos;
+
     public enum ScreenState { Controls, Settings, Camera};
     public ScreenState currentScreen = ScreenState.Controls;
     public GameObject ControlScreenHolder;
@@ -59,6 +59,7 @@ public class Options : MonoBehaviour {
     //camera settings
     private float fov;
     private float sensitivity;
+    CameraManager cameraManager;
 
     //audio
     public Text bgmVol;
@@ -158,19 +159,13 @@ public class Options : MonoBehaviour {
         else //only navigate options screen if we're not waiting for input to be assigned
         {
             //allow using bumpers to navigate screens
-            if (currentScreen == ScreenState.Controls)
+            if (CrossPlatformInputManager.GetAxis(Constants.RTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.RTAxisMac) != 0)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.RTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.RTAxisMac) != 0)
-                {
-                    ShowMoreRight();
-                }
+                ShowMoreRight();
             }
-            else if (currentScreen == ScreenState.Settings)
+            else if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
-                {
-                    ShowMoreLeft();
-                }
+                ShowMoreLeft();
             }
 
             if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
@@ -275,6 +270,9 @@ public class Options : MonoBehaviour {
                 break;
             case ScreenState.Settings:
                 buttonArray = settingsButtonArray;
+                break;
+            case ScreenState.Camera:
+                buttonArray = cameraButtonArray;
                 break;
         }
         //start at index 0 if nothing is selected yet
@@ -569,6 +567,13 @@ public class Options : MonoBehaviour {
     void SaveFOV()
     {
         PlayerPrefs.SetFloat(Constants.CameraFOV, fov);
+    }
+
+    //load error tracking enabled from playerprefs
+    void LoadPostProcessing()
+    {
+        PostProcessing.isOn = PlayerPrefs.GetInt(Constants.PostProcessingEnabled, 1) == 1;
+        //Debug.Log("sentry on: " + ErrorTrackingToggle.isOn);
     }
 
     //if selector is activated it still needs to reflect mouseover options
