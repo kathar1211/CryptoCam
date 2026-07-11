@@ -125,6 +125,10 @@ public static class Constants {
     //used for image data- what size are these images
     public static int CameraWidth = 1920;
     public static int CameraHeight = 1080;
+    //camera settings
+    public static string CameraSensitivity;
+    public static string CameraFOV;
+    public static string PostProcessingEnabled;
 
     //cryptid names
     public const string Tsuchinoko = "Tsuchinoko";
