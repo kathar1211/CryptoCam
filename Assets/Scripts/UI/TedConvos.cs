@@ -44,15 +44,25 @@ public class TedConvos : MonoBehaviour {
             readBlurbs.Clear();
         }
 
-        //grab a random blurb
-        int blurbIndex = Random.Range(0, allBlurbs.Count-1);
+        //grab blurbs in order until player has read them all, then grab random
+        int blurbIndex = 0;
+        if (PlayerPrefs.HasKey(Constants.HasSeenAllTedDialogue) && (PlayerPrefs.GetInt(Constants.HasSeenAllTedDialogue) == 1))
+        {
+            blurbIndex = Random.Range(0, allBlurbs.Count - 1);
+        }
+        else
+        {
+            blurbIndex = PlayerPrefs.GetInt(Constants.TedTalkIndex, 0);
+        }
+      
         Blurb nextblurb = allBlurbs[blurbIndex];
         tedBox.GetComponent<TextBox>().FeedText(nextblurb.dialogue, nextblurb.sprites);
         tedBox.GetComponent<TextBox>().DisplayText(); //display text should be called when finished feeding lines
 
         //mark that ted has now said this already
-        allBlurbs.RemoveAt(blurbIndex);
-        readBlurbs.Add(nextblurb);
+        blurbIndex++;
+        PlayerPrefs.SetInt(Constants.TedTalkIndex, blurbIndex);
+        if (blurbIndex >= allBlurbs.Count) { PlayerPrefs.SetInt(Constants.HasSeenAllTedDialogue, 1); }
     }
     
     ///

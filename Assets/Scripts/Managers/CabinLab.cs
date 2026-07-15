@@ -326,7 +326,7 @@ public class CabinLab : MonoBehaviour {
         {
             currentState = MenuState.Talking;
             textBox.gameObject.SetActive(true);
-            string txt = "You can't look at the gallery yet.";
+            string txt = "You can't look at the gallery yet. That'll be available \nin the full game.";
             textBox.FeedText(txt);
             textBox.FeedTed(TedMoods.Uncertain);
             textBox.DisplayText();

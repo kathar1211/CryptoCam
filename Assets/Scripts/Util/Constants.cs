@@ -120,9 +120,15 @@ public static class Constants {
     public static string SFXVolume = "SFXVolume";
     public static string BGMVolume = "BGMVolume";
     public static string ErrorTrackingConsent = "ErrorTracking";
+    public static string TedTalkIndex = "TedTalkIndex";
+    public static string HasSeenAllTedDialogue = "HasTalkedToTed";
     //used for image data- what size are these images
     public static int CameraWidth = 1920;
     public static int CameraHeight = 1080;
+    //camera settings
+    public static string CameraSensitivity = "CameraSensitivity";
+    public static string CameraFOV = "CameraFOV";
+    public static string PostProcessingEnabled = "PostProcessingEnabled";
 
     //cryptid names
     public const string Tsuchinoko = "Tsuchinoko";
@@ -146,6 +152,8 @@ public static class Constants {
         {Flatwoods, "Known for her signature skirt and hood, this stylish creature was first spotted in the town of Flatwoods in 1952 after a mysterious bright light crossed the night sky. Though there were several additional reports shortly after her first appearance, there have been no new sightings since the 50s." },
         {Mothman, "Despite the name, Mothman is usually described as a large birdlike creature. Originally spotted in Point Pleasant in 1966, he's alleged to be connected to the collapse of the Silver Bridge and the disappearance of several pets, but he was never found guilty in a court of law." }
     };
+
+    public static readonly string[] DemoLockedCryptids = { Bigfoot, Mothman }; //cryptids that arent in the demo
 
     public const string defaultEntry = "Take a photo of this cryptid and submit it to Ted to learn more about them.";
     public const string demoLockedEntry = "This cryptid will be available in the full release of the game.";

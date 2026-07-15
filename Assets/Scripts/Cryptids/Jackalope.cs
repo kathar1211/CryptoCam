@@ -117,7 +117,7 @@ public class Jackalope : Cryptid {
                     animator.SetBool(Run, true);
                     animator.SetBool(Sniff, false);
                     //animator.Play("run");
-                    nav.isStopped = false;
+                    if (nav.enabled) { nav.isStopped = false; }
                 }
 
                 break;
@@ -182,8 +182,11 @@ public class Jackalope : Cryptid {
 
     private void StopEating()
     {
-        nav.isStopped = false;
-        nav.destination = targetPos;
+        if (nav.enabled)
+        {
+            nav.isStopped = false;
+            nav.destination = targetPos;
+        }
         Debug.Log("updated nav destination on " + this.name);
         currentState = MoveState.run;
         animator.SetBool(Eat, false);

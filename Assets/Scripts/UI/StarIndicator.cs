@@ -14,6 +14,9 @@ public class StarIndicator : MonoBehaviour
     public Color FilledStar;
     public Color EmptyStar;
 
+    static int TwoStarScore = 250;
+    static int ThreeStarScore = 500;
+
     void Start()
     {
         
@@ -25,8 +28,13 @@ public class StarIndicator : MonoBehaviour
         
     }
 
-    public void ShowStars(int starCount)
+    public void ShowStars(int score)
     {
+        int starCount;
+        if (score < TwoStarScore) { starCount = 1; }
+        else if (score < ThreeStarScore) { starCount = 2; }
+        else { starCount = 3; }
+
         Container.SetActive(true);
         Star1.gameObject.SetActive(true);
         Star2.gameObject.SetActive(true);

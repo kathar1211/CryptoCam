@@ -18,15 +18,9 @@ Happy - 14
 }
 
 /STARTBLURB/
-8/What? Goodness no, I would never hurt an innocent \ncryptid.
-0/Oh, the Jackalope on the mantle. That's a fake, of \ncourse. It has buttons for eyes. You should really learn \nthe difference if you're going to be a cryptid \nphotographer.
-4/The net? ...That's not for cryptids.
-/ENDBLURB/
-
-/STARTBLURB/
-8/Oh no, no, don't get the wrong idea. My interest in \nBigfoot in strictly academic.
-2/Well, yes, of course he has a gentle charm and is \nruggedly handsome... but it's not like that.
-5/...Why? ......Did he ask about me?
+0/I can't really recommend straying too far from the \npath when you're out exploring the woods around \nthe cabin.
+8/Not because I can't guarantee your safety or anything. \nJust because I can't guarantee you'll find anything \ninteresting.
+4/But you're an independent contractor, not my \nemployee. I can't really tell you how to do your job.
 /ENDBLURB/
 
 /STARTBLURB/
@@ -36,21 +30,27 @@ Happy - 14
 /ENDBLURB/
 
 /STARTBLURB/
-12/Oh, thank you! I'm quite proud of my book collection.\nAn academic such as myself has to stay well read, \nafter all.
-3/The comic books? Well of course those are also \nvaluable for research purposes.
-5/...Plus, they're fun.
-/ENDBLURB/
-
-/STARTBLURB/
 3/The Flatwoods Monster? Ah yes, I hear she's pretty \nelusive, even by cryptid standards.
 12/If you encounter a cryptid that seems camera shy, \nyou might just need to give it some time to warm up \nto you.
 14/I'm sure your patience will be rewarded. Probably.
 /ENDBLURB/
 
 /STARTBLURB/
-4/Actually, there's something I've been meaning to ask \nyou about.
-2/I'm... not sure how to bring this up but... why is it that, \nevery time you leave...
-0/...you always climb out through the window? I do have \na door you know.
+8/What? Goodness no, I would never hurt an innocent \ncryptid.
+0/Oh, the Jackalope on the mantle. That's a fake, of \ncourse. It has buttons for eyes. You should really learn \nthe difference if you're going to be a cryptid \nphotographer.
+4/The net? ...That's not for cryptids.
+/ENDBLURB/
+
+/STARTBLURB/
+12/Oh, thank you! I'm quite proud of my book collection.\nAn academic such as myself has to stay well read, \nafter all.
+3/The comic books? Well of course those are also \nvaluable for research purposes.
+5/...Plus, they're fun.
+/ENDBLURB/
+
+/STARTBLURB/
+8/Oh no, no, don't get the wrong idea. My interest in \nBigfoot is strictly academic.
+2/Well, yes, of course he has a gentle charm and is \nruggedly handsome... but it's not like that.
+5/...Why? ......Did he ask about me?
 /ENDBLURB/
 
 /STARTBLURB/
@@ -66,9 +66,9 @@ Happy - 14
 /ENDBLURB/
 
 /STARTBLURB/
-0/I can't really recommend straying too far from the \npath when you're out exploring the woods around \nthe cabin.
-8/Not because I can't guarantee your safety or anything. \nJust because I can't guarantee you'll find anything \ninteresting.
-4/But you're an independent contractor, not my \nemployee. I can't really tell you how to do your job.
+8/Composition? Framing? ...Rule of thirds?
+11/..............................................
+0/I don't know those cryptids.
 /ENDBLURB/
 
 /STARTBLURB/

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Splash : MonoBehaviour
 {
     public GameObject SplashEffectPrefab;
+    public GameObject SplashEffectPrefabNoTrigger;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,11 @@ public class Splash : MonoBehaviour
         //only counts if we're entering the water from above
         if (other.transform.position.y < this.transform.position.y) { return; }
 
-        GameObject.Instantiate(SplashEffectPrefab, other.transform.position, SplashEffectPrefab.transform.rotation);
+        GameObject splashToInstantiate = SplashEffectPrefab;
+
+        if (other.tag == Constants.CryptidTag) { splashToInstantiate = SplashEffectPrefabNoTrigger; }//prevent cryptids from spawning splashes that affect them
+
+        GameObject splash = GameObject.Instantiate(splashToInstantiate, other.transform.position, SplashEffectPrefab.transform.rotation);
+        
     }
 }

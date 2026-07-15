@@ -31,34 +31,45 @@ public class Options : MonoBehaviour {
     public ToggleWithHighlight ErrorTrackingToggle;
     public UIControlWithHighlight RestoreDefaultsSettings;
 
+    //buttons screen 3
+    public UIControlWithHighlight CloseOptionsScreen3;
+    public SliderWithLabel CameraSensitivity;
+    public SliderWithLabel CameraFOV;
+    public ToggleWithHighlight PostProcessing;
+    public UIControlWithHighlight RestoreDefaultsCamera;
+
     //buttons on all screens
-    public UIControlWithHighlight More;
+    public UIControlWithHighlight MoreLeft;
+    public UIControlWithHighlight MoreRight;
 
     //screen handling
     bool isScrolling = false;
     public float scrollSpeed;
-    float moreButtonPos;
-    public enum ScreenState { Controls, Settings};
+
+    public enum ScreenState { Controls, Settings, Camera};
     public ScreenState currentScreen = ScreenState.Controls;
     public GameObject ControlScreenHolder;
     public GameObject SettingsScreenHolder;
+    public GameObject CameraScreenHolder;
     private float offScreenPos;
 
     //display the current text speed
-    
     private float speed;
-    public float maxSpeed;
-    public float minSpeed;
-    public float increment;
+
+    //camera settings
+    private float fov;
+    private float sensitivity;
+    [SerializeField]CameraManager cameraManager;
 
     //audio
     public Text bgmVol;
     public Text sfxVol;
-    AudioManager audioManager;
+    [SerializeField] AudioManager audioManager;
 
     //hold buttons in an array that represents the order theyre in on screen
     private UIControlWithHighlight[] controlbuttonArray;
     private UIControlWithHighlight[] settingsButtonArray;
+    private UIControlWithHighlight[] cameraButtonArray;
     private UIControlWithHighlight selectedButton;
     private int selectedButtonIndex;
 
@@ -90,6 +101,8 @@ public class Options : MonoBehaviour {
         settingsButtonArray = new UIControlWithHighlight[] { TextSpeedSlider,
             BGMSlider, SFXSlider ,FullScreenToggle, ErrorTrackingToggle, RestoreDefaultsSettings, CloseOptionsScreen2, };
 
+        cameraButtonArray = new UIControlWithHighlight[] { CameraSensitivity, CameraFOV, PostProcessing, RestoreDefaultsCamera, CloseOptionsScreen3 };
+
         //assuming we're starting with controls screen on
         offScreenPos = SettingsScreenHolder.transform.localPosition.x;
 
@@ -103,7 +116,10 @@ public class Options : MonoBehaviour {
         CustomController.LoadAllKeys();
         LoadTextSpeed();
         LoadErrorTracking();
-        audioManager = FindObjectOfType<AudioManager>();
+        //audioManager = FindObjectOfType<AudioManager>();
+        LoadCameraSensitivity();
+        LoadFOV();
+        LoadPostProcessing();
 
         UpdateButtonText();
         UpdateSettingsText();
@@ -144,19 +160,13 @@ public class Options : MonoBehaviour {
         else //only navigate options screen if we're not waiting for input to be assigned
         {
             //allow using bumpers to navigate screens
-            if (currentScreen == ScreenState.Controls)
+            if (CrossPlatformInputManager.GetAxis(Constants.RTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.RTAxisMac) != 0)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.RTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.RTAxisMac) != 0)
-                {
-                    ShowMore();
-                }
+                ShowMoreRight();
             }
-            else if (currentScreen == ScreenState.Settings)
+            else if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
             {
-                if (CrossPlatformInputManager.GetAxis(Constants.LTAxis) != 0 || CrossPlatformInputManager.GetAxis(Constants.LTAxisMac) != 0)
-                {
-                    ShowMore();
-                }
+                ShowMoreLeft();
             }
 
             if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
@@ -166,7 +176,10 @@ public class Options : MonoBehaviour {
             }
 
             //adjust sliders if a slider is selected
-            float dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal);
+            float dir = 0;
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Horizontal))
+            { dir = CrossPlatformInputManager.GetAxis(Constants.Horizontal); }
+
             if (dir != 0 && selectedButton != null)
             {
                 Slider sliderSelect = selectedButton.GetComponent<Slider>();
@@ -183,19 +196,30 @@ public class Options : MonoBehaviour {
                     AdjustSliderValue(sliderSelect, increment);
                 }
 
+                //navigate between buttons on this screen and the buttons to switch to other screens
                 else
                 {
-
-                    switch (currentScreen)
+                    if (selectedButton == MoreLeft && dir < 0) { MoveSelector(MoreRight); }
+                    else if (selectedButton == MoreRight && dir > 0) { MoveSelector(MoreLeft); }
+                    else if (selectedButton != MoreLeft && selectedButton != MoreRight)
                     {
-                        case ScreenState.Controls:
-                            if (dir > 0) { MoveSelector(More); }
-                            else { MoveSelector(controlbuttonArray[selectedButtonIndex]); }
-                            break;
-                        case ScreenState.Settings:
-                            if (dir < 0) { MoveSelector(More); }
-                            else { MoveSelector(settingsButtonArray[selectedButtonIndex]); }
-                            break;
+                        if (dir < 0) { MoveSelector(MoreLeft); }
+                        else if (dir > 0) { MoveSelector(MoreRight); }
+                    }
+
+                    else {
+                        switch (currentScreen)
+                        {
+                            case ScreenState.Controls:
+                                MoveSelector(controlbuttonArray[selectedButtonIndex]);
+                                break;
+                            case ScreenState.Settings:
+                                MoveSelector(settingsButtonArray[selectedButtonIndex]);
+                                break;
+                            case ScreenState.Camera:
+                                MoveSelector(cameraButtonArray[selectedButtonIndex]);
+                                break;
+                        }
                     }
 
                 }
@@ -248,6 +272,9 @@ public class Options : MonoBehaviour {
             case ScreenState.Settings:
                 buttonArray = settingsButtonArray;
                 break;
+            case ScreenState.Camera:
+                buttonArray = cameraButtonArray;
+                break;
         }
         //start at index 0 if nothing is selected yet
         if (selectedButton == null)
@@ -285,6 +312,13 @@ public class Options : MonoBehaviour {
     {
         if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
         Screen.fullScreen = FullScreenToggle.isOn;
+    }
+
+    public void OnPostProcessingToggleChanged()
+    {
+        if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
+        PlayerPrefs.SetInt(Constants.PostProcessingEnabled, PostProcessing.isOn ? 1 : 0);
+        if (cameraManager != null) { cameraManager.OnPostProcessingSettingChanged(); }
     }
 
     //https://www.studica.com/blog/custom-input-manager-unity-tutorial
@@ -424,25 +458,13 @@ public class Options : MonoBehaviour {
         TextSpeedSlider.value = 1;
     }
 
-    //method to change the speed at which dialogue appears. true to increase false to decrease
-    public void AdjustTextSpeed (bool increase)
+    public void RestoreCameraDefaults()
     {
-        if (!isScrolling)
-        {
-            if (NormalButtonSFX != null) { NormalButtonSFX.Play(); }
-            if (increase && speed < maxSpeed)
-            {
-                speed += increment;
-            }
-            else if (!increase && speed > minSpeed)
-            {
-                speed -= increment;
-            }
-            //save value and update ui
-            SaveTextSpeed();
-            UpdateSettingsText();
-        }
+        CameraFOV.value = 60;
+        CameraSensitivity.value = 1;
+        PostProcessing.isOn = true;
     }
+
 
     public void OnTextSpeedSliderChanged()
     {
@@ -462,6 +484,20 @@ public class Options : MonoBehaviour {
     {
         float sfx = SFXSlider.value;
         audioManager.UpdateSFXVolume(sfx);
+    }
+
+    public void OnFOVSliderChanged()
+    {
+        fov = CameraFOV.value;
+        SaveFOV();
+        if (cameraManager != null) { cameraManager.OnUpdateCameraFOV(); }
+    }
+
+    public void OnSensitivitySliderChanged()
+    {
+        sensitivity = CameraSensitivity.value;
+        SaveCameraSensitivity();
+        if (cameraManager != null) { cameraManager.OnUpdateCameraSensitivity(); }
     }
 
    
@@ -517,6 +553,53 @@ public class Options : MonoBehaviour {
 
     }
 
+    //load text speed from playerprefs
+    void LoadCameraSensitivity()
+    {
+        if (PlayerPrefs.HasKey(Constants.CameraSensitivity))
+        {
+            sensitivity = PlayerPrefs.GetFloat(Constants.CameraSensitivity);
+        }
+        else
+        {
+            sensitivity = 1;
+        }
+        CameraSensitivity.value = sensitivity;
+    }
+
+    //save text speed to playerprefs
+    void SaveCameraSensitivity()
+    {
+        PlayerPrefs.SetFloat(Constants.CameraSensitivity, sensitivity);
+    }
+
+    //load text speed from playerprefs
+    void LoadFOV()
+    {
+        if (PlayerPrefs.HasKey(Constants.CameraFOV))
+        {
+            fov = PlayerPrefs.GetFloat(Constants.CameraFOV);
+        }
+        else
+        {
+            fov = 60;
+        }
+        CameraFOV.value = fov;
+    }
+
+    //save text speed to playerprefs
+    void SaveFOV()
+    {
+        PlayerPrefs.SetFloat(Constants.CameraFOV, fov);
+    }
+
+    //load error tracking enabled from playerprefs
+    void LoadPostProcessing()
+    {
+        PostProcessing.isOn = PlayerPrefs.GetInt(Constants.PostProcessingEnabled, 1) == 1;
+        //Debug.Log("sentry on: " + ErrorTrackingToggle.isOn);
+    }
+
     //if selector is activated it still needs to reflect mouseover options
     public void MoveSelector(UIControlWithHighlight button)
     {
@@ -545,35 +628,93 @@ public class Options : MonoBehaviour {
         }
     }
 
-    public void ShowMore()
+    public void ShowMoreRight()
     {
         if (MoreButtonSFX != null) { MoreButtonSFX.Play(); }
         if (!isScrolling)
         {
-            moreButtonPos = More.transform.localPosition.x;
             isScrolling = true;
-            
         }
 
         Sequence transition = DOTween.Sequence();
         transition.SetUpdate(true);
-        transition.Append(More.transform.DOLocalMoveX(moreButtonPos * -1, .5f).SetEase(Ease.OutSine));
-        
 
-        //update selected screen
+        GameObject leftScreen = null;
+        GameObject middleScreen = null;
+        GameObject rightScreen = null;
+
         switch (currentScreen)
         {
             case ScreenState.Controls:
                 currentScreen = ScreenState.Settings;
-                transition.Join(SettingsScreenHolder.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
-                transition.Join(ControlScreenHolder.transform.DOLocalMoveX(offScreenPos * -1, .5f).SetEase(Ease.OutSine));
+                leftScreen = CameraScreenHolder;
+                middleScreen = ControlScreenHolder;
+                rightScreen = SettingsScreenHolder;
                 break;
             case ScreenState.Settings:
-                transition.Join(ControlScreenHolder.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
-                transition.Join(SettingsScreenHolder.transform.DOLocalMoveX(offScreenPos * 1, .5f).SetEase(Ease.OutSine));
+                currentScreen = ScreenState.Camera;
+                leftScreen = ControlScreenHolder;
+                middleScreen = SettingsScreenHolder;
+                rightScreen = CameraScreenHolder;
+                break;
+            case ScreenState.Camera:
                 currentScreen = ScreenState.Controls;
+                leftScreen = SettingsScreenHolder;
+                middleScreen = CameraScreenHolder;
+                rightScreen = ControlScreenHolder;
                 break;
         }
+
+        transition.Join(rightScreen.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
+        transition.Join(middleScreen.transform.DOLocalMoveX(offScreenPos * -1, .5f).SetEase(Ease.OutSine));
+        transition.Join(leftScreen.transform.DOLocalMoveX(offScreenPos * -2f, .5f).SetEase(Ease.OutSine));
+        transition.AppendCallback(() => leftScreen.transform.localPosition = new Vector3(offScreenPos, leftScreen.transform.localPosition.y));
+
+        transition.AppendCallback(OnShowMoreComplete);
+        transition.Play();
+    }
+
+    public void ShowMoreLeft()
+    {
+        if (MoreButtonSFX != null) { MoreButtonSFX.Play(); }
+        if (!isScrolling)
+        {
+            isScrolling = true;
+        }
+
+        Sequence transition = DOTween.Sequence();
+        transition.SetUpdate(true);
+
+        GameObject leftScreen = null;
+        GameObject middleScreen = null;
+        GameObject rightScreen = null;
+
+        switch (currentScreen)
+        {
+            case ScreenState.Controls:
+                currentScreen = ScreenState.Camera;
+                leftScreen = CameraScreenHolder;
+                middleScreen = ControlScreenHolder;
+                rightScreen = SettingsScreenHolder;
+                break;
+            case ScreenState.Settings:
+                currentScreen = ScreenState.Controls;
+                leftScreen = ControlScreenHolder;
+                middleScreen = SettingsScreenHolder;
+                rightScreen = CameraScreenHolder;
+                break;
+            case ScreenState.Camera:
+                currentScreen = ScreenState.Settings;
+                leftScreen = SettingsScreenHolder;
+                middleScreen = CameraScreenHolder;
+                rightScreen = ControlScreenHolder;
+                break;
+        }
+
+        transition.Join(leftScreen.transform.DOLocalMoveX(0, .5f).SetEase(Ease.OutSine));
+        transition.Join(middleScreen.transform.DOLocalMoveX(offScreenPos * 1f, .5f).SetEase(Ease.OutSine));
+        transition.Join(rightScreen.transform.DOLocalMoveX(offScreenPos * 2f, .5f).SetEase(Ease.OutSine));
+        transition.AppendCallback(() => rightScreen.transform.localPosition = new Vector3(offScreenPos * -1, rightScreen.transform.localPosition.y));
 
         transition.AppendCallback(OnShowMoreComplete);
         transition.Play();
@@ -584,11 +725,11 @@ public class Options : MonoBehaviour {
         isScrolling = false;
 
         //flip sprite
-        Vector3 localScale = More.transform.localScale;
-        More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
+       // Vector3 localScale = More.transform.localScale;
+       // More.transform.localScale = new Vector3(localScale.x * -1, localScale.y, localScale.z);
 
-        //snap to position
-        More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
+       // //snap to position
+       // More.transform.localPosition = new Vector3(moreButtonPos * -1, More.transform.localPosition.y, More.transform.localPosition.z);
     }
 
     public void ThrowFakeError()

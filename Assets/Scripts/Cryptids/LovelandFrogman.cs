@@ -52,6 +52,10 @@ public class LovelandFrogman : Cryptid {
     public CryptidPathPoint trigger2target;
     private CryptidPathPoint currentPathTarget;
 
+    //stop frogman from getting off the lilypad and then immediately getting back on
+    private float timeOfLastWaterReEntry = -5;
+    private float timeInSecondsBetweenExitingWater = 5;
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -272,25 +276,27 @@ public class LovelandFrogman : Cryptid {
             rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             //no gravity while swimming
             rb.useGravity = false;
+            timeOfLastWaterReEntry = Time.time;
         }
         //frogman approaches shore
         else if (other.tag == Constants.ShoreTag && (currentState == MoveState.swim || currentState == MoveState.flee))
         {
-           // transform.Translate(preleapOffset);
-            currentState = MoveState.edgeLeap;
-            animator.SetBool("climb", true);
-            KillNavMeshMovement();
-            nav.enabled = false;
+            if (Time.time - timeOfLastWaterReEntry > timeInSecondsBetweenExitingWater)
+            {
+                // transform.Translate(preleapOffset);
+                currentState = MoveState.edgeLeap;
+                animator.SetBool("climb", true);
+                KillNavMeshMovement();
+                nav.enabled = false;
 
-            //snap rotate towards the surface to make sure we actually land on it
-            RotateToward(other.transform.position, 100);
+                //snap rotate towards the surface to make sure we actually land on it
+                RotateToward(other.transform.position, 100);
 
-            //add extra "oomph" to the leap
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-            rb.AddForce(Vector3.up * leapHeight);
-            rb.AddForce(Vector3.forward * leapSpeed);
-            
-
+                //add extra "oomph" to the leap
+                rb.constraints = RigidbodyConstraints.FreezeRotation;
+                rb.AddForce(Vector3.up * leapHeight);
+                rb.AddForce(Vector3.forward * leapSpeed);
+            }
         }
 
 
@@ -334,7 +340,7 @@ public class LovelandFrogman : Cryptid {
     public override bool SpecialPose()
     {
         if (animator.GetBool("climb")){ return true; }
-        else if (currentState == MoveState.sit) { return true; }
+        else if (currentState == MoveState.sit || currentState == MoveState.lilypadsit) { return true; }
         return base.SpecialPose();
     }
 

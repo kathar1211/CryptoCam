@@ -31,6 +31,7 @@ public class CryptidNomicon : MonoBehaviour {
     public Image largeThumbnailOverlay;
     public Image notUnlockedSilhouette;
     public TextMeshProUGUI totalScoreText;
+    public StarIndicator starRatingDisplay;
 
     Dictionary<string, PageContent> pageContents;
     bool isInitialized = false;
@@ -96,9 +97,7 @@ public class CryptidNomicon : MonoBehaviour {
             };
 
             //get total score to show at the front
-            int totalScore = CalculateTotalScore(pageContents);
-            if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }
-            else { totalScoreText.text = "Total Score:\n" + totalScore.ToString(); }
+            UpdateScoreText();
         }
     }
 	
@@ -197,12 +196,21 @@ public class CryptidNomicon : MonoBehaviour {
             {
                 thumbnail.gameObject.SetActive(false);
                 scoreDesc.gameObject.SetActive(false);
+                starRatingDisplay.gameObject.SetActive(false);
                 
                 imageDesc.gameObject.SetActive(true);
                 nameDesc.gameObject.SetActive(false);
                 notUnlockedSilhouette.gameObject.SetActive(true);
 
-                imageDesc.text = Constants.defaultEntry;
+                if (Constants.DemoLockedCryptids.Contains(entry.Key))
+                {
+                    imageDesc.text = Constants.demoLockedEntry;
+                }
+                else
+                {
+                    imageDesc.text = Constants.defaultEntry;
+                }
+                
                 notUnlockedSilhouette.sprite = CryptidPreviewTable[entry.Key];
                 //nameDesc.text = entry.Key;
             }
@@ -212,12 +220,14 @@ public class CryptidNomicon : MonoBehaviour {
                 scoreDesc.gameObject.SetActive(true);
                 imageDesc.gameObject.SetActive(true);
                 nameDesc.gameObject.SetActive(true);
+                starRatingDisplay.gameObject.SetActive(true);
 
                 notUnlockedSilhouette.gameObject.SetActive(false);
 
                 thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
                 //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
                 scoreDesc.text = "Score: " + content.photoScore;
+                starRatingDisplay.ShowStars(content.photoScore);
                 imageDesc.text = content.flavorText;
                 nameDesc.text = content.name;
             }
@@ -232,6 +242,7 @@ public class CryptidNomicon : MonoBehaviour {
             imageDesc.gameObject.SetActive(false);
             nameDesc.gameObject.SetActive(false);
             notUnlockedSilhouette.gameObject.SetActive(false);
+            starRatingDisplay.gameObject.SetActive(false);
         }
     }
 
@@ -277,6 +288,14 @@ public class CryptidNomicon : MonoBehaviour {
 
         //autosave after updating photos
         SavePhotos();
+        UpdateScoreText();
+    }
+
+    private void UpdateScoreText()
+    {
+        int totalScore = CalculateTotalScore(pageContents);
+        if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }
+        else { totalScoreText.text = "Total Score:\n" + totalScore.ToString(); }
     }
 
     private int CalculateTotalScore(Dictionary<string, PageContent> pagecontents)
