@@ -202,14 +202,15 @@ public class CryptidNomicon : MonoBehaviour {
                 nameDesc.gameObject.SetActive(false);
                 notUnlockedSilhouette.gameObject.SetActive(true);
 
-                if (Constants.DemoLockedCryptids.Contains(entry.Key))
+                //demo stuff
+               /* if (Constants.DemoLockedCryptids.Contains(entry.Key))
                 {
                     imageDesc.text = Constants.demoLockedEntry;
                 }
                 else
-                {
+                {*/
                     imageDesc.text = Constants.defaultEntry;
-                }
+                //}
                 
                 notUnlockedSilhouette.sprite = CryptidPreviewTable[entry.Key];
                 //nameDesc.text = entry.Key;
