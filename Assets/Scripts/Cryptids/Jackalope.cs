@@ -36,7 +36,7 @@ public class Jackalope : Cryptid {
     string Eat = "Eat";
     public bool startAwake;
 
-    public enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward};
+    public enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward, caught};
     public MoveState currentState;
     MoveState nextState;
 
@@ -138,6 +138,7 @@ public class Jackalope : Cryptid {
                 break;
 
             //dont move in these states
+            case MoveState.caught:
             case MoveState.sleep:
                //do nothing
                 break;
@@ -273,6 +274,15 @@ public class Jackalope : Cryptid {
             base.GetBonked(leftImpact);
         }
         
+    }
+
+    public void GetCaught()
+    {
+        nav.enabled = false;
+        currentState = MoveState.caught;
+        animator.SetBool(StandUp, false);
+        animator.SetBool(Run, true);
+        animator.SetBool(Sniff, false);
     }
 
 }
