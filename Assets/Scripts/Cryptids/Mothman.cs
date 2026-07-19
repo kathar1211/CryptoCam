@@ -20,6 +20,7 @@ public class Mothman : Cryptid
 
     private Jackalope jackalopeTarget;
     public float minDistFromJackalope;
+    public float jackalopeGrabRange;
 
     public Transform JackalopeAttachTarget;
 
