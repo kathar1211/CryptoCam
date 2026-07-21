@@ -122,7 +122,7 @@ public class Cryptid : MonoBehaviour {
                 {
                     movementTimer = 0;
                     nav.destination = hit.position;
-                    Debug.Log("updated nav destination on " + this.name);
+                    //Debug.Log("updated nav destination on " + this.name);
                     break;
                 }
             }
@@ -394,18 +394,24 @@ public class Cryptid : MonoBehaviour {
     public virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag == "DestroyZone")
-        { 
-            //we're instantiating the particles and the sfx bc both these references are expected to be to prefabs
-            if (particles != null)
-            {
-                GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, particles.transform.rotation);
-                newParticles.SetActive(true);
-                //newParticles.transform.localScale = this.transform.localScale * 2;
-                //newParticles.transform.Translate(0, 1, 0);//move it up a lil
-            }
-
-            Destroy(this.gameObject);
+        {
+            Poof();
         }
+    }
+
+    //remove cryptid from the level
+    protected void Poof()
+    {
+        //we're instantiating the particles and the sfx bc both these references are expected to be to prefabs
+        if (particles != null)
+        {
+            GameObject newParticles = GameObject.Instantiate(particles, this.transform.position, particles.transform.rotation);
+            newParticles.SetActive(true);
+            //newParticles.transform.localScale = this.transform.localScale * 2;
+            //newParticles.transform.Translate(0, 1, 0);//move it up a lil
+        }
+
+        Destroy(this.gameObject);
     }
 
     public virtual void OnCollisionEnter(Collision collision)
@@ -502,9 +508,9 @@ public class Cryptid : MonoBehaviour {
         //option to do additional obstacle avoidance in the event the navmesh and cryptid get separated (common)
         if (!avoidObstacles || !AvoidObstacles(rotateSpeed))
         {
-            Debug.Log("nav status for " + this.name + ": nav path status: " + nav.pathStatus + 
-                ", nav path pending: " + nav.pathPending + ", current position: " + transform.position + 
-                ", next position: " + nav.nextPosition +  ", destination: " + nav.destination);
+           // Debug.Log("nav status for " + this.name + ": nav path status: " + nav.pathStatus + 
+           //     ", nav path pending: " + nav.pathPending + ", current position: " + transform.position + 
+            //    ", next position: " + nav.nextPosition +  ", destination: " + nav.destination);
             RotateToward(nav.nextPosition, rotateSpeed);
         }
         Move(moveSpeed);

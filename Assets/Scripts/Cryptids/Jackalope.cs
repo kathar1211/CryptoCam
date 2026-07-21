@@ -224,6 +224,10 @@ public class Jackalope : Cryptid {
             }
 
         }
+        else if (other.tag == Constants.WaterTag)
+        {
+            Poof();
+        }
 
         base.OnTriggerEnter(other);
     }

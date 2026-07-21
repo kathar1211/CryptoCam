@@ -66,6 +66,19 @@ public class Save
         Save loadedSave = (Save)bf.Deserialize(file);
         file.Close();
 
+        //start with a blank save and fill in data as we find it. keeps order consistent and allows for empty entries
+        loadedContents = new Dictionary<string, PageContent>
+         {
+                { Constants.Jackalope, null },
+                { Constants.Tsuchinoko, null },
+                { Constants.Nessie, null },
+                { Constants.Frogman, null },
+                { Constants.Fresno, null },
+                { Constants.Flatwoods, null },
+                { Constants.Bigfoot, null },
+                { Constants.Mothman, null },
+        };
+
         foreach (Photodata photo in loadedSave.photos)
         {
             PageContent content = new PageContent();
@@ -76,7 +89,7 @@ public class Save
             content.photoScore = photo.photoScore;
             if (Constants.tedsWriting.ContainsKey(photo.name)) { content.flavorText = Constants.tedsWriting[photo.name]; }
 
-            loadedContents.Add(content.name, content);
+            loadedContents[content.name] = content;
         }
 
         return loadedContents;
