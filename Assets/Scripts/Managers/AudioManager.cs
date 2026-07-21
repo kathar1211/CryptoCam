@@ -5,10 +5,12 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour {
 
+    public const float DEFAULT_VOL = -20f;
+
     /*List<AudioSource> AllSFX = new List<AudioSource>();
     List<AudioSource> AllBGM = new List<AudioSource>();*/
-    float SFXVol = -25;
-    float BGMVol = -25;
+    float SFXVol = DEFAULT_VOL;
+    float BGMVol = DEFAULT_VOL;
 
     public AudioMixer Mixer;
     private const string SFX_MIXER_GROUP = "SFX_VOL";

@@ -453,8 +453,8 @@ public class Options : MonoBehaviour {
 
     public void RestoreSettingDefaults()
     {
-        BGMSlider.value = 0;
-        SFXSlider.value = 0;
+        BGMSlider.value = AudioManager.DEFAULT_VOL;
+        SFXSlider.value = AudioManager.DEFAULT_VOL;
         TextSpeedSlider.value = 1;
     }
 
