@@ -66,7 +66,7 @@ public class Save
         Save loadedSave = (Save)bf.Deserialize(file);
         file.Close();
 
-        //start with a blank save and fill in data as we find it
+        //start with a blank save and fill in data as we find it. keeps order consistent and allows for empty entries
         loadedContents = new Dictionary<string, PageContent>
          {
                 { Constants.Jackalope, null },

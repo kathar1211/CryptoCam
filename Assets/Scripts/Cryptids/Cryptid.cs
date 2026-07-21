@@ -122,7 +122,7 @@ public class Cryptid : MonoBehaviour {
                 {
                     movementTimer = 0;
                     nav.destination = hit.position;
-                    Debug.Log("updated nav destination on " + this.name);
+                    //Debug.Log("updated nav destination on " + this.name);
                     break;
                 }
             }
@@ -502,9 +502,9 @@ public class Cryptid : MonoBehaviour {
         //option to do additional obstacle avoidance in the event the navmesh and cryptid get separated (common)
         if (!avoidObstacles || !AvoidObstacles(rotateSpeed))
         {
-            Debug.Log("nav status for " + this.name + ": nav path status: " + nav.pathStatus + 
-                ", nav path pending: " + nav.pathPending + ", current position: " + transform.position + 
-                ", next position: " + nav.nextPosition +  ", destination: " + nav.destination);
+           // Debug.Log("nav status for " + this.name + ": nav path status: " + nav.pathStatus + 
+           //     ", nav path pending: " + nav.pathPending + ", current position: " + transform.position + 
+            //    ", next position: " + nav.nextPosition +  ", destination: " + nav.destination);
             RotateToward(nav.nextPosition, rotateSpeed);
         }
         Move(moveSpeed);
