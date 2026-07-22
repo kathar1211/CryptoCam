@@ -9,6 +9,7 @@ public class SelectableImage : UIControlWithHighlight
 
     public Sprite sprite { get { return Image.sprite; } set { Image.sprite = value; } }
     public GameObject SelectedIndicator;
-
+    public GameObject GallerySelector;
+    public GameObject ChallengeSelector;
 
 }

@@ -88,6 +88,10 @@ public static class Constants {
     public static string KeepPreviousText = "Keep Previous Photo";
     public static string UseNewText = "Use New Photo";
 
+    //button text when selecting photos
+    public static string SaveToGallery = "Save to Gallery";
+    public static string UndoSaveToGallery = "Remove from Gallery";
+
     //cabin ui
     public static string Score = "Score: ";
     public static string FinalScore = "Final Score: ";

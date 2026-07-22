@@ -51,6 +51,9 @@ public class GradeManager : MonoBehaviour {
     //only one of each cryptid type is allowed
     public Dictionary<string, Photograph> finalSelection = new Dictionary<string, Photograph>();
 
+    public List<Photograph> galleryPhotos = new List<Photograph>();
+    public Dictionary<string, Photograph> challengeSelection = new Dictionary<string, Photograph>();
+
     //store photograph information that corresponds with each thumbnail
     Dictionary<SelectableImage, Photograph> allPhotos = new Dictionary<SelectableImage, Photograph>();
 
