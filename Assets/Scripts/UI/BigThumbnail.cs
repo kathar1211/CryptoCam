@@ -34,6 +34,9 @@ public class BigThumbnail : MonoBehaviour
 
     private UIControlWithHighlight currentSelectedButton;
 
+    public GameObject gallerySelectedIndicator;
+    public GameObject challengeSelectedIndicator;
+
     public void Init(Image image, bool selectedForGallery, bool qualifiesForChallenge, bool selectedForChallenge)
     {
         DisplayedImage.sprite = image.sprite;
@@ -46,6 +49,9 @@ public class BigThumbnail : MonoBehaviour
 
         ChallengeButton.gameObject.SetActive(picQualifiesForChallenge);
         ChallengeLabel.text = picSelectedForChallenge ? Constants.UnsubmitChallenge : Constants.SubmitChallenge;
+
+        gallerySelectedIndicator.SetActive(selectedForGallery);
+        challengeSelectedIndicator.SetActive(selectedForChallenge);
     }
 
     public void Update()
@@ -78,7 +84,27 @@ public class BigThumbnail : MonoBehaviour
         if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.Vertical))
         {
             float verticalDir = CrossPlatformInputManager.GetAxis(Constants.Vertical);
-            //positive value is up, negative value is down 
+            //positive value is up
+            if (verticalDir > 0)
+            {
+                if (currentSelectedButton == ChallengeButton) { MoveHighlight(GalleryButton); return; }
+                if (currentSelectedButton == YesButton || currentSelectedButton == NoButton)
+                {
+                    if (picQualifiesForChallenge) { MoveHighlight(ChallengeButton); return; }
+                    else { MoveHighlight(GalleryButton); return; }
+                }
+            }
+            //negative value is down 
+            else
+            {
+                if (currentSelectedButton == GalleryButton)
+                {
+                    if (picQualifiesForChallenge) { MoveHighlight(ChallengeButton); return; }
+                    else { MoveHighlight(NoButton); return; }
+                }
+
+                if (currentSelectedButton == ChallengeButton) { MoveHighlight(NoButton); }
+            }
         }
     }
 
@@ -127,12 +153,23 @@ public class BigThumbnail : MonoBehaviour
 
     public void OnGalleryButtonClick()
     {
+        picSelectedForGallery = !picSelectedForGallery;
+        gallerySelectedIndicator.SetActive(!gallerySelectedIndicator.activeSelf);
 
+        if (picSelectedForGallery) { GalleryLabel.text = Constants.UndoSaveToGallery; }
+        else { GalleryLabel.text = Constants.SaveToGallery; }
+
+        GradeManager.AddOrRemoveSelectedGalleryImage();
     }
 
     public void OnChallengeButtonClick()
     {
+        picSelectedForChallenge = !picSelectedForChallenge;
+        challengeSelectedIndicator.SetActive(!challengeSelectedIndicator);
 
+        ChallengeLabel.text = picSelectedForChallenge ? Constants.UnsubmitChallenge : Constants.SubmitChallenge;
+
+        GradeManager.AddOrRemoveSelectedChallengePhoto();
     }
 
 }

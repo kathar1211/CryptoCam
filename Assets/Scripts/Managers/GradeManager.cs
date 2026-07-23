@@ -52,7 +52,7 @@ public class GradeManager : MonoBehaviour {
     public Dictionary<string, Photograph> finalSelection = new Dictionary<string, Photograph>();
 
     public List<Photograph> galleryPhotos = new List<Photograph>();
-    public Dictionary<string, Photograph> challengeSelection = new Dictionary<string, Photograph>();
+    public Dictionary<ChallengePhotographContent, Photograph> challengeSelection = new Dictionary<ChallengePhotographContent, Photograph>();
 
     //store photograph information that corresponds with each thumbnail
     Dictionary<SelectableImage, Photograph> allPhotos = new Dictionary<SelectableImage, Photograph>();
@@ -223,6 +223,27 @@ public class GradeManager : MonoBehaviour {
         finalSelection[pic.subjectName] = pic;
     }
 
+    void UpdateChallengePhoto(Photograph pic)
+    {
+        SelectableImage deselect = null;
+        Photograph toRemove = challengeSelection[pic.challenge];
+
+        foreach (KeyValuePair<SelectableImage, Photograph> pair in allPhotos)
+        {
+            if (pair.Value.Equals(toRemove))
+            {
+                deselect = pair.Key;
+                break;
+            }
+        }
+
+        if (deselect != null)
+        {
+            deselect.ChallengeSelector.SetActive(false);
+        }
+        challengeSelection[pic.challenge] = pic;
+    }
+
     //photo dismissed
     public void NoButtonClick()
     {
@@ -370,7 +391,10 @@ public class GradeManager : MonoBehaviour {
 
         List<Photograph> photos = new List<Photograph>();
         photos.AddRange(finalSelection.Values);
-        GameManager.Instance.ReturnToLab(photos);
+        List<Photograph> challenges = new List<Photograph>();
+        challenges.AddRange(challengeSelection.Values);
+
+        GameManager.Instance.ReturnToLab(photos, galleryPhotos, challenges);
         //currentState = GradeState.tedGrading;
        // Selectioncanvas.enabled = false;
        // GradingCanvas.enabled = true;
@@ -512,6 +536,9 @@ public class GradeManager : MonoBehaviour {
 
     public void AddOrRemoveSelectedGalleryImage()
     {
+        //play sfx if applicable
+        if (ClickSFX != null) { ClickSFX.Play(); }
+
         Photograph picToAdd = allPhotos[selectedImage];
 
         //remove gallery photo
@@ -526,6 +553,32 @@ public class GradeManager : MonoBehaviour {
         {
             galleryPhotos.Add(picToAdd);
             selectedImage.GallerySelector.SetActive(true);
+        }
+    }
+
+    public void AddOrRemoveSelectedChallengePhoto()
+    {
+        //play sfx if applicable
+        if (ClickSFX != null) { ClickSFX.Play(); }
+
+        //add photo to dictionary
+        Photograph picToAdd = allPhotos[selectedImage];
+        if (!challengeSelection.ContainsKey(picToAdd.challenge))
+        {
+            challengeSelection.Add(picToAdd.challenge, picToAdd);
+        }
+        else
+        {
+            //if a photo of that cryptid has already been added, deselect and replace
+            if (!picToAdd.Equals(challengeSelection[picToAdd.challenge]))
+            {
+                UpdateChallengePhoto(picToAdd);
+            }
+            //if the existing entry is the current photo, remove it
+            else
+            {
+                challengeSelection.Remove(picToAdd.challenge);
+            }
         }
     }
 }
