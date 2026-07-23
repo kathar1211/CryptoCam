@@ -103,7 +103,7 @@ public class BigThumbnail : MonoBehaviour
                     else { MoveHighlight(NoButton); return; }
                 }
 
-                if (currentSelectedButton == ChallengeButton) { MoveHighlight(NoButton); }
+                if (currentSelectedButton == ChallengeButton) { MoveHighlight(NoButton); return; }
             }
         }
     }

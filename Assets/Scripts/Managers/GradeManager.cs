@@ -117,7 +117,7 @@ public class GradeManager : MonoBehaviour {
     void Update()
     {
 
-        if (currentState != GradeState.doneConfirm) //this state is handled with a controller navigable confirmation window
+        if (currentState == GradeState.allThumbs) //other states are handled with other scripts
         {
             HandleControllerNavigation();
 
