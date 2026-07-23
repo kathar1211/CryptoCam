@@ -91,6 +91,8 @@ public static class Constants {
     //button text when selecting photos
     public static string SaveToGallery = "Save to Gallery";
     public static string UndoSaveToGallery = "Remove from Gallery";
+    public static string SubmitChallenge = "Submit Challenge";
+    public static string UnsubmitChallenge = "Unsubmit Challenge";
 
     //cabin ui
     public static string Score = "Score: ";

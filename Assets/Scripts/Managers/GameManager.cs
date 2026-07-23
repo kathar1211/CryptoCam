@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour {
     bool LevelOver;
 
     public List<Photograph> pics4grading = new List<Photograph>();
+    public List<Photograph> pics4galleery = new List<Photograph>();
+    public List<Photograph> pics4challenge = new List<Photograph>();
 
     //when scene is loaded and level begins start with some panning shots of the level before transitioning into gameplay
     public bool transitionsEnabled;
@@ -175,7 +177,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void ReturnToLab(List<Photograph> finalPhotos)
+    public void ReturnToLab(List<Photograph> finalPhotos, List<Photograph> galleryPhotos, List<Photograph> ChallengePhotos)
     {
        // if (isSceneLoading) { return; }
         Time.timeScale = 1;

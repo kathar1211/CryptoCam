@@ -18,6 +18,19 @@ public struct Photograph
     public float visibility; //represents how many points on cryptid are visible
     public Texture2D pic; //the actual photo
     public int finalScore;
+    public ChallengePhotoGraphContent challenge;
+}
+
+public enum ChallengePhotoGraphContent
+{
+    None,
+    SleepingJackalope,
+    SleepingTsuchinoko,
+    LilypadFrogman,
+    DancingFresno,
+    SittingBigfoot,
+    PeaceSignFlatwoods,
+    CarryingMothman
 }
 
 public class Photography : MonoBehaviour {

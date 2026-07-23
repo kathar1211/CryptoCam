@@ -13,7 +13,7 @@ public class GradeManager : MonoBehaviour {
     [SerializeField]
     TextBox textbox; //this is the textbox that prompts to select photos
     [SerializeField]
-    Image bigThumbnail;
+    BigThumbnail bigThumbnail;
     SelectableImage selectedImage;
 
     [SerializeField]
@@ -150,14 +150,15 @@ public class GradeManager : MonoBehaviour {
     //bring up image on click
     public void Enlarge(SelectableImage src)
     {
-        if (!bigThumbnail.IsActive() && currentState == GradeState.allThumbs)
+        if (!bigThumbnail.gameObject.activeInHierarchy && currentState == GradeState.allThumbs)
         {
             //play sfx if applicable
             if (ClickSFX != null) { ClickSFX.Play(); }
 
             selectedImage = src;
-            bigThumbnail.sprite = src.sprite;
+            //bigThumbnail.sprite = src.sprite;
             bigThumbnail.gameObject.SetActive(true);
+            bigThumbnail.Init(src.Image, galleryPhotos.Contains(allPhotos[selectedImage]), false, false);
             textbox.FeedText(Constants.ConfirmSelectPhoto);
             textbox.DisplayText();
             ToggleInputButtons(true);
@@ -507,5 +508,24 @@ public class GradeManager : MonoBehaviour {
         //set hover to match dimensions of selected button
         if (prevSelectedButton != null) { prevSelectedButton.HideHighlight(); }
         if (highlightedUIcontrol != null) { highlightedUIcontrol.ShowHighlight(); }
+    }
+
+    public void AddOrRemoveSelectedGalleryImage()
+    {
+        Photograph picToAdd = allPhotos[selectedImage];
+
+        //remove gallery photo
+        if (galleryPhotos.Contains(picToAdd))
+        {
+            galleryPhotos.Remove(picToAdd);
+            selectedImage.GallerySelector.SetActive(false);
+        }
+
+        //add gallery photo
+        else
+        {
+            galleryPhotos.Add(picToAdd);
+            selectedImage.GallerySelector.SetActive(true);
+        }
     }
 }
