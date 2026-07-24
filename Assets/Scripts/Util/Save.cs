@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using UnityFileBrowser;
+//using UnityFileBrowser;
 
 //contains only the aspects of a player's photo that need to be saved to file
 //very similar to CryptidNomicon's PageContent struct
@@ -42,6 +42,7 @@ public class Save
     //create save data based on contents of the crytpidnomicon
     public void SaveFromCryptidNomicon(Dictionary<string, PageContent> contents)
     {
+        if (contents == null) { return; }
         photos = new List<Photodata>();
         foreach (KeyValuePair<string, PageContent> content in contents)
         {
@@ -54,9 +55,17 @@ public class Save
         }
     }
 
-    public void SaveGalleryPhotos()
+    public void SaveGalleryPhotos(List<Texture2D> gallery)
     {
+        if (gallery == null) { return; }
 
+        galleryPhotos = new List<PhotoOnlyData>();
+        foreach (Texture2D photo in gallery)
+        {
+            PhotoOnlyData data = new PhotoOnlyData();
+            data.imageData = photo.GetRawTextureData();
+            galleryPhotos.Add(data);
+        }
     }
 
     public void SaveChallengePhotos()
@@ -85,16 +94,22 @@ public class Save
         File.Delete(Application.persistentDataPath + "/photos.save");
     }
 
+    public static Save LoadSave()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(Application.persistentDataPath + "/photos.save", FileMode.Open);
+        Save loadedSave = (Save)bf.Deserialize(file);
+        file.Close();
+
+        return loadedSave;
+    }
+
     //returns a cryptid nomicon spread created from the save file
     //https://www.raywenderlich.com/418-how-to-save-and-load-a-game-in-unity
     public static Dictionary<string, PageContent> LoadCryptidNomicon()
     {
         Dictionary<string, PageContent> loadedContents = new Dictionary<string, PageContent>();
-
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/photos.save", FileMode.Open);
-        Save loadedSave = (Save)bf.Deserialize(file);
-        file.Close();
+        Save loadedSave = LoadSave();
 
         //start with a blank save and fill in data as we find it. keeps order consistent and allows for empty entries
         loadedContents = new Dictionary<string, PageContent>
@@ -125,10 +140,29 @@ public class Save
         return loadedContents;
     }
 
+    public static List<Texture2D> LoadGalleryPhotos()
+    {
+        List<Texture2D> gallery = new List<Texture2D>();
+        Save loadedSave = Save.LoadSave();
+
+        if (loadedSave != null && loadedSave.galleryPhotos != null)
+        {
+            foreach (PhotoOnlyData photo in loadedSave.galleryPhotos)
+            {
+                Texture2D constructedPhoto = new Texture2D(Constants.CameraWidth, Constants.CameraHeight, TextureFormat.RGB24, true);
+                constructedPhoto.LoadRawTextureData(photo.imageData);
+                constructedPhoto.Apply();
+                gallery.Add(constructedPhoto);
+            }
+        }
+
+        return gallery;
+    }
+
     public static void SavePhotoToPNG(Texture2D photo)
     {
-        byte[] png = photo.EncodeToPNG();
-        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
-        System.IO.File.WriteAllBytes(path, png)
+       // byte[] png = photo.EncodeToPNG();
+       // string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
+        //System.IO.File.WriteAllBytes(path, png);
     }
 }

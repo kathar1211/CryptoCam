@@ -184,6 +184,8 @@ public class GameManager : MonoBehaviour {
 
         //load async next scene
         pics4grading = finalPhotos;
+        pics4gallery = galleryPhotos;
+        pics4challenge = ChallengePhotos;
         isSceneLoading = true;
         SceneManager.LoadSceneAsync("Lab", LoadSceneMode.Single);
 

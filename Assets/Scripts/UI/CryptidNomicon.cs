@@ -350,4 +350,6 @@ public class CryptidNomicon : MonoBehaviour {
     {
         ReadyToClose = true;
     }
+
+    public Dictionary<string, PageContent> GetPageContents() { return pageContents; }
 }

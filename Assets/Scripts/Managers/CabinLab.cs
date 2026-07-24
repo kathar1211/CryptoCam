@@ -78,9 +78,11 @@ public class CabinLab : MonoBehaviour {
         if (gameManager != null)
         {
             List<Photograph> p = gameManager.pics4grading;
+            bool grading = false;
             //move the images from the gamemanager script to the cabin lab script
             if (p != null && p.Count > 0)
             {
+                grading = true;
                 gradeablePhotos.AddRange(p);
                 gameManager.pics4grading.Clear();
                 //gradingThumbnail.gameObject.SetActive(true);
@@ -97,12 +99,19 @@ public class CabinLab : MonoBehaviour {
             }
 
             //other things that mightve come back from the level
-            if(gameManager.pics4gallery != null && gameManager.pics4gallery.Count > 0)
+            if(gameManager.HasGalleryPhotos())
             {
-
+                gallery.MergePhotos(gameManager.pics4gallery);
+                if (!grading) { SavePhotos(cryptidNomicon.GetPageContents()); }//save now if we're not grading since we won't later
             }
 
             //todo:challenges
+            if (gameManager.HasChallengePhotos())
+            {
+                if (!grading) { }//todo: some text
+
+                //these might need to be graded same as cryptidnomicon photos. so user can choose what to keep
+            }
         }
 
         //if it's the first time starting the game, set up the intro sequence
@@ -337,29 +346,6 @@ public class CabinLab : MonoBehaviour {
         }
     }
 
-    public void OpenGallery()
-    {
-        if (currentState == MenuState.Main)
-        {
-            gallery.ReadyToClose = false;
-            gallery.gameObject.SetActive(true);
-            currentState = MenuState.Gallery;
-        }
-    }
-
-    public void Items()
-    {
-        if (currentState == MenuState.Main)
-        {
-            currentState = MenuState.Talking;
-            textBox.gameObject.SetActive(true);
-            string txt = "You can't look at the items yet.";
-            textBox.FeedText(txt);
-            textBox.FeedTed(TedMoods.SquintHandUp);
-            textBox.DisplayText();
-        }
-    }
-
     public void Feedback()
     {
         Application.OpenURL(Constants.FeedbackFormURL);
@@ -368,14 +354,13 @@ public class CabinLab : MonoBehaviour {
 
     public void Gallery()
     {
+
         if (currentState == MenuState.Main)
         {
-            currentState = MenuState.Talking;
-            textBox.gameObject.SetActive(true);
-            string txt = "You can't look at the gallery yet. That'll be available \nin the full game.";
-            textBox.FeedText(txt);
-            textBox.FeedTed(TedMoods.Uncertain);
-            textBox.DisplayText();
+            gallery.ReadyToClose = false;
+            gallery.gameObject.SetActive(true);
+            currentState = MenuState.Gallery;
+            if (selectSFX != null) { selectSFX.Play(); }
         }
     }
 
@@ -679,7 +664,7 @@ public class CabinLab : MonoBehaviour {
     {
         SaveData = new Save();
         SaveData.SaveFromCryptidNomicon(pageContents);
-        SaveData.SaveGalleryPhotos();
+        SaveData.SaveGalleryPhotos(gallery.GetGallery());
         SaveData.SaveChallengePhotos();
         SaveData.SaveGame();
     }
