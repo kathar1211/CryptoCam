@@ -17,14 +17,16 @@ public class CabinLab : MonoBehaviour {
     public TextBox textBox; //for dialogue
     public GameObject ted;
 
-    public GameObject cryptidNomicon;
+    public CryptidNomicon cryptidNomicon;
 
     //for options
     public GameObject options;
     //for credits
     public GameObject credits;
+    //gallery
+    public Gallery gallery;
 
-    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading, GradingDone, Credits };
+    enum MenuState { Main, Talking, CryptidNomicon, LevelSelect, Items, Gallery, Options, Grading, GradingDone, Credits, Challenges };
     MenuState currentState;
 
     List<Photograph> gradeablePhotos = new List<Photograph>();
@@ -51,6 +53,8 @@ public class CabinLab : MonoBehaviour {
     bool introPlaying = false;
     bool loadingScene = false;
 
+    public Save SaveData { get; private set; }
+
 	// Use this for initialization
 	void Start () {
 
@@ -61,7 +65,7 @@ public class CabinLab : MonoBehaviour {
 
         MoveSelector(textButtons[0]);
         currentState = MenuState.Main;
-        cryptidNomicon.SetActive(false);
+        cryptidNomicon.gameObject.SetActive(false);
 
 
         options.SetActive(false);
@@ -91,6 +95,14 @@ public class CabinLab : MonoBehaviour {
                 textBox.DisplayText();
                 //currentState = MenuState.Grading;
             }
+
+            //other things that mightve come back from the level
+            if(gameManager.pics4gallery != null && gameManager.pics4gallery.Count > 0)
+            {
+
+            }
+
+            //todo:challenges
         }
 
         //if it's the first time starting the game, set up the intro sequence
@@ -178,12 +190,17 @@ public class CabinLab : MonoBehaviour {
                 break;
 
             case MenuState.CryptidNomicon:
-                if (cryptidNomicon.GetComponent<CryptidNomicon>().ReadyToClose)
+                if (cryptidNomicon.ReadyToClose)
                 {
-                    Return(cryptidNomicon);
+                    Return(cryptidNomicon.gameObject);
                 }
                 break;
-
+            case MenuState.Gallery:
+                if (gallery.ReadyToClose)
+                {
+                    Return(gallery.gameObject);
+                }
+                break;
             case MenuState.Talking:
                 //textbox will reach conclusion and handle input on its own, just check if its done
                 if (!textBox.gameObject.activeInHierarchy)
@@ -210,12 +227,26 @@ public class CabinLab : MonoBehaviour {
                 {
                     //outro
                     textBox.FeedText(Constants.DoneGrading,TedMoods.Default);
+                    //additional lines if you brought back gallery/challenge photos
+                    if (GameManager.Instance.HasChallengePhotos() && GameManager.Instance.HasGalleryPhotos())
+                    {
+                        textBox.FeedText(Constants.GalleryAndChallenge, TedMoods.Satisfied);
+                    }
+                    else if (GameManager.Instance.HasGalleryPhotos())
+                    {
+                        textBox.FeedText(Constants.GalleryOnly, TedMoods.Pleased);
+                    }
+                    else if (GameManager.Instance.HasChallengePhotos())
+                    {
+                        textBox.FeedText(Constants.ChallengeOnly, TedMoods.Happy);
+                    }
+
                     textBox.DisplayText();
                     currentState = MenuState.GradingDone;
                     gradingThumbnailHolder.gameObject.SetActive(false);
 
                     //send over the photos to the cyrptidnomicon/gallery/challenges
-                    Dictionary<string, PageContent> pageContents = cryptidNomicon.GetComponent<CryptidNomicon>().RecievePhotos(gradeablePhotos);
+                    Dictionary<string, PageContent> pageContents = cryptidNomicon.RecievePhotos(gradeablePhotos);
 
                     //save
                     SavePhotos(pageContents);
@@ -299,10 +330,20 @@ public class CabinLab : MonoBehaviour {
     {
         if (currentState == MenuState.Main)
         {
-            cryptidNomicon.GetComponent<CryptidNomicon>().ReadyToClose = false;
-            cryptidNomicon.SetActive(true);
+            cryptidNomicon.ReadyToClose = false;
+            cryptidNomicon.gameObject.SetActive(true);
             currentState = MenuState.CryptidNomicon;
 
+        }
+    }
+
+    public void OpenGallery()
+    {
+        if (currentState == MenuState.Main)
+        {
+            gallery.ReadyToClose = false;
+            gallery.gameObject.SetActive(true);
+            currentState = MenuState.Gallery;
         }
     }
 
@@ -539,7 +580,7 @@ public class CabinLab : MonoBehaviour {
         
 
         //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
-        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        CryptidNomicon cryptidData = cryptidNomicon;
         if (cryptidData != null && cryptidData.HasEntry(photo.subjectName)){
 
             PageContent content = cryptidData.GetEntry(photo.subjectName);
@@ -592,7 +633,7 @@ public class CabinLab : MonoBehaviour {
         textBox.ted.SlideTed();
 
         Debug.Log("grabbing existing photo at index " + gradingIndex);
-        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        CryptidNomicon cryptidData = cryptidNomicon;
         PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
         prevScoreText.text = Constants.Score + content.photoScore;
     }
@@ -627,7 +668,7 @@ public class CabinLab : MonoBehaviour {
         textBox.ClearLeftButtonAction();
 
         //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
-        CryptidNomicon cryptidData = cryptidNomicon.GetComponent<CryptidNomicon>();
+        CryptidNomicon cryptidData = cryptidNomicon;
         PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
         gradeablePhotos[gradingIndex] = cryptidData.PageToPhoto(content);
     }
@@ -636,9 +677,11 @@ public class CabinLab : MonoBehaviour {
     //write photos from the current cryptidnomicon to file
     public void SavePhotos(Dictionary<string, PageContent> pageContents)
     {
-        Save savedata = new Save();
-        savedata.CreateSaveFromCryptidNomicon(pageContents);
-        savedata.SaveGame();
+        SaveData = new Save();
+        SaveData.SaveFromCryptidNomicon(pageContents);
+        SaveData.SaveGalleryPhotos();
+        SaveData.SaveChallengePhotos();
+        SaveData.SaveGame();
     }
 }
 

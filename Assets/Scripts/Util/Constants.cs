@@ -83,6 +83,9 @@ public static class Constants {
     public static string OverwritePrompt = "Which photo would you like to keep for the \nCryptid-Nomicon?";
     public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
     public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
+    public static string GalleryOnly = "Oh, looks like you kept some photos for yourself too. \nI'll put those in the gallery for you.";
+    public static string ChallengeOnly = "Ah, I see you went above and beyond! \nYou can check out the Challenges section to see how you did.";
+    public static string GalleryAndChallenge = "Your gallery and challenge photos have been updated too. \nI'm sure you know where to find them.";
 
     //button options during grading
     public static string KeepPreviousText = "Keep Previous Photo";

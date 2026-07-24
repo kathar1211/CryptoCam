@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour {
     bool LevelOver;
 
     public List<Photograph> pics4grading = new List<Photograph>();
-    public List<Photograph> pics4galleery = new List<Photograph>();
+    public List<Photograph> pics4gallery = new List<Photograph>();
     public List<Photograph> pics4challenge = new List<Photograph>();
 
     //when scene is loaded and level begins start with some panning shots of the level before transitioning into gameplay
@@ -194,5 +194,17 @@ public class GameManager : MonoBehaviour {
     public void TestFunction()
     {
         Debug.Log("test function called");
+    }
+
+    public bool HasChallengePhotos()
+    {
+        if (pics4challenge == null) { return false; }
+        return pics4challenge.Count > 0;
+    }
+
+    public bool HasGalleryPhotos()
+    {
+        if(pics4gallery == null) { return false; }
+        return pics4gallery.Count > 0;
     }
 }

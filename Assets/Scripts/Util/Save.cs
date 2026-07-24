@@ -40,7 +40,7 @@ public class Save
     public List<ChallengePhotoData> challengePhotos;
 
     //create save data based on contents of the crytpidnomicon
-    public void CreateSaveFromCryptidNomicon(Dictionary<string, PageContent> contents)
+    public void SaveFromCryptidNomicon(Dictionary<string, PageContent> contents)
     {
         photos = new List<Photodata>();
         foreach (KeyValuePair<string, PageContent> content in contents)
@@ -52,6 +52,16 @@ public class Save
             data.name = content.Value.name;
             photos.Add(data);
         }
+    }
+
+    public void SaveGalleryPhotos()
+    {
+
+    }
+
+    public void SaveChallengePhotos()
+    {
+
     }
 
     //write this save to file
@@ -119,6 +129,6 @@ public class Save
     {
         byte[] png = photo.EncodeToPNG();
         string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
-        System.IO.File.WriteAllBytes(path, png);
+        System.IO.File.WriteAllBytes(path, png)
     }
 }

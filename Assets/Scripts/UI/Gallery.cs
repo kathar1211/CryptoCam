@@ -10,6 +10,11 @@ public class Gallery : MonoBehaviour
     BigThumbnail bigThumbnail;
     SelectableImage selectedImage;
 
+    [SerializeField]
+    int columns; //need to know what the grid layout is to navigate thumbnails via controller
+    UIControlWithHighlight highlightedUIcontrol;
+    int activeThumbnailCount; //how many of these thumbnail objects are actually showing images
+
     enum GalleryState { allThumbs, bigThumb, confirm };
     GalleryState currentState;
 
@@ -24,6 +29,8 @@ public class Gallery : MonoBehaviour
     AudioSource ConfirmSFX;
     [SerializeField]
     AudioSource CancelSFX;
+
+    public bool ReadyToClose;
 
     // Start is called before the first frame update
     void Start()
