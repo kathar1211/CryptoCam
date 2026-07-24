@@ -269,7 +269,7 @@ public class CryptidNomicon : MonoBehaviour {
     }
 
     //accept photos from grading to display in the crytpidnomicon
-    public void RecievePhotos(List<Photograph> finalPhotos)
+    public Dictionary<string, PageContent> RecievePhotos(List<Photograph> finalPhotos)
     {
         if (!isInitialized) { Start(); }
         foreach (Photograph photo in finalPhotos)
@@ -287,9 +287,10 @@ public class CryptidNomicon : MonoBehaviour {
 
         }
 
-        //autosave after updating photos
-        SavePhotos();
         UpdateScoreText();
+
+        //return photo data structure for saving
+        return pageContents;
     }
 
     private void UpdateScoreText()
@@ -323,14 +324,6 @@ public class CryptidNomicon : MonoBehaviour {
     {
         largeThumbnailOverlay.gameObject.SetActive(false);
         viewing = false;
-    }
-
-    //write photos from the current cryptidnomicon to file
-    public void SavePhotos()
-    {
-        Save savedata = new Save();
-        savedata.CreateSaveFromCryptidNomicon(pageContents);
-        savedata.SaveGame();
     }
 
     //returns true if this cryptidnomicon has an entry for a given cryptid

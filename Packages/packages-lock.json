@@ -149,6 +149,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "dev.kalucky0.filebrowser": {
+      "version": "https://github.com/kalucky0/UnityFileBrowser.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "6c33c9139d1e2e151a057d93be6b45d599dd2695"
+    },
     "io.sentry.unity": {
       "version": "https://github.com/getsentry/unity.git#3.0.0",
       "depth": 0,

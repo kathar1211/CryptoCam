@@ -197,7 +197,7 @@ public class CabinLab : MonoBehaviour {
                 {
                     if (!textBox.gameObject.activeInHierarchy && gradingIndex < gradeablePhotos.Count - 1)
                     {
-                        Debug.Log("queued grading for photo " + gradingIndex + ". increasing to " + gradingIndex + 1);
+                       // Debug.Log("queued grading for photo " + gradingIndex + ". increasing to " + gradingIndex + 1);
                         gradingIndex++;
                         //if textbox is not active it means its finished with the current photo 
                         //set it active again and queue up the next photo
@@ -213,8 +213,13 @@ public class CabinLab : MonoBehaviour {
                     textBox.DisplayText();
                     currentState = MenuState.GradingDone;
                     gradingThumbnailHolder.gameObject.SetActive(false);
-                    //send over the photos to the cyrptidnomicon
-                    cryptidNomicon.GetComponent<CryptidNomicon>().RecievePhotos(gradeablePhotos);
+
+                    //send over the photos to the cyrptidnomicon/gallery/challenges
+                    Dictionary<string, PageContent> pageContents = cryptidNomicon.GetComponent<CryptidNomicon>().RecievePhotos(gradeablePhotos);
+
+                    //save
+                    SavePhotos(pageContents);
+
                 }
                 break;
             case MenuState.GradingDone:
@@ -627,5 +632,13 @@ public class CabinLab : MonoBehaviour {
         gradeablePhotos[gradingIndex] = cryptidData.PageToPhoto(content);
     }
     #endregion
+
+    //write photos from the current cryptidnomicon to file
+    public void SavePhotos(Dictionary<string, PageContent> pageContents)
+    {
+        Save savedata = new Save();
+        savedata.CreateSaveFromCryptidNomicon(pageContents);
+        savedata.SaveGame();
+    }
 }
 

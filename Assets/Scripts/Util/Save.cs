@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityFileBrowser;
 
 //contains only the aspects of a player's photo that need to be saved to file
 //very similar to CryptidNomicon's PageContent struct
@@ -14,10 +15,29 @@ public struct Photodata
     public string name;
 }
 
+//structure for gallery photos
+[System.Serializable]
+public struct PhotoOnlyData
+{
+    public byte[] imageData;
+}
+
+//structure for challenge photos
+[System.Serializable]
+public struct ChallengePhotoData
+{
+    public int photoScore;
+    public byte[] imageData;
+    public ChallengePhotographContent challenge;
+}
+
+
 [System.Serializable]
 public class Save
 {
     public List<Photodata> photos;
+    public List<PhotoOnlyData> galleryPhotos;
+    public List<ChallengePhotoData> challengePhotos;
 
     //create save data based on contents of the crytpidnomicon
     public void CreateSaveFromCryptidNomicon(Dictionary<string, PageContent> contents)
@@ -93,5 +113,12 @@ public class Save
         }
 
         return loadedContents;
+    }
+
+    public static void SavePhotoToPNG(Texture2D photo)
+    {
+        byte[] png = photo.EncodeToPNG();
+        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
+        System.IO.File.WriteAllBytes(path, png);
     }
 }

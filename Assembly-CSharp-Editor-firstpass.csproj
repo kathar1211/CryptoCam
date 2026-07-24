@@ -345,6 +345,12 @@
     <Reference Include="Sentry.Unity.Native">
       <HintPath>Library\PackageCache\io.sentry.unity@0a73dc1315\Runtime\Sentry.Unity.Native.dll</HintPath>
     </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>Assets\StandaloneFileBrowser\Plugins\Ookii.Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>Assets\StandaloneFileBrowser\Plugins\System.Windows.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.6\net35\unity-custom\nunit.framework.dll</HintPath>
     </Reference>
@@ -797,6 +803,9 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityFileBrowser">
+      <HintPath>Library\ScriptAssemblies\UnityFileBrowser.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
