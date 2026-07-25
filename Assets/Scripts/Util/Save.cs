@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-//using UnityFileBrowser;
+using UnityFileBrowser;
 
 //contains only the aspects of a player's photo that need to be saved to file
 //very similar to CryptidNomicon's PageContent struct
@@ -161,8 +161,8 @@ public class Save
 
     public static void SavePhotoToPNG(Texture2D photo)
     {
-       // byte[] png = photo.EncodeToPNG();
-       // string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
-        //System.IO.File.WriteAllBytes(path, png);
+        byte[] png = photo.EncodeToPNG();
+        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
+        System.IO.File.WriteAllBytes(path, png);
     }
 }
