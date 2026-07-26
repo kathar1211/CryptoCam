@@ -115,7 +115,7 @@ public class CryptidNomicon : MonoBehaviour {
             {
                 TurnPage(true);
             }
-            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis))
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxisMac))
             {
                 TurnPage(false);
             }
@@ -351,5 +351,8 @@ public class CryptidNomicon : MonoBehaviour {
         ReadyToClose = true;
     }
 
-    public Dictionary<string, PageContent> GetPageContents() { return pageContents; }
+    public Dictionary<string, PageContent> GetPageContents() { 
+        if (!isInitialized) { Start(); }
+        return pageContents;
+    }
 }

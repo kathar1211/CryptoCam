@@ -662,6 +662,8 @@ public class CabinLab : MonoBehaviour {
     //write photos from the current cryptidnomicon to file
     public void SavePhotos(Dictionary<string, PageContent> pageContents)
     {
+        if (pageContents == null) { pageContents = cryptidNomicon.GetPageContents(); }
+
         SaveData = new Save();
         SaveData.SaveFromCryptidNomicon(pageContents);
         SaveData.SaveGalleryPhotos(gallery.GetGallery());

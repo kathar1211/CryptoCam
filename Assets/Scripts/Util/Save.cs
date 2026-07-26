@@ -108,8 +108,9 @@ public class Save
     //https://www.raywenderlich.com/418-how-to-save-and-load-a-game-in-unity
     public static Dictionary<string, PageContent> LoadCryptidNomicon()
     {
-        Dictionary<string, PageContent> loadedContents = new Dictionary<string, PageContent>();
+        Dictionary<string, PageContent> loadedContents;
         Save loadedSave = LoadSave();
+        if (loadedSave == null) { loadedSave = new Save(); }
 
         //start with a blank save and fill in data as we find it. keeps order consistent and allows for empty entries
         loadedContents = new Dictionary<string, PageContent>
@@ -162,7 +163,7 @@ public class Save
     public static void SavePhotoToPNG(Texture2D photo)
     {
         byte[] png = photo.EncodeToPNG();
-        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { ".png" });
-        System.IO.File.WriteAllBytes(path, png);
+        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { "png" });
+        if (!string.IsNullOrEmpty(path)) System.IO.File.WriteAllBytes(path, png);
     }
 }

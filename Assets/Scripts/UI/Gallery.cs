@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Gallery : MonoBehaviour
 {
@@ -40,12 +42,17 @@ public class Gallery : MonoBehaviour
 
     public GameObject emptyGalleryText;
     public GameObject thumbnailHolder;
+    public GameObject deleteConfirmationWindow;
 
     //all data
     private List<Texture2D> allGalleryPhotos;
+    private List<Sprite> allPhotoSprites; //create all the sprites once to improve performance on redraws/page navigation
 
     private bool isInitialized = false;
     int pageIndex = 0;
+
+
+    public CabinLab cabinLab;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +63,12 @@ public class Gallery : MonoBehaviour
             if (Save.SaveFileExists())
             {
                 allGalleryPhotos = Save.LoadGalleryPhotos();
+            }
+
+            allPhotoSprites = new List<Sprite>();
+            foreach (Texture2D tex in allGalleryPhotos)
+            {
+                allPhotoSprites.Add(Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f)));
             }
 
             DrawThumbnails();
@@ -78,6 +91,7 @@ public class Gallery : MonoBehaviour
         {
             emptyGalleryText.gameObject.SetActive(true);
             thumbnailHolder.SetActive(false);
+            return;
         }
         else
         {
@@ -94,14 +108,14 @@ public class Gallery : MonoBehaviour
         for (int i = 0; i < thumbnails.Length; i++)
         {
             int photoIndex = i + startingIndex;
-            if (photoIndex >= allGalleryPhotos.Count) 
+            if (photoIndex >= allPhotoSprites.Count) 
             { 
                 thumbnails[i].gameObject.SetActive(false); 
             }
             else
             {
                 thumbnails[i].gameObject.SetActive(true);
-                thumbnails[i].sprite = Sprite.Create(allGalleryPhotos[photoIndex], new Rect(0f, 0f, allGalleryPhotos[photoIndex].width, allGalleryPhotos[photoIndex].height), new Vector2(.5f, .5f));
+                thumbnails[i].sprite = allPhotoSprites[photoIndex];
             }
         }
 
@@ -113,6 +127,37 @@ public class Gallery : MonoBehaviour
     void Update()
     {
         HandleControllerNavigation();
+
+        if (currentState == GalleryState.allThumbs)
+        {
+            //allow shoulder button navigation as well
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.RTAxisMac))
+            {
+                OnRightClick();
+            }
+            if (CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxis) || CrossPlatformInputManager.GetButtonOrAxisDown(Constants.LTAxisMac))
+            {
+                OnLeftClick();
+            }
+        }
+
+        //handle closing windows based on state
+        if (CrossPlatformInputManager.GetButtonDown(Constants.Cancel))
+        {
+            switch (currentState)
+            {
+                case GalleryState.allThumbs:
+                    ReadyToClose = true;
+                    if (CancelSFX != null) { CancelSFX.Play(); }
+                    break;
+                case GalleryState.bigThumb:
+                    Delarge();
+                    break;
+                case GalleryState.confirm:
+                    OnCancelDelete();
+                    break;
+            }
+        }
     }
 
     void HandleControllerNavigation()
@@ -132,7 +177,7 @@ public class Gallery : MonoBehaviour
     public void OnRightClick()
     {
         pageIndex++;
-        int pageIndexLimit = Mathf.FloorToInt((allGalleryPhotos.Count * 1f) / (thumbnails.Length * 1f));
+        int pageIndexLimit = Mathf.FloorToInt(((allGalleryPhotos.Count - 1) * 1f) / (thumbnails.Length * 1f));
         if (pageIndex > pageIndexLimit) { pageIndex = 0; }
 
         DrawThumbnails();
@@ -157,6 +202,7 @@ public class Gallery : MonoBehaviour
 
     public void Delarge()
     {
+        if (CancelSFX != null) { CancelSFX.Play(); }
         bigThumbnail.gameObject.SetActive(false);
         currentState = GalleryState.allThumbs;
     }
@@ -181,4 +227,40 @@ public class Gallery : MonoBehaviour
     }
 
     public List<Texture2D> GetGallery() { return allGalleryPhotos; }
+
+    public void OnClickDelete()
+    {
+        deleteConfirmationWindow.SetActive(true);
+        //bigThumbnail.gameObject.SetActive(false);
+        currentState = GalleryState.confirm;
+    }
+
+    public void OnConfirmDelete()
+    {
+        if (ConfirmSFX != null) { ConfirmSFX.Play(); }
+        deleteConfirmationWindow.SetActive(false);
+
+        //which picture was this
+        int thumbnailIndex = ArrayUtility.IndexOf(thumbnails, selectedImage);
+        int photoIndex = (pageIndex * thumbnails.Length) + thumbnailIndex;
+        allGalleryPhotos.RemoveAt(photoIndex);
+        allPhotoSprites.RemoveAt(photoIndex);
+
+        Delarge();
+        DrawThumbnails();
+        cabinLab.SavePhotos(null);
+    }
+
+    public void OnCancelDelete()
+    {
+        deleteConfirmationWindow.SetActive(false);
+        if (CancelSFX != null) { CancelSFX.Play(); }
+        currentState = GalleryState.bigThumb;
+        bigThumbnail.gameObject.SetActive(true);
+    }
+
+    public void OnClickSave()
+    {
+        Save.SavePhotoToPNG(bigThumbnail.sprite.texture);
+    }
 }

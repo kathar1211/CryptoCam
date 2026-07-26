@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour {
         endprompt.SetActive(false);
         SceneManager.LoadSceneAsync("Grading", LoadSceneMode.Single);
         isSceneLoading = true;
+        DontAllowPause = true;
 
         //set loading icon to active
         loadingAnim.gameObject.SetActive(true);
