@@ -69,7 +69,7 @@ public class Gallery : MonoBehaviour
             allPhotoSprites = new List<Sprite>();
             foreach (Texture2D tex in allGalleryPhotos)
             {
-                allPhotoSprites.Add(Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f)));
+                allPhotoSprites.Add(Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f), 100,0, SpriteMeshType.FullRect));
             }
 
             // make a little page dots display 
