@@ -43,6 +43,7 @@ public class Gallery : MonoBehaviour
     public GameObject emptyGalleryText;
     public GameObject thumbnailHolder;
     public GameObject deleteConfirmationWindow;
+    public PageDots pageNavigation;
 
     //all data
     private List<Texture2D> allGalleryPhotos;
@@ -71,6 +72,10 @@ public class Gallery : MonoBehaviour
                 allPhotoSprites.Add(Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(.5f, .5f)));
             }
 
+            // make a little page dots display 
+            int pageIndexLimit = Mathf.FloorToInt((allGalleryPhotos.Count * 1f) / (thumbnails.Length * 1f));
+            pageNavigation.Init(pageIndexLimit);
+
             DrawThumbnails();
 
             isInitialized = true;
@@ -91,6 +96,7 @@ public class Gallery : MonoBehaviour
         {
             emptyGalleryText.gameObject.SetActive(true);
             thumbnailHolder.SetActive(false);
+            pageNavigation.gameObject.SetActive(false);
             return;
         }
         else
@@ -102,6 +108,7 @@ public class Gallery : MonoBehaviour
         //show left/right navigation only if we have more photos than can show on a screen
         LeftButton.gameObject.SetActive(allGalleryPhotos.Count > thumbnails.Length);
         RightButton.gameObject.SetActive(allGalleryPhotos.Count > thumbnails.Length);
+        pageNavigation.gameObject.SetActive(allGalleryPhotos.Count > thumbnails.Length);
 
         //create and assign sprite 
         int startingIndex = pageIndex * thumbnails.Length;
@@ -119,7 +126,8 @@ public class Gallery : MonoBehaviour
             }
         }
 
-        //todo: we'll make a little page dots display 
+        //update pagedots
+        pageNavigation.SelectPage(pageIndex);
     }
 
 
@@ -168,7 +176,7 @@ public class Gallery : MonoBehaviour
     public void OnLeftClick()
     {
         pageIndex--;
-        int pageIndexLimit = Mathf.FloorToInt((allGalleryPhotos.Count * 1f) / (thumbnails.Length * 1f));
+        int pageIndexLimit = Mathf.FloorToInt((allGalleryPhotos.Count - 1 * 1f) / (thumbnails.Length * 1f));
         if (pageIndex < 0) { pageIndex = pageIndexLimit; }
 
         DrawThumbnails();
