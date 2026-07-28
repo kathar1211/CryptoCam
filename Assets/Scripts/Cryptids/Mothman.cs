@@ -15,19 +15,29 @@ public class Mothman : Cryptid
     private const string animatorTriggerFlap = "flap";
     private const string animatorBoolGrabbing = "Grabbing";
 
-    public enum MoveState { Resting, Hovering, Flying, Targeting }
+    public enum MoveState { Resting, Takeoff, Flying, Landing, Targeting }
     public MoveState currentMoveState;
 
     private Jackalope jackalopeTarget;
     public float minDistFromJackalope;
     public float jackalopeGrabRange;
+    public float landingRangeForRestPoint;
+    public float maximumAltitude;
 
     public Transform JackalopeAttachTarget;
+
+    public float upSpeed;
+    public float forwardSpeed;
+    public float rotateSpeed;
+
+    RandomChanceInterval TakeOffChance;
+    RandomChanceInterval FlapChance;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        TakeOffChance = new RandomChanceInterval(30, .2f);
+        FlapChance = new RandomChanceInterval(5, .15f);
     }
 
     // Update is called once per frame
@@ -39,9 +49,33 @@ public class Mothman : Cryptid
         {
             case MoveState.Resting:
                 break;
-            case MoveState.Hovering:
+            case MoveState.Takeoff:
                 break;
             case MoveState.Flying:
+                //fly towards the target while moving up
+                Vector3 target = PathPoints[pathIndex].transform.position;
+                RotateToward(target, rotateSpeed);
+                Move(forwardSpeed);
+                Ascend(upSpeed, maximumAltitude);
+                if ((this.transform.position - target).magnitude < landingRangeForRestPoint)
+                {
+                    animator.SetBool(animatorBoolFlying, false);
+                    currentMoveState = MoveState.Landing;
+                }
+
+                //chance to flap wings
+                if (FlapChance.UpdateTimerAndCheckSuccess())
+                {
+                    animator.SetTrigger(animatorTriggerFlap);
+                }
+
+                break;
+            case MoveState.Landing:
+                //come down for landing, and orient self to face the way the path point is
+                target = PathPoints[pathIndex].transform.position;
+                Vector3 targetDir = PathPoints[pathIndex].transform.forward;
+                RotateToward(targetDir, rotateSpeed);
+                Move(forwardSpeed / 2f);
                 break;
             case MoveState.Targeting:
                 break;
@@ -51,5 +85,11 @@ public class Mothman : Cryptid
     public override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+    }
+
+    public void SnatchJackalope()
+    {
+        if (jackalopeTarget == null) { return; }
+        jackalopeTarget.GetCaught();
     }
 }

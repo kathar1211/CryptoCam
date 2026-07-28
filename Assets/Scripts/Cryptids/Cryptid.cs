@@ -85,6 +85,14 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
+    public void Ascend(float upSpeed, float heightCap)
+    {
+        if (transform.position.y < heightCap && heightCap != -1)
+        {
+            transform.Translate(Vector3.up * Time.deltaTime * upSpeed);
+        }
+    }
+
     //move forward and up
     public void Leap(float leapSpeed, float leapHeight)
     {
