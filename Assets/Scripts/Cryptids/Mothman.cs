@@ -47,4 +47,9 @@ public class Mothman : Cryptid
                 break;
         }
     }
+
+    public override void OnTriggerEnter(Collider other)
+    {
+        base.OnTriggerEnter(other);
+    }
 }
