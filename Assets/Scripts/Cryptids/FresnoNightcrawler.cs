@@ -33,6 +33,15 @@ public class FresnoNightcrawler : Cryptid {
     public enum MoveState { Walk, Flee, Dance, Nothing, Wander, WalkToward, Look};
     public MoveState currentState = MoveState.Walk;
 
+    //stuff around triggering the dance behavior
+    private bool WatchingForDance = false;
+    public CryptidTrigger DanceZone;
+    private int BounceThreshold = 5; //how many times does the player have to bounce to trigger
+    private float BounceTimeLimit = 30; //time in seconds they have to hit the threshold
+    private float DancingDuration = 45; //time in seconds fresnos will keep dancing after threshold hit
+    private float bounceTimer; //tracking current time againt limit
+    private float danceTimer; //tracking current time against duration
+
     RandomChanceInterval DoneLookingChance;
 
     [SerializeField]
@@ -51,6 +60,12 @@ public class FresnoNightcrawler : Cryptid {
         }
 
         DoneLookingChance = new RandomChanceInterval(1, .25f);
+
+        if (DanceZone != null)
+        {
+            DanceZone.TriggerEnterAction += () => { WatchingForDance = true;};
+            DanceZone.TriggerExitAction += () => { WatchingForDance = false;};
+        }
 	}
 
     // Update is called once per frame
