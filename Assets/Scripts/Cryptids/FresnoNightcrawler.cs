@@ -278,7 +278,7 @@ public class FresnoNightcrawler : Cryptid {
 
     public override bool SpecialPose()
     {
-       //todo
+       if (currentState == MoveState.Dance) { return true;}
 
         return base.SpecialPose();
     }
