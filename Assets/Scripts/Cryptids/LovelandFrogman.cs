@@ -218,7 +218,9 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
-        if (transform.parent != null) { transform.localPosition = Vector3.zero;}
+        if (transform.parent != null && TransformIsNessie(transform.parent)) {
+            transform.localPosition = Vector3.zero;
+        }
     }
 
     //event for when we're about to push the frog off the ledge
@@ -245,7 +247,7 @@ public class LovelandFrogman : Cryptid {
         //convert offset to be relative to frogmans direction
         Vector3 upMove = new Vector3(transform.up.x * leapOffset.y, transform.up.y * leapOffset.y, transform.up.z * leapOffset.y);
         Vector3 forwardMove = new Vector3(transform.forward.x * leapOffset.z, transform.forward.y * leapOffset.z, transform.forward.z * leapOffset.z);
-        Vector3 totalMove = (upMove * transform.localScale.y) + (forwardMove * transform.localScale.z);
+        Vector3 totalMove = (upMove * transform.lossyScale.y) + (forwardMove * transform.lossyScale.z);
 
         if (preleap) {
             transform.position += totalMove; 
@@ -427,5 +429,13 @@ public class LovelandFrogman : Cryptid {
     {
         KillNavMeshMovement();
         currentState = MoveState.walkforward;
+    }
+
+    private bool TransformIsNessie(Transform other)
+    {
+        Transform root = other.root;
+        if (root.GetComponent<Nessie>() != null) { return true;}
+
+        return false;
     }
 }
