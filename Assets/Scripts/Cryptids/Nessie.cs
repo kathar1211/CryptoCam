@@ -34,8 +34,7 @@ public class Nessie : Cryptid {
         ripples = GetComponentInChildren<ParticleSystem>();
         HeadBone = GetComponentInChildren<HeadBone>();
 
-        //DiveChance = new RandomChanceInterval(2, .15f);
-        DiveChance = new RandomChanceInterval(5,-1); //temp while testing frogman leap on nessie
+        DiveChance = new RandomChanceInterval(2, .15f);
         BreachChance = new RandomChanceInterval(3, .2f);
         LookAroundChance = new RandomChanceInterval(2, .3f);
     }
