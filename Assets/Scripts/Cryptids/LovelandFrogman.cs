@@ -218,6 +218,7 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+        if (transform.parent != null) { transform.localPosition = Vector3.zero;}
     }
 
     //event for when we're about to push the frog off the ledge
@@ -277,6 +278,7 @@ public class LovelandFrogman : Cryptid {
             //no gravity while swimming
             rb.useGravity = false;
             timeOfLastWaterReEntry = Time.time;
+            transform.SetParent(null);
         }
         //frogman approaches shore
         else if (other.tag == Constants.ShoreTag && (currentState == MoveState.swim || currentState == MoveState.flee))
@@ -296,6 +298,8 @@ public class LovelandFrogman : Cryptid {
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 rb.AddForce(Vector3.up * leapHeight);
                 rb.AddForce(Vector3.forward * leapSpeed);
+
+                transform.SetParent(other.gameObject.transform);
             }
         }
 
@@ -369,6 +373,8 @@ public class LovelandFrogman : Cryptid {
 
                 break;
             case MoveState.walk:
+            case MoveState.walkforward:
+            case MoveState.walktoward:
                 if (leftImpact)
                 {
                     animator.Play("stand_bonk_left");
