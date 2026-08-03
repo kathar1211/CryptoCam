@@ -165,6 +165,7 @@ public class FresnoNightcrawler : Cryptid {
 
             if (currentState != MoveState.WatchPlayer && currentState != MoveState.Dance)
             {
+                KillNavMeshMovement();
                 currentState = MoveState.WatchPlayer;
                 animator.SetBool(Idle, true);
             }
@@ -172,6 +173,7 @@ public class FresnoNightcrawler : Cryptid {
             bounceCounter++;
             if(bounceCounter >= BounceThreshold)
             {
+                KillNavMeshMovement();
                 currentState = MoveState.Dance;
                 animator.SetBool(Dance, true);
                 bounceCounter = 0;
