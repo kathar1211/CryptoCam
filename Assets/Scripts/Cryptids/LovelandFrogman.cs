@@ -56,6 +56,9 @@ public class LovelandFrogman : Cryptid {
     private float timeOfLastWaterReEntry = -5;
     private float timeInSecondsBetweenExitingWater = 5;
 
+    //when sitting on nessie's back, keep a reference to her so we can check her behavior
+    private Nessie ridingNessie;
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -150,9 +153,13 @@ public class LovelandFrogman : Cryptid {
                 timer += Time.deltaTime;
                 if (timer > timeToSit)
                 {
-                    timer = 0;
-                    animator.SetBool("creep", true);
-                    currentState = MoveState.walkforward;
+                    StartWalkingForward();
+                }
+
+                //if we're sitting on nessie, detect when she goes back underwater
+                if (ridingNessie != null && ridingNessie.IsDiving())
+                {
+                    StartWalkingForward();
                 }
                 break;
             case MoveState.floating:
@@ -218,8 +225,12 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
-        if (transform.parent != null && TransformIsNessie(transform.parent)) {
+
+        //do some extra stuff if we just leapt on nessie
+        Nessie tryGetNessie = GetNessieComponentFromTransform(transform.parent);
+        if (transform.parent != null && tryGetNessie != null) {
             transform.localPosition = Vector3.zero;
+            ridingNessie = tryGetNessie;
         }
     }
 
@@ -270,17 +281,7 @@ public class LovelandFrogman : Cryptid {
         //frogman leaves shore, returns to water
         if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit)//somethings happening here
         {
-            currentState = MoveState.swim;
-            nav.speed = swimSpeed;
-            nav.baseOffset = swimBaseOffset;
-            ResetNavAgentPosition();
-            animator.SetBool("swim", true);
-            animator.SetBool("creep", false);
-            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            //no gravity while swimming
-            rb.useGravity = false;
-            timeOfLastWaterReEntry = Time.time;
-            transform.SetParent(null);
+            StartSwimming();
         }
         //frogman approaches shore
         else if (other.tag == Constants.ShoreTag && (currentState == MoveState.swim || currentState == MoveState.flee))
@@ -340,6 +341,29 @@ public class LovelandFrogman : Cryptid {
         }
 
         base.OnTriggerEnter(other);
+    }
+
+    //when frogman returns to water from another state
+    private void StartSwimming()
+    {
+        currentState = MoveState.swim;
+        nav.speed = swimSpeed;
+        nav.baseOffset = swimBaseOffset;
+        ResetNavAgentPosition();
+        animator.SetBool("swim", true);
+        animator.SetBool("creep", false);
+        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        //no gravity while swimming
+        rb.useGravity = false;
+        timeOfLastWaterReEntry = Time.time;
+        transform.SetParent(null);
+    }
+
+    private void StartWalkingForward()
+    {
+        timer = 0;
+        animator.SetBool("creep", true);
+        currentState = MoveState.walkforward;
     }
 
     //leaping is frogmans special pose
@@ -431,11 +455,10 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.walkforward;
     }
 
-    private bool TransformIsNessie(Transform other)
+    //returns null if this transform is not part of nessie
+    private Nessie GetNessieComponentFromTransform(Transform other)
     {
         Transform root = other.root;
-        if (root.GetComponent<Nessie>() != null) { return true;}
-
-        return false;
+        return root.GetComponent<Nessie>();
     }
 }

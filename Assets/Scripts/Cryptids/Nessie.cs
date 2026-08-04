@@ -192,15 +192,21 @@ public class Nessie : Cryptid {
         currentState = MoveState.waitToSubmerge;
         justChangedStates = true;
 
-        //it's possible for a carrot to land on nessie's back and stay there; deactivate object to prevent it from triggering bonks forever
+        //it's possible for a carrot to land on nessie's back and stay there;
+        //deactivate object to prevent it from triggering bonks forever
         if (bonked != null) { bonked.Active = false; }
     }
-
+    
     public override bool SpecialPose()
     {
         //nessie's cheeky look is her special pose
         if (animator.GetBool("Look") || animator.GetBool("MirrorLook")){ return true; }
 
         return base.SpecialPose();
+    }
+
+    public bool IsDiving()
+    {
+        return currentState == MoveState.underWaterSwim;
     }
 }
