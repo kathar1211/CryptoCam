@@ -22,6 +22,7 @@ public class FresnoNightcrawler : Cryptid {
     const string Idle = "Idle";
     const string Lookdown = "Lookdown";
     const string Still = "still";
+    const string Dance = "Dance";
 
     private Transform fleeFromTarget;
     private Transform walkTowardTarget;
@@ -30,8 +31,18 @@ public class FresnoNightcrawler : Cryptid {
     public float seeObstacles;
     public float walkTowardMinDistance;
 
-    public enum MoveState { Walk, Flee, Dance, Nothing, Wander, WalkToward, Look};
+    public enum MoveState { Walk, Flee, Dance, Nothing, Wander, WalkToward, Look, WatchPlayer};
     public MoveState currentState = MoveState.Walk;
+
+    //stuff around triggering the dance behavior
+    private bool WatchingForDance = false;
+    public CryptidTrigger DanceZone;
+    private int BounceThreshold = 5; //how many times does the player have to bounce to trigger
+    private float BounceTimeLimit = 30; //time in seconds they have to hit the threshold
+    private float DancingDuration = 45; //time in seconds fresnos will keep dancing after threshold hit
+    private float bounceTimer; //tracking current time againt limit
+    private float danceTimer; //tracking current time against duration
+    private int bounceCounter; //tracking current bounces against threshold
 
     RandomChanceInterval DoneLookingChance;
 
@@ -51,6 +62,12 @@ public class FresnoNightcrawler : Cryptid {
         }
 
         DoneLookingChance = new RandomChanceInterval(1, .25f);
+
+        if (DanceZone != null)
+        {
+            DanceZone.TriggerEnterAction += () => { WatchingForDance = true;};
+            DanceZone.TriggerExitAction += () => { WatchingForDance = false;};
+        }
 	}
 
     // Update is called once per frame
@@ -120,6 +137,48 @@ public class FresnoNightcrawler : Cryptid {
                     currentState = MoveState.Walk;
                 }
                 break;
+            case MoveState.WatchPlayer:
+                RotateToward(Photography.Instance.cryptoCam.transform.position, rotateSpeed);
+                bounceTimer += Time.deltaTime;
+                if (bounceTimer > BounceTimeLimit)
+                {
+                    animator.SetBool(Idle, false);
+                    currentState = MoveState.Walk;
+                    bounceTimer = 0;
+                    bounceCounter = 0;
+                }
+                break;
+            case MoveState.Dance:
+                danceTimer += Time.deltaTime;
+                if (danceTimer > DancingDuration)
+                {
+                    animator.SetBool(Dance, false);
+                    currentState = MoveState.WatchPlayer;
+                    danceTimer = 0;
+                }
+                break;
+        }
+
+        if (WatchingForDance &&
+            (CustomController.GetButtonDown(Constants.JumpButton) ||
+            CustomController.GetButtonDown(Constants.CrouchButton))){
+
+            if (currentState != MoveState.WatchPlayer && currentState != MoveState.Dance)
+            {
+                KillNavMeshMovement();
+                currentState = MoveState.WatchPlayer;
+                animator.SetBool(Idle, true);
+            }
+
+            bounceCounter++;
+            if(bounceCounter >= BounceThreshold)
+            {
+                KillNavMeshMovement();
+                currentState = MoveState.Dance;
+                animator.SetBool(Dance, true);
+                bounceCounter = 0;
+                danceTimer = 0;
+            }
         }
         
     }
@@ -221,7 +280,7 @@ public class FresnoNightcrawler : Cryptid {
 
     public override bool SpecialPose()
     {
-       //todo
+       if (currentState == MoveState.Dance) { return true;}
 
         return base.SpecialPose();
     }

@@ -56,6 +56,9 @@ public class LovelandFrogman : Cryptid {
     private float timeOfLastWaterReEntry = -5;
     private float timeInSecondsBetweenExitingWater = 5;
 
+    //when sitting on nessie's back, keep a reference to her so we can check her behavior
+    private Nessie ridingNessie;
+
     // Use this for initialization
     void Start () {
         StartUp();
@@ -150,9 +153,13 @@ public class LovelandFrogman : Cryptid {
                 timer += Time.deltaTime;
                 if (timer > timeToSit)
                 {
-                    timer = 0;
-                    animator.SetBool("creep", true);
-                    currentState = MoveState.walkforward;
+                    StartWalkingForward();
+                }
+
+                //if we're sitting on nessie, detect when she goes back underwater
+                if (ridingNessie != null && ridingNessie.IsDiving())
+                {
+                    StartWalkingForward();
                 }
                 break;
             case MoveState.floating:
@@ -218,6 +225,13 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+
+        //do some extra stuff if we just leapt on nessie
+        Nessie tryGetNessie = GetNessieComponentFromTransform(transform.parent);
+        if (transform.parent != null && tryGetNessie != null) {
+            transform.localPosition = Vector3.zero;
+            ridingNessie = tryGetNessie;
+        }
     }
 
     //event for when we're about to push the frog off the ledge
@@ -244,7 +258,7 @@ public class LovelandFrogman : Cryptid {
         //convert offset to be relative to frogmans direction
         Vector3 upMove = new Vector3(transform.up.x * leapOffset.y, transform.up.y * leapOffset.y, transform.up.z * leapOffset.y);
         Vector3 forwardMove = new Vector3(transform.forward.x * leapOffset.z, transform.forward.y * leapOffset.z, transform.forward.z * leapOffset.z);
-        Vector3 totalMove = (upMove * transform.localScale.y) + (forwardMove * transform.localScale.z);
+        Vector3 totalMove = (upMove * transform.lossyScale.y) + (forwardMove * transform.lossyScale.z);
 
         if (preleap) {
             transform.position += totalMove; 
@@ -267,16 +281,7 @@ public class LovelandFrogman : Cryptid {
         //frogman leaves shore, returns to water
         if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit)//somethings happening here
         {
-            currentState = MoveState.swim;
-            nav.speed = swimSpeed;
-            nav.baseOffset = swimBaseOffset;
-            ResetNavAgentPosition();
-            animator.SetBool("swim", true);
-            animator.SetBool("creep", false);
-            rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-            //no gravity while swimming
-            rb.useGravity = false;
-            timeOfLastWaterReEntry = Time.time;
+            StartSwimming();
         }
         //frogman approaches shore
         else if (other.tag == Constants.ShoreTag && (currentState == MoveState.swim || currentState == MoveState.flee))
@@ -296,6 +301,8 @@ public class LovelandFrogman : Cryptid {
                 rb.constraints = RigidbodyConstraints.FreezeRotation;
                 rb.AddForce(Vector3.up * leapHeight);
                 rb.AddForce(Vector3.forward * leapSpeed);
+
+                transform.SetParent(other.gameObject.transform);
             }
         }
 
@@ -336,6 +343,29 @@ public class LovelandFrogman : Cryptid {
         base.OnTriggerEnter(other);
     }
 
+    //when frogman returns to water from another state
+    private void StartSwimming()
+    {
+        currentState = MoveState.swim;
+        nav.speed = swimSpeed;
+        nav.baseOffset = swimBaseOffset;
+        ResetNavAgentPosition();
+        animator.SetBool("swim", true);
+        animator.SetBool("creep", false);
+        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        //no gravity while swimming
+        rb.useGravity = false;
+        timeOfLastWaterReEntry = Time.time;
+        transform.SetParent(null);
+    }
+
+    private void StartWalkingForward()
+    {
+        timer = 0;
+        animator.SetBool("creep", true);
+        currentState = MoveState.walkforward;
+    }
+
     //leaping is frogmans special pose
     public override bool SpecialPose()
     {
@@ -369,6 +399,8 @@ public class LovelandFrogman : Cryptid {
 
                 break;
             case MoveState.walk:
+            case MoveState.walkforward:
+            case MoveState.walktoward:
                 if (leftImpact)
                 {
                     animator.Play("stand_bonk_left");
@@ -421,5 +453,12 @@ public class LovelandFrogman : Cryptid {
     {
         KillNavMeshMovement();
         currentState = MoveState.walkforward;
+    }
+
+    //returns null if this transform is not part of nessie
+    private Nessie GetNessieComponentFromTransform(Transform other)
+    {
+        Transform root = other.root;
+        return root.GetComponent<Nessie>();
     }
 }

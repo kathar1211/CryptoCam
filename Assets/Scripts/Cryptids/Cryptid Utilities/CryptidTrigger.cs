@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CryptidTrigger : MonoBehaviour
 {
-    public System.Action TriggerEnterAction; 
+    public System.Action TriggerEnterAction;
+    public System.Action TriggerExitAction;
 
     // Start is called before the first frame update
     void Start()
@@ -21,5 +22,10 @@ public class CryptidTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (TriggerEnterAction != null && other.CompareTag(Constants.PlayerTag)) { TriggerEnterAction.Invoke(); }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (TriggerExitAction != null && other.CompareTag(Constants.PlayerTag)) { TriggerExitAction.Invoke();}
     }
 }
