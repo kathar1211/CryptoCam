@@ -12,10 +12,10 @@ public class Mothman : Cryptid
     private const string animatorTriggerBonkBack = "bonk_back";
     private const string animatorBoolResting = "Resting";
     private const string animatorBoolFlying = "Flying";
-    private const string animatorTriggerFlap = "flap";
+    private const string animatorBoolFlap = "flap";
     private const string animatorBoolGrabbing = "Grabbing";
 
-    public enum MoveState { Resting, Takeoff, Flying, Landing, Targeting, Skedaddling }
+    public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Skedaddling }
     public MoveState currentMoveState;
 
     public CryptidPathPoint outOfBoundsPoint; //mothman flies away after getting a jackalope
@@ -24,6 +24,7 @@ public class Mothman : Cryptid
     public float jackalopeGrabRange;
     public float landingRangeForRestPoint;
     public float maximumAltitude;
+    private float distanceToNextTarget;
 
     public Transform JackalopeAttachTarget;
 
@@ -42,8 +43,7 @@ public class Mothman : Cryptid
     {
         StartUp();
 
-        TakeOffChance = new RandomChanceInterval(30, .2f);
-        FlapChance = new RandomChanceInterval(5, .15f);
+        TakeOffChance = new RandomChanceInterval(10, .2f);
     }
 
     // Update is called once per frame
@@ -60,6 +60,7 @@ public class Mothman : Cryptid
                     animator.SetBool(animatorBoolResting, false);
                     currentMoveState = MoveState.Takeoff;
                     timer = 0;
+                    UpdateDistanceToTarget();
                 }
                 break;
             case MoveState.Takeoff:
@@ -69,19 +70,47 @@ public class Mothman : Cryptid
                 if (timer >= takeOffTime)
                 {
                     animator.SetBool(animatorBoolFlying, true);
-                    currentMoveState = MoveState.Flying;
+                    animator.SetBool(animatorBoolFlap, true);
+                    currentMoveState = MoveState.Ascending;
                     timer = 0;
                 }
                 break;
-            case MoveState.Flying:
+            case MoveState.Ascending:
                 //fly towards the target while moving up
                 Vector3 target = PathPoints[pathIndex].transform.position;
                 RotateToward(target, rotateSpeed);
                 Move(forwardSpeed);
                 Ascend(upSpeed, maximumAltitude);
 
-                //we could get pretty high up, so only look at x and z for proximity to landing point
+                //start to descend once we're halfway to the target
                 Vector3 xzTarget = new Vector3(target.x, target.y, target.z);
+                xzTarget.y = this.transform.position.y;
+                if ((this.transform.position - xzTarget).magnitude < distanceToNextTarget/2f)
+                {
+                    currentMoveState = MoveState.Descending;
+                    animator.SetBool(animatorBoolFlap, false);
+                }
+
+                break;
+            case MoveState.Descending:
+
+                target = PathPoints[pathIndex].transform.position;
+                RotateToward(target, rotateSpeed);
+                Move(forwardSpeed);
+
+                //keep going up if we're somehow not there yet
+                if (this.transform.position.y < target.y)
+                {
+                    Ascend(upSpeed, maximumAltitude);
+                }
+                else
+                {
+                    Descend(upSpeed, target.y);
+                }
+               
+
+                //we could get pretty high up, so only look at x and z for proximity to landing point
+                xzTarget = new Vector3(target.x, target.y, target.z);
                 xzTarget.y = this.transform.position.y;
                 if ((this.transform.position - xzTarget).magnitude < landingRangeForRestPoint)
                 {
@@ -89,13 +118,6 @@ public class Mothman : Cryptid
                     currentMoveState = MoveState.Landing;
                     break;
                 }
-
-                //chance to flap wings
-                if (FlapChance.UpdateTimerAndCheckSuccess())
-                {
-                    animator.SetTrigger(animatorTriggerFlap);
-                }
-
                 break;
             case MoveState.Skedaddling:
                 //mothman flies to a spot the player cant reach
@@ -111,7 +133,8 @@ public class Mothman : Cryptid
                 target = PathPoints[pathIndex].transform.position;
                 Vector3 targetDir = PathPoints[pathIndex].transform.forward;
                 RotateToward(targetDir, rotateSpeed);
-                Move(forwardSpeed / 2f);
+                Descend(upSpeed, target.y);
+                SlideToward(forwardSpeed / 2f, target);
 
                 //do a little math to see if we're within a few degrees of where we want to be
                 Vector3 targetForward = (transform.position - targetPos);
@@ -141,5 +164,16 @@ public class Mothman : Cryptid
         if (jackalopeTarget == null) { return; }
         jackalopeTarget.GetCaught();
         jackalopeTarget.transform.SetParent(JackalopeAttachTarget);
+    }
+
+    //mark how far the next resting spot is when we first takeoff, so that later we can measure progress against it
+    private void UpdateDistanceToTarget()
+    {
+        //look at xz distance only
+        Vector3 target = PathPoints[pathIndex].transform.position;
+        Vector3 xzTarget = new Vector3(target.x, target.y, target.z);
+        xzTarget.y = this.transform.position.y;
+        distanceToNextTarget = xzTarget.magnitude;
+
     }
 }

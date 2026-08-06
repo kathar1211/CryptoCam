@@ -85,11 +85,27 @@ public class Cryptid : MonoBehaviour {
         }
     }
 
-    public void Ascend(float upSpeed, float heightCap)
+    //move a cryptid in a direction without necessarily rotating them to face it
+    public void SlideToward(float slideSpeed, Vector3 targetPosition)
     {
-        if (transform.position.y < heightCap && heightCap != -1)
+        Vector3 targetDir = transform.position - targetPos;
+        targetDir = Vector3.Normalize(targetDir);
+        transform.Translate(targetDir * Time.deltaTime * slideSpeed);
+    }
+
+    public void Ascend(float upSpeed, float heightCap = -1)
+    {
+        if (transform.position.y < heightCap || heightCap == -1)
         {
             transform.Translate(Vector3.up * Time.deltaTime * upSpeed);
+        }
+    }
+
+    public void Descend(float downSpeed, float heightMin = -1)
+    {
+        if (transform.position.y > heightMin || heightMin == -1)
+        {
+            transform.Translate(Vector3.down * Time.deltaTime * downSpeed);
         }
     }
 
