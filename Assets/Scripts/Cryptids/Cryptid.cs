@@ -88,9 +88,10 @@ public class Cryptid : MonoBehaviour {
     //move a cryptid in a direction without necessarily rotating them to face it
     public void SlideToward(float slideSpeed, Vector3 targetPosition)
     {
-        Vector3 targetDir = transform.position - targetPos;
+        Vector3 targetDir = targetPosition - transform.position;
         targetDir = Vector3.Normalize(targetDir);
-        transform.Translate(targetDir * Time.deltaTime * slideSpeed);
+        transform.Translate(targetDir * Time.deltaTime * slideSpeed, Space.World);
+        Debug.DrawLine(transform.position, targetPosition, Color.magenta);
     }
 
     public void Ascend(float upSpeed, float heightCap = -1)
@@ -291,6 +292,14 @@ public class Cryptid : MonoBehaviour {
         //update: handle forward movement separate from deciding direction with move() in child script
         Debug.DrawRay(transform.position, newDir*10, Color.blue);
         Debug.DrawRay(transform.position, transform.forward * 10, Color.cyan);
+    }
+
+    public void RotateToMatchDirection(Vector3 targetforward, float rotateSpeed)
+    {
+        targetforward = Vector3.Normalize(targetforward); //this should be a normal vector to begin with, but lets not assume
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, targetforward, rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir, Vector3.up);
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0); //lock rotation to only rotate about y axis
     }
 
     public void RotateAway(Vector3 target, float rotateSpeed)

@@ -25,6 +25,7 @@ public class Mothman : Cryptid
     public float landingRangeForRestPoint;
     public float maximumAltitude;
     private float distanceToNextTarget;
+    public float targetHeightOffset; //aim for a little above the resting point so he can ease down
 
     public Transform JackalopeAttachTarget;
 
@@ -87,8 +88,8 @@ public class Mothman : Cryptid
                 xzTarget.y = this.transform.position.y;
                 if ((this.transform.position - xzTarget).magnitude < distanceToNextTarget/2f)
                 {
-                    currentMoveState = MoveState.Descending;
                     animator.SetBool(animatorBoolFlap, false);
+                    currentMoveState = MoveState.Descending;
                 }
 
                 break;
@@ -99,13 +100,13 @@ public class Mothman : Cryptid
                 Move(forwardSpeed);
 
                 //keep going up if we're somehow not there yet
-                if (this.transform.position.y < target.y)
+                if (this.transform.position.y < target.y + targetHeightOffset)
                 {
                     Ascend(upSpeed, maximumAltitude);
                 }
                 else
                 {
-                    Descend(upSpeed, target.y);
+                    Descend(upSpeed, target.y + targetHeightOffset);
                 }
                
 
@@ -114,6 +115,9 @@ public class Mothman : Cryptid
                 xzTarget.y = this.transform.position.y;
                 if ((this.transform.position - xzTarget).magnitude < landingRangeForRestPoint)
                 {
+                    Debug.Log("Mothman approaching landing point. " +
+                        "Pathpoint index " + pathIndex +
+                        " pathpoint location " + PathPoints[pathIndex].transform.position);
                     animator.SetBool(animatorBoolFlying, false);
                     currentMoveState = MoveState.Landing;
                     break;
@@ -131,21 +135,24 @@ public class Mothman : Cryptid
             case MoveState.Landing:
                 //come down for landing, and orient self to face the way the path point is
                 target = PathPoints[pathIndex].transform.position;
-                Vector3 targetDir = PathPoints[pathIndex].transform.forward;
-                RotateToward(targetDir, rotateSpeed);
+                //Vector3 targetDir = PathPoints[pathIndex].transform.position + PathPoints[pathIndex].transform.forward;
+                //RotateToward(targetDir, rotateSpeed);
+                RotateToMatchDirection(PathPoints[pathIndex].transform.forward, rotateSpeed);
                 Descend(upSpeed, target.y);
                 SlideToward(forwardSpeed / 2f, target);
 
                 //do a little math to see if we're within a few degrees of where we want to be
-                Vector3 targetForward = (transform.position - targetPos);
-                float cos = Vector3.Dot(targetForward.normalized, transform.forward);
+                //Vector3 targetForward = (transform.position - targetPos);
+                float cos = Vector3.Dot(PathPoints[pathIndex].transform.forward, transform.forward);
 
                 //arrive at rest within a certain range
                 float distance = (this.transform.position - target).magnitude;
-                if (Mathf.Abs(cos) >= .9f && distance < pathPointMinDist)
+                Debug.Log("Mothman landing. dot product of forwards: " + cos);
+                if (cos >= .95f && distance < pathPointMinDist)
                 {
                     animator.SetBool(animatorBoolResting, true);
                     currentMoveState = MoveState.Resting;
+                    pathIndex++;
                 }
 
                 break;
