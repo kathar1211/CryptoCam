@@ -15,8 +15,10 @@ public class Mothman : Cryptid
     private const string animatorBoolFlap = "flap";
     private const string animatorBoolGrabbing = "Grabbing";
 
-    public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Skedaddling }
+    public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Skedaddling, None }
     public MoveState currentMoveState;
+    private MoveState nextMoveState = MoveState.None;
+    private bool justChangedStates = false;
 
     public CryptidPathPoint outOfBoundsPoint; //mothman flies away after getting a jackalope
     private Jackalope jackalopeTarget;
@@ -51,17 +53,26 @@ public class Mothman : Cryptid
     protected override void Update()
     {
         base.Update();
+        if (lockMovementSuper) { return;}
 
         switch (currentMoveState)
         {
             case MoveState.Resting:
+                //if we just triggered a bonk, give animations a frame to initialize before we try to do anything else
+                if (justChangedStates)
+                {
+                    justChangedStates = false;
+                    break;
+                }
+
                 //just hang out until its time to move to the next point
-                if (TakeOffChance.UpdateTimerAndCheckSuccess())
+                if (TakeOffChance.UpdateTimerAndCheckSuccess() || nextMoveState == MoveState.Takeoff)
                 {
                     animator.SetBool(animatorBoolResting, false);
                     currentMoveState = MoveState.Takeoff;
                     timer = 0;
                     UpdateDistanceToTarget();
+                    nextMoveState = MoveState.None;
                 }
                 break;
             case MoveState.Takeoff:
@@ -182,5 +193,48 @@ public class Mothman : Cryptid
         xzTarget.y = this.transform.position.y;
         distanceToNextTarget = xzTarget.magnitude;
 
+    }
+
+    public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
+    {
+        //base.GetBonked(leftImpact, bonked);
+        switch (currentMoveState)
+        {
+            case MoveState.Resting:
+                if (leftImpact) { animator.SetTrigger(animatorTiggerBonkLeft);}
+                else { animator.SetTrigger(animatorTriggerBonkRight);}
+                //would like this to trigger takeoff as well
+                nextMoveState = MoveState.Takeoff;
+                justChangedStates = true;
+                break;
+
+            case MoveState.Takeoff:
+            case MoveState.Landing:
+            case MoveState.Targeting:
+                //hover looks for forward and back rather than left/right, so we have to calculate impact direction again
+                //line from cryptid to carrot
+                Vector3 bonkDistance = this.gameObject.transform.position - bonked.gameObject.transform.position;
+
+                //if the line from the cryptid to the carrot is in the same direction as the cryptid's forward vector,
+                //then the carrot is in front of the cryptid
+                bool frontImpact = false;
+                if (Vector3.Dot(this.transform.forward, bonkDistance) < 0)
+                {
+                    frontImpact = true;
+                }
+                if (frontImpact) { animator.SetTrigger(animatorTiggerBonkFront);}
+                else { animator.SetTrigger(animatorTriggerBonkBack);}
+                break;
+
+            case MoveState.Ascending:
+            case MoveState.Descending:
+                if (leftImpact) { animator.SetTrigger(animatorTiggerBonkLeft); }
+                else { animator.SetTrigger(animatorTriggerBonkRight); }
+                break;
+
+            case MoveState.Skedaddling:
+                //todo
+                break;
+        }
     }
 }
