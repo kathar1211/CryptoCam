@@ -234,7 +234,10 @@ public class Gallery : MonoBehaviour
         return allGalleryPhotos;
     }
 
-    public List<Texture2D> GetGallery() { return allGalleryPhotos; }
+    public List<Texture2D> GetGallery() {
+        if (!isInitialized) { Start(); }
+        return allGalleryPhotos; 
+    }
 
     public void OnClickDelete()
     {
