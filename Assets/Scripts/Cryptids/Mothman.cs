@@ -49,6 +49,8 @@ public class Mothman : Cryptid
 
         TakeOffChance = new RandomChanceInterval(10, .2f);
         FlapChance = new RandomChanceInterval(5, .15f);
+
+        pathIndex = -1;
     }
 
     // Update is called once per frame
@@ -79,11 +81,7 @@ public class Mothman : Cryptid
                 //just hang out until its time to move to the next point
                 if (TakeOffChance.UpdateTimerAndCheckSuccess() || nextMoveState == MoveState.Takeoff)
                 {
-                    animator.SetBool(animatorBoolResting, false);
-                    currentMoveState = MoveState.Takeoff;
-                    timer = 0;
-                    UpdateDistanceToTarget();
-                    nextMoveState = MoveState.None;
+                    TakeOff();
                 }
                 break;
             case MoveState.Takeoff:
@@ -186,9 +184,7 @@ public class Mothman : Cryptid
                 Debug.Log("Mothman landing. dot product of forwards: " + cos);
                 if (cos >= .95f && distance < pathPointMinDist)
                 {
-                    animator.SetBool(animatorBoolResting, true);
-                    currentMoveState = MoveState.Resting;
-                    pathIndex++;
+                    Land();
                 }
 
                 break;
@@ -200,6 +196,52 @@ public class Mothman : Cryptid
     public override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
+    }
+
+    private void TakeOff()
+    {
+        //attempt to unoccupy current perch, if applicable
+        if (pathIndex >= 0 && pathIndex < PathPoints.Length)
+        {
+            CryptidPathPoint currentPoint = PathPoints[pathIndex];
+            if (currentPoint is MothmanPathPoint)
+            {
+                MothmanPathPoint currentMothmanPoint = currentPoint as MothmanPathPoint;
+                if (currentMothmanPoint.Perch != null)
+                {
+                    currentMothmanPoint.Perch.perchOccupied = false;
+                    currentMothmanPoint.Perch.myMothman = null;
+                }
+            }
+        }
+        pathIndex++;
+
+        animator.SetBool(animatorBoolResting, false);
+        currentMoveState = MoveState.Takeoff;
+        timer = 0;
+        UpdateDistanceToTarget();
+        nextMoveState = MoveState.None;
+    }
+
+    private void Land()
+    {
+        //attempt to occupy current perch, if applicable
+        if (pathIndex >= 0 && pathIndex < PathPoints.Length)
+        {
+            CryptidPathPoint currentPoint = PathPoints[pathIndex];
+            if (currentPoint is MothmanPathPoint)
+            {
+                MothmanPathPoint currentMothmanPoint = currentPoint as MothmanPathPoint;
+                if (currentMothmanPoint.Perch != null)
+                {
+                    currentMothmanPoint.Perch.perchOccupied = true;
+                    currentMothmanPoint.Perch.myMothman = this;
+                }
+            }
+        }
+
+        animator.SetBool(animatorBoolResting, true);
+        currentMoveState = MoveState.Resting;
     }
 
     public void SnatchJackalope()
@@ -217,7 +259,6 @@ public class Mothman : Cryptid
         Vector3 xzTarget = new Vector3(target.x, target.y, target.z);
         xzTarget.y = this.transform.position.y;
         distanceToNextTarget = xzTarget.magnitude;
-
     }
 
     public override void GetBonked(bool leftImpact, BonkableObject bonked = null)
@@ -261,5 +302,11 @@ public class Mothman : Cryptid
                 //todo
                 break;
         }
+    }
+
+    //called if the object mothman is standing on gets hit with a carrot
+    public void PerchBonked()
+    {
+        TakeOff();
     }
 }

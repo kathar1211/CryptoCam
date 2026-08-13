@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidPathPoint.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidTrigger.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\HeadBone.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\MothmanPathPoint.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FlatwoodsMonster.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FresnoNightcrawler.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Assets\Scripts\Environment\GrassInteractionHolder.cs" />
     <Compile Include="Assets\Scripts\Environment\IntroCameraBehavior.cs" />
     <Compile Include="Assets\Scripts\Environment\LeaveCourse.cs" />
+    <Compile Include="Assets\Scripts\Environment\MothmanPerch.cs" />
     <Compile Include="Assets\Scripts\Environment\SetRippleShaderEffects.cs" />
     <Compile Include="Assets\Scripts\Environment\ShowLevelIntro.cs" />
     <Compile Include="Assets\Scripts\Environment\Splash.cs" />
