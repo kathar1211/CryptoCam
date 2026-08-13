@@ -17,7 +17,7 @@ public class PageDots : MonoBehaviour
     public void Init(int pageCount)
     {
         allDots = new List<Image>();
-        for (int i = 0; i < pageCount; i++)
+        for (int i = 0; i <= pageCount; i++)
         {
             Image dot = GameObject.Instantiate(dotPrefab, dotHolder);
             dot.color = unselectedDotColor;

@@ -54,6 +54,8 @@ public class Mothman : Cryptid
     // Update is called once per frame
     protected override void Update()
     {
+        baseScore = 200;
+        cryptidType = Constants.Mothman;
         base.Update();
 
         //ignore bonk freeze if we get bonked while flying
