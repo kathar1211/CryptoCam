@@ -13,6 +13,7 @@ public class Mothman : Cryptid
     private const string animatorBoolResting = "Resting";
     private const string animatorBoolFlying = "Flying";
     private const string animatorBoolFlap = "flap";
+    private const string animatorTriggerFlap = "flapOnce";
     private const string animatorBoolGrabbing = "Grabbing";
 
     public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Skedaddling, None }
@@ -47,12 +48,20 @@ public class Mothman : Cryptid
         StartUp();
 
         TakeOffChance = new RandomChanceInterval(10, .2f);
+        FlapChance = new RandomChanceInterval(5, .15f);
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
+
+        //ignore bonk freeze if we get bonked while flying
+        if (currentMoveState == MoveState.Ascending || currentMoveState == MoveState.Descending || currentMoveState == MoveState.Skedaddling)
+        {
+            lockMovementSuper = false;
+        }
+        
         if (lockMovementSuper) { return;}
 
         switch (currentMoveState)
@@ -114,12 +123,18 @@ public class Mothman : Cryptid
                 if (this.transform.position.y < target.y + targetHeightOffset)
                 {
                     Ascend(upSpeed, maximumAltitude);
+
+                    //we should be flapping if we still need to go up
+                    if ((target.y + targetHeightOffset) - this.transform.position.y > targetHeightOffset * 2)
+                    {
+                        animator.SetBool(animatorBoolFlap, true);
+                    }
                 }
-                else
+                else 
                 {
                     Descend(upSpeed, target.y + targetHeightOffset);
+                    animator.SetBool(animatorBoolFlap, false);
                 }
-               
 
                 //we could get pretty high up, so only look at x and z for proximity to landing point
                 xzTarget = new Vector3(target.x, target.y, target.z);
@@ -129,10 +144,18 @@ public class Mothman : Cryptid
                     Debug.Log("Mothman approaching landing point. " +
                         "Pathpoint index " + pathIndex +
                         " pathpoint location " + PathPoints[pathIndex].transform.position);
+                    animator.SetBool(animatorBoolFlap, false);
                     animator.SetBool(animatorBoolFlying, false);
                     currentMoveState = MoveState.Landing;
                     break;
                 }
+
+                //chance to flap wings
+                if (FlapChance.UpdateTimerAndCheckSuccess())
+                {
+                    animator.SetTrigger(animatorTriggerFlap);
+                }
+
                 break;
             case MoveState.Skedaddling:
                 //mothman flies to a spot the player cant reach
