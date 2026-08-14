@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -163,7 +164,8 @@ public class Save
     public static void SavePhotoToPNG(Texture2D photo)
     {
         byte[] png = photo.EncodeToPNG();
-        string path = FileBrowser.SaveFileBrowser("", "", "CryptidCamPhoto", new string[] { "png" });
+        string filename = "CryptidCamPhoto-" + DateTime.Now.ToString("yyyy-MM-dd-HH\\hmm\\mss\\sfff");
+        string path = FileBrowser.SaveFileBrowser("", "", filename, new string[] { "png" });
         if (!string.IsNullOrEmpty(path)) System.IO.File.WriteAllBytes(path, png);
     }
 }

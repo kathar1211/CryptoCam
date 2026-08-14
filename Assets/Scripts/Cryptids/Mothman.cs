@@ -47,7 +47,7 @@ public class Mothman : Cryptid
     {
         StartUp();
 
-        TakeOffChance = new RandomChanceInterval(10, .2f);
+        TakeOffChance = new RandomChanceInterval(30, .2f);
         FlapChance = new RandomChanceInterval(5, .15f);
 
         pathIndex = -1;
