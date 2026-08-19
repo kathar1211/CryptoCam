@@ -8,8 +8,8 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, walkforward, walktoward, edgeLeap, sit, lilypadsit, flee, stand, floating}
-    [SerializeField] MoveState currentState;
+    public enum MoveState { swim, walk, walkforward, walktoward, edgeLeap, sit, lilypadsit, flee, stand, floating}
+    [SerializeField] public MoveState currentState;
     MoveState previousState;
 
     //amount position needs to be adjusted after a leap
@@ -460,5 +460,10 @@ public class LovelandFrogman : Cryptid {
     {
         Transform root = other.root;
         return root.GetComponent<Nessie>();
+    }
+
+    public bool IsRidingNessie()
+    {
+        return ridingNessie != null;
     }
 }

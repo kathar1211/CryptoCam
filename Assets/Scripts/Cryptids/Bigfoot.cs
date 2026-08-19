@@ -25,8 +25,8 @@ public class Bigfoot : Cryptid
     public const float MinScratchTime = 0;
 
     //keep track of  move state,
-    enum MoveState { wander, sit, idle, befuddle, flee, pointReached }
-    [SerializeField] MoveState currentState;
+    public enum MoveState { wander, sit, idle, befuddle, flee, pointReached }
+    [SerializeField] public MoveState currentState;
     private bool lookedOnce;
 
     //wandering properties

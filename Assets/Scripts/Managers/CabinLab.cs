@@ -409,7 +409,7 @@ public class CabinLab : MonoBehaviour {
     #endregion
 
     //iterate through the different attributes of the photo and queue up dialogue and sprites for ted that go with them
-    void GradePhoto(Photograph photo)
+    void GradePhoto(Photograph photo, bool isChallengePhoto = false)
     {
         gradingThumbnailHolder.gameObject.SetActive(true);
         gradingThumbnailHolder.Play("PopIn");
@@ -433,12 +433,24 @@ public class CabinLab : MonoBehaviour {
             textBox.DisplayText();
             return;
         }
-        else
+        else if (!isChallengePhoto) //default grading commentary
         {
             //dialogue.Add("Oh, it's " + photo.subjectName + "!");
             dialogue.Add(Constants.FoundSubject.Replace(Constants.ParameterSTR, photo.subjectName));
             sprites.Add(TedMoods.Default);
             //.Add("That's worth " + photo.baseScore + " points.");
+            dialogue.Add(Constants.FoundPoints.Replace(Constants.ParameterSTR, photo.baseScore.ToString()));
+            sprites.Add(TedMoods.Pleased);
+            score += photo.baseScore;
+            scoreUpdates.Add(Constants.Score + score);
+        }
+        else //for challenge photos name it by the challenge type rather than the subject
+        {
+            //dialogue.Add("Oh, it's " + photo.subjectName + "!");
+            dialogue.Add(Constants.FoundSubject.Replace(Constants.ParameterSTR, ChallengeManager.GetTextForChallenge(photo.challenge)));
+            sprites.Add(TedMoods.Default);
+            //.Add("That's worth " + photo.baseScore + " points.");
+            //todo: base score for challenge photos should maybe be different
             dialogue.Add(Constants.FoundPoints.Replace(Constants.ParameterSTR, photo.baseScore.ToString()));
             sprites.Add(TedMoods.Pleased);
             score += photo.baseScore;
@@ -562,33 +574,45 @@ public class CabinLab : MonoBehaviour {
         TextBox actualTextBox = textBox;
         actualTextBox.ClearTextQueue();
         actualTextBox.FeedText(dialogue, sprites, scoreUpdates);
-        
+
 
         //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
-        CryptidNomicon cryptidData = cryptidNomicon;
-        if (cryptidData != null && cryptidData.HasEntry(photo.subjectName)){
-
-            PageContent content = cryptidData.GetEntry(photo.subjectName);
-            if (content != null)
+        if (!isChallengePhoto)
+        {
+            CryptidNomicon cryptidData = cryptidNomicon;
+            if (cryptidData != null && cryptidData.HasEntry(photo.subjectName))
             {
-                Texture2D pic = content.image;
-                prevThumbnail.sprite = Sprite.Create(pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
-                Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
 
-                actualTextBox.FeedText(Constants.ExistingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
-                actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
-                actualTextBox.FeedTed(TedMoods.Surprised);
+                PageContent content = cryptidData.GetEntry(photo.subjectName);
+                if (content != null)
+                {
+                    Texture2D pic = content.image;
+                    prevThumbnail.sprite = Sprite.Create(pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
+                    Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
 
-                actualTextBox.FeedText(Constants.OverwritePrompt, PromptPhotoChoice);
-                actualTextBox.FeedScore(Constants.Score + score);
-                actualTextBox.FeedTed(TedMoods.LookDownHandUp);
+                    actualTextBox.FeedText(Constants.ExistingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
+                    actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
+                    actualTextBox.FeedTed(TedMoods.Surprised);
 
-                actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
-                actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
+                    actualTextBox.FeedText(Constants.OverwritePrompt, PromptPhotoChoice);
+                    actualTextBox.FeedScore(Constants.Score + score);
+                    actualTextBox.FeedTed(TedMoods.LookDownHandUp);
+
+                    actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
+                    actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
+                }
             }
+        }
+        //todo: do a similar check to overwrite for challenge photos
+        else
+        {
+
         }
 
         actualTextBox.DisplayText();
+
+        //grant achievement for getting this photo
+        AchievementManager.GrantPictureAchievement(photo.subjectName);
     }
 
     
@@ -621,6 +645,15 @@ public class CabinLab : MonoBehaviour {
         CryptidNomicon cryptidData = cryptidNomicon;
         PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
         prevScoreText.text = Constants.Score + content.photoScore;
+    }
+
+    public void ShowPreviousChallengePhoto()
+    {
+        gradingThumbnailHolder.Play("SlideOver");
+        textBox.ted.SlideTed();
+
+        Debug.Log("grabbing existing photo at index " + gradingIndex);
+        //todo
     }
 
     //show buttons that give players the choice to keep an old photo vs a new one
@@ -656,6 +689,19 @@ public class CabinLab : MonoBehaviour {
         CryptidNomicon cryptidData = cryptidNomicon;
         PageContent content = cryptidData.GetEntry(gradeablePhotos[gradingIndex].subjectName);
         gradeablePhotos[gradingIndex] = cryptidData.PageToPhoto(content);
+    }
+
+    public void ChoseOldChallengePhoto()
+    {
+        gradingThumbnailHolder.Play("PreviousSelected");
+        textBox.ted.SlideTed();
+        textBox.ButtonsOut();
+        textBox.FeedText(Constants.OldPhotoSelected, TedMoods.Satisfied);
+        textBox.Continue();
+        textBox.ClearLeftButtonAction();
+
+        //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
+        //todo
     }
     #endregion
 

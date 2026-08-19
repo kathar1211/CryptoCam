@@ -6,8 +6,8 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class FlatwoodsMonster : Cryptid
 {
     //keep track of  move state,
-    enum MoveState { wander, hover, flee, turnAway, turnToward, pose }
-    [SerializeField] MoveState currentState;
+    public enum MoveState { wander, hover, flee, turnAway, turnToward, pose }
+    [SerializeField] public MoveState currentState;
 
     //wandering properties
     public float distance;

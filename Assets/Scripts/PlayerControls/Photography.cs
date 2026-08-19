@@ -21,17 +21,6 @@ public struct Photograph
     public ChallengePhotographContent challenge;
 }
 
-public enum ChallengePhotographContent
-{
-    None,
-    SleepingJackalope,
-    SleepingTsuchinoko,
-    LilypadFrogman,
-    DancingFresno,
-    SittingBigfoot,
-    PeaceSignFlatwoods,
-    CarryingMothman
-}
 
 public class Photography : MonoBehaviour {
 
@@ -174,8 +163,8 @@ public class Photography : MonoBehaviour {
         //Display(screenshot);
 
         //determine who's in the photo
-        List<GameObject> subjects = new List<GameObject>();
-        GameObject mainSubject;
+        List<Cryptid> subjects = new List<Cryptid>();
+        Cryptid mainSubject;
         foreach (GameObject cryptid in allCryptids)
         {
             if (cryptid == null) { continue; }
@@ -190,7 +179,7 @@ public class Photography : MonoBehaviour {
             if (IsInCameraView(Component.renderer, positionInShot))
             {
                 //dont add cryptids that are in frame but not visible
-                if (checkVisibility(cryptid) != 0) { subjects.Add(cryptid); }
+                if (checkVisibility(Component) != 0) { subjects.Add(Component); }
             }
         }
         pic.subjectCount = subjects.Count;
@@ -223,8 +212,8 @@ public class Photography : MonoBehaviour {
 
             //allScores[picIndex] = ScoreSubject(subjects[0]);
             mainSubject = subjects[0];
-            pic.baseScore = mainSubject.GetComponent<Cryptid>().baseScore;
-            pic.subjectName = mainSubject.GetComponent<Cryptid>().cryptidType;
+            pic.baseScore = mainSubject.baseScore;
+            pic.subjectName = mainSubject.cryptidType;
 
         //}
         //if more than one cryptid is in the photo determine whos the subject
@@ -232,14 +221,13 @@ public class Photography : MonoBehaviour {
         if (subjects.Count > 1)
         {
             float subjectScore = 1000000f;
-            foreach (GameObject cryptid in subjects)
+            foreach (Cryptid cryptid in subjects)
             {
                 //viewpos.z represents distance from camera (z=0 is on top of camera)
                 //(.5,.5) is the center of the screen: |(x,y)-(.5,.5)| represents distance from center
                 Vector3 viewPos;
-                Cryptid Component = cryptid.GetComponent<Cryptid>();
-                if (Component != null && Component.CenterOfMass != null) { viewPos = cryptoCam.WorldToViewportPoint(Component.CenterOfMass.position); }
-                else if (Component != null && Component.HeadBone != null) { viewPos = cryptoCam.WorldToViewportPoint(Component.HeadBone.transform.position); }
+                if (cryptid != null && cryptid.CenterOfMass != null) { viewPos = cryptoCam.WorldToViewportPoint(cryptid.CenterOfMass.position); }
+                else if (cryptid != null && cryptid.HeadBone != null) { viewPos = cryptoCam.WorldToViewportPoint(cryptid.HeadBone.transform.position); }
                 else { viewPos = cryptoCam.WorldToViewportPoint(cryptid.transform.position); }
                 
                 //don't include cryptids behind the camera 
@@ -258,18 +246,17 @@ public class Photography : MonoBehaviour {
                 }
             }
 
-            pic.baseScore = mainSubject.GetComponent<Cryptid>().baseScore;
-            pic.subjectName = mainSubject.GetComponent<Cryptid>().cryptidType;
+            pic.baseScore = mainSubject.baseScore;
+            pic.subjectName = mainSubject.cryptidType;
         }
 
         //once main subject is determined check other score criteria
-        Cryptid cryptidComponent = mainSubject.GetComponent<Cryptid>();
 
         //check if facing forward
         Vector3 cryptidForward = mainSubject.transform.forward;
 
         //if cryptid has a "head bone" (object that represents the head and face) then use the forward of that for a more accurate estimate of which way its facing
-        HeadBone cryptidHead = cryptidComponent.HeadBone;
+        HeadBone cryptidHead = mainSubject.HeadBone;
         if (cryptidHead != null)
         {
             cryptidForward = cryptidHead.GetForward();
@@ -284,12 +271,12 @@ public class Photography : MonoBehaviour {
 
         //check for cool animation
         
-        pic.coolPose = cryptidComponent.SpecialPose();
+        pic.coolPose = mainSubject.SpecialPose();
 
         //store distance from center and distance from camera
         Vector3 cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.transform.position);
         //if cryptid has center of mass use that
-        if (cryptidComponent.CenterOfMass != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidComponent.CenterOfMass.position); }
+        if (mainSubject.CenterOfMass != null) { cameraPos = cryptoCam.WorldToViewportPoint(mainSubject.CenterOfMass.position); }
         //if cryptid has a head bone use that as the center instead
         else if (cryptidHead != null) { cameraPos = cryptoCam.WorldToViewportPoint(cryptidHead.transform.position); }
 
@@ -302,6 +289,9 @@ public class Photography : MonoBehaviour {
 
         //score the pic
         pic.finalScore = ScorePhoto(pic);
+
+        //check if this photo fulfills one of the challenge requirements
+        pic.challenge = ChallengeManager.CheckChallengePhotoRequirements(subjects);
 
         //store the pic
         allPics[picIndex] = pic;
@@ -386,10 +376,10 @@ public class Photography : MonoBehaviour {
     }
 
     //calculates roughly how much of the cryptid is visible vs how much is obscured by obstacles
-    float checkVisibility(GameObject mainSubject)
+    float checkVisibility(Cryptid mainSubject)
     {
         //if cryptid has set itself to invisible use that
-        if (!mainSubject.GetComponent<Cryptid>().IsVisible()) { return 0; }
+        if (!mainSubject.IsVisible()) { return 0; }
 
         //cycle throuh hitboxes on cryptid, raycasting to each one
         //pic.visibility is hitboxes successfully hit by raycast/total hitboxes

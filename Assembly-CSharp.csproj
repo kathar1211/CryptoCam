@@ -86,9 +86,11 @@
     <Compile Include="Assets\Scripts\Environment\TsuchinokoLog.cs" />
     <Compile Include="Assets\Scripts\Items\BonkableObject.cs" />
     <Compile Include="Assets\Scripts\Items\Float.cs" />
+    <Compile Include="Assets\Scripts\Managers\AchievementManager.cs" />
     <Compile Include="Assets\Scripts\Managers\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Managers\CabinLab.cs" />
     <Compile Include="Assets\Scripts\Managers\CameraManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ChallengeManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GradeManager.cs" />
     <Compile Include="Assets\Scripts\Managers\InitializationManager.cs" />
@@ -104,6 +106,7 @@
     <Compile Include="Assets\Scripts\UI\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\UI\Gallery.cs" />
     <Compile Include="Assets\Scripts\UI\HelpPrompt.cs" />
+    <Compile Include="Assets\Scripts\UI\InitializationPrompt.cs" />
     <Compile Include="Assets\Scripts\UI\LogoAnimation.cs" />
     <Compile Include="Assets\Scripts\UI\Options.cs" />
     <Compile Include="Assets\Scripts\UI\PageDots.cs" />
@@ -111,6 +114,7 @@
     <Compile Include="Assets\Scripts\UI\SliderWithLabel.cs" />
     <Compile Include="Assets\Scripts\UI\SpriteWithShadow.cs" />
     <Compile Include="Assets\Scripts\UI\StarIndicator.cs" />
+    <Compile Include="Assets\Scripts\UI\SteamFailedPrompt.cs" />
     <Compile Include="Assets\Scripts\UI\Ted.cs" />
     <Compile Include="Assets\Scripts\UI\TedConvos.cs" />
     <Compile Include="Assets\Scripts\UI\TextBox.cs" />
@@ -955,10 +959,6 @@
       <HintPath>Library\ScriptAssemblies\io.sentry.unity.runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityFileBrowser">
-      <HintPath>Library\ScriptAssemblies\UnityFileBrowser.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
       <Private>False</Private>
@@ -1057,6 +1057,10 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityFileBrowser">
+      <HintPath>Library\ScriptAssemblies\UnityFileBrowser.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

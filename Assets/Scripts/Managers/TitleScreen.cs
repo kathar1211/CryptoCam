@@ -118,6 +118,9 @@ public class TitleScreen : MonoBehaviour {
         loader.SetActive(true);
         isSceneLoading = true;
         PlayerPrefs.SetInt(Constants.FirstPlay,0);
+        PlayerPrefs.DeleteKey(Constants.TedTalkIndex);
+        PlayerPrefs.DeleteKey(Constants.HasSeenAllTedDialogue);
+        PlayerPrefs.DeleteKey(Constants.CryptidNomiconComplete);
         SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
 

@@ -131,6 +131,8 @@ public static class Constants {
     public static string ErrorTrackingConsent = "ErrorTracking";
     public static string TedTalkIndex = "TedTalkIndex";
     public static string HasSeenAllTedDialogue = "HasTalkedToTed";
+    public static string CryptidNomiconComplete = "CryptidNomiconComplete";
+
     //used for image data- what size are these images
     public static int CameraWidth = 1920;
     public static int CameraHeight = 1080;
@@ -148,6 +150,16 @@ public static class Constants {
     public const string Flatwoods = "Flatwoods Monster";
     public const string Bigfoot = "Bigfoot";
     public const string Mothman = "Mothman";
+
+    //cryptid challenge descriptions
+    public const string SleepingJackalope = "a Jackalope sleeping";
+    public const string SleepingTsuchinoko = "a sleeping Tsuchinoko";
+    public const string LilypadFrogman = "a Loveland Frogman on a Lilypad";
+    public const string DancingFresno = "a dancing Fresno Nightcrawler";
+    public const string SittingBigfoot = "Bigfoot sitting down";
+    public const string PeaceSignFlatwoods = "The Flatwoods Monster giving a peace sign";
+    public const string CarryingMothman = "Mothman carrying a Jackalope";
+    public const string NessieWithFrogman = "Nessie with a Frogman on her back";
 
     //holds description text for cryptids in the cryptid-nomicon
     public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()

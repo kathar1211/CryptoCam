@@ -197,6 +197,26 @@ public class SteamManager : MonoBehaviour
 		// Run Steam client callbacks
 		SteamAPI.RunCallbacks();
 	}
+
+	public static void RestartThroughSteam()
+    {
+		if (SteamAPI.RestartAppIfNecessary((AppId_t)Constants.SteamAppID))
+		{
+			Application.Quit();
+			return;
+		}
+	}
+
+	public static void GrantAchievement(string achievementID)
+    {
+		SteamUserStats.SetAchievement(achievementID);
+	}
+
+	private static void SetStat(string statID, int statValue)
+    {
+		SteamUserStats.SetStat(statID, statValue);
+    }
+
 #else
 	public static bool Initialized {
 		get {

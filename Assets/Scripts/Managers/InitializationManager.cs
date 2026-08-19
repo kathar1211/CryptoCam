@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 public class InitializationManager : MonoBehaviour
 {
     public TrackErrorsPrompt ErrorsPrompt;
+    public SteamFailedPrompt SteamPrompt;
     public GameObject LoadingIcon;
     private bool isSceneLoading = false;
     public bool useSteam;
@@ -54,11 +55,14 @@ public class InitializationManager : MonoBehaviour
             //steam failed to initialize
             if (!SteamManager.Initialized)
             {
-                //todo: ask the user if they want to relaunch steam or proceed without
+                //ask the user if they want to relaunch steam or proceed without
                 Debug.Log("steam api not initialized");
+                SteamPrompt.AnimateOnscreen();
+                PauseInitialization = true;
             }
         }
 
+        await UniTask.WaitUntil(() => PauseInitialization == false);
 
         //if there's nothing else we want to do first, we can proceed to the title screen
         ProceedToTitle();
