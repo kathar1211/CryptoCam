@@ -1,216 +1,632 @@
 fileFormatVersion: 2
 guid: 1a7c00e1974fb7d4591227075b0dd0f0
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: Cube
-    100004: f_index.01.L
-    100006: f_index.01.R
-    100008: f_index.02.L
-    100010: f_index.02.R
-    100012: f_index.03.L
-    100014: f_index.03.L_end
-    100016: f_index.03.R
-    100018: f_index.03.R_end
-    100020: f_middle.01.L
-    100022: f_middle.01.R
-    100024: f_middle.02.L
-    100026: f_middle.02.R
-    100028: f_middle.03.L
-    100030: f_middle.03.L_end
-    100032: f_middle.03.R
-    100034: f_middle.03.R_end
-    100036: f_pinky.01.L
-    100038: f_pinky.01.R
-    100040: f_pinky.02.L
-    100042: f_pinky.02.R
-    100044: f_pinky.03.L
-    100046: f_pinky.03.L_end
-    100048: f_pinky.03.R
-    100050: f_pinky.03.R_end
-    100052: f_ring.01.L
-    100054: f_ring.01.R
-    100056: f_ring.02.L
-    100058: f_ring.02.R
-    100060: f_ring.03.L
-    100062: f_ring.03.L_end
-    100064: f_ring.03.R
-    100066: f_ring.03.R_end
-    100068: foot.L
-    100070: foot.R
-    100072: forearm.L
-    100074: forearm.R
-    100076: hand.L
-    100078: hand.R
-    100080: heel.02.L
-    100082: heel.02.L_end
-    100084: heel.02.R
-    100086: heel.02.R_end
-    100088: metarig
-    100090: palm.01.L
-    100092: palm.01.R
-    100094: palm.02.L
-    100096: palm.02.R
-    100098: palm.03.L
-    100100: palm.03.R
-    100102: palm.04.L
-    100104: palm.04.R
-    100106: pelvis.L
-    100108: pelvis.L_end
-    100110: pelvis.R
-    100112: pelvis.R_end
-    100114: shin.L
-    100116: shin.R
-    100118: shoulder.L
-    100120: shoulder.R
-    100122: spine
-    100124: spine.001
-    100126: spine.002
-    100128: spine.003
-    100130: spine.004
-    100132: spine.005
-    100134: spine.005_end
-    100136: thigh.L
-    100138: thigh.R
-    100140: thumb.01.L
-    100142: thumb.01.R
-    100144: thumb.02.L
-    100146: thumb.02.R
-    100148: thumb.03.L
-    100150: thumb.03.L_end
-    100152: thumb.03.R
-    100154: thumb.03.R_end
-    100156: toe.L
-    100158: toe.L_end
-    100160: toe.R
-    100162: toe.R_end
-    100164: upper_arm.L
-    100166: upper_arm.R
-    400000: //RootNode
-    400002: Cube
-    400004: f_index.01.L
-    400006: f_index.01.R
-    400008: f_index.02.L
-    400010: f_index.02.R
-    400012: f_index.03.L
-    400014: f_index.03.L_end
-    400016: f_index.03.R
-    400018: f_index.03.R_end
-    400020: f_middle.01.L
-    400022: f_middle.01.R
-    400024: f_middle.02.L
-    400026: f_middle.02.R
-    400028: f_middle.03.L
-    400030: f_middle.03.L_end
-    400032: f_middle.03.R
-    400034: f_middle.03.R_end
-    400036: f_pinky.01.L
-    400038: f_pinky.01.R
-    400040: f_pinky.02.L
-    400042: f_pinky.02.R
-    400044: f_pinky.03.L
-    400046: f_pinky.03.L_end
-    400048: f_pinky.03.R
-    400050: f_pinky.03.R_end
-    400052: f_ring.01.L
-    400054: f_ring.01.R
-    400056: f_ring.02.L
-    400058: f_ring.02.R
-    400060: f_ring.03.L
-    400062: f_ring.03.L_end
-    400064: f_ring.03.R
-    400066: f_ring.03.R_end
-    400068: foot.L
-    400070: foot.R
-    400072: forearm.L
-    400074: forearm.R
-    400076: hand.L
-    400078: hand.R
-    400080: heel.02.L
-    400082: heel.02.L_end
-    400084: heel.02.R
-    400086: heel.02.R_end
-    400088: metarig
-    400090: palm.01.L
-    400092: palm.01.R
-    400094: palm.02.L
-    400096: palm.02.R
-    400098: palm.03.L
-    400100: palm.03.R
-    400102: palm.04.L
-    400104: palm.04.R
-    400106: pelvis.L
-    400108: pelvis.L_end
-    400110: pelvis.R
-    400112: pelvis.R_end
-    400114: shin.L
-    400116: shin.R
-    400118: shoulder.L
-    400120: shoulder.R
-    400122: spine
-    400124: spine.001
-    400126: spine.002
-    400128: spine.003
-    400130: spine.004
-    400132: spine.005
-    400134: spine.005_end
-    400136: thigh.L
-    400138: thigh.R
-    400140: thumb.01.L
-    400142: thumb.01.R
-    400144: thumb.02.L
-    400146: thumb.02.R
-    400148: thumb.03.L
-    400150: thumb.03.L_end
-    400152: thumb.03.R
-    400154: thumb.03.R_end
-    400156: toe.L
-    400158: toe.L_end
-    400160: toe.R
-    400162: toe.R_end
-    400164: upper_arm.L
-    400166: upper_arm.R
-    2100000: Material
-    4300000: Cube
-    7400000: walk
-    7400002: metarig|Action
-    7400004: metarig|apose
-    7400006: metarig|bigfootpose
-    7400008: metarig|walkcycle_Cntact
-    7400010: metarig|walkcycle_contact
-    7400012: all anims
-    7400014: metarig|walkcycle_pass
-    7400016: metarig|walkcycle_pass.001
-    7400018: metarig|walkcycle_up.002
-    7400020: walk_turn
-    7400022: turn_pose
-    7400024: idle
-    7400026: sit_transition
-    7400028: sit_idle
-    7400030: sit_bonk_right
-    7400032: sit_bonk_left
-    7400034: bonk_right
-    7400036: bonk_left
-    7400038: lookdown
-    7400040: headscratch_loop
-    7400042: walk_1
-    7400044: walk_2
-    7400046: walk_3
-    7400048: walk_4
-    7400050: walk_turn_1
-    7400052: walk_turn_2
-    7400054: walk_turn_3
-    7400056: walk_turn_4
-    7400058: walk_turn_5
-    7400060: walk_turn_6
-    7400062: walk_turn_7
-    7400064: walk_turn_8
-    9500000: //RootNode
-    13700000: Cube
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Cube
+  - first:
+      1: 100004
+    second: f_index.01.L
+  - first:
+      1: 100006
+    second: f_index.01.R
+  - first:
+      1: 100008
+    second: f_index.02.L
+  - first:
+      1: 100010
+    second: f_index.02.R
+  - first:
+      1: 100012
+    second: f_index.03.L
+  - first:
+      1: 100014
+    second: f_index.03.L_end
+  - first:
+      1: 100016
+    second: f_index.03.R
+  - first:
+      1: 100018
+    second: f_index.03.R_end
+  - first:
+      1: 100020
+    second: f_middle.01.L
+  - first:
+      1: 100022
+    second: f_middle.01.R
+  - first:
+      1: 100024
+    second: f_middle.02.L
+  - first:
+      1: 100026
+    second: f_middle.02.R
+  - first:
+      1: 100028
+    second: f_middle.03.L
+  - first:
+      1: 100030
+    second: f_middle.03.L_end
+  - first:
+      1: 100032
+    second: f_middle.03.R
+  - first:
+      1: 100034
+    second: f_middle.03.R_end
+  - first:
+      1: 100036
+    second: f_pinky.01.L
+  - first:
+      1: 100038
+    second: f_pinky.01.R
+  - first:
+      1: 100040
+    second: f_pinky.02.L
+  - first:
+      1: 100042
+    second: f_pinky.02.R
+  - first:
+      1: 100044
+    second: f_pinky.03.L
+  - first:
+      1: 100046
+    second: f_pinky.03.L_end
+  - first:
+      1: 100048
+    second: f_pinky.03.R
+  - first:
+      1: 100050
+    second: f_pinky.03.R_end
+  - first:
+      1: 100052
+    second: f_ring.01.L
+  - first:
+      1: 100054
+    second: f_ring.01.R
+  - first:
+      1: 100056
+    second: f_ring.02.L
+  - first:
+      1: 100058
+    second: f_ring.02.R
+  - first:
+      1: 100060
+    second: f_ring.03.L
+  - first:
+      1: 100062
+    second: f_ring.03.L_end
+  - first:
+      1: 100064
+    second: f_ring.03.R
+  - first:
+      1: 100066
+    second: f_ring.03.R_end
+  - first:
+      1: 100068
+    second: foot.L
+  - first:
+      1: 100070
+    second: foot.R
+  - first:
+      1: 100072
+    second: forearm.L
+  - first:
+      1: 100074
+    second: forearm.R
+  - first:
+      1: 100076
+    second: hand.L
+  - first:
+      1: 100078
+    second: hand.R
+  - first:
+      1: 100080
+    second: heel.02.L
+  - first:
+      1: 100082
+    second: heel.02.L_end
+  - first:
+      1: 100084
+    second: heel.02.R
+  - first:
+      1: 100086
+    second: heel.02.R_end
+  - first:
+      1: 100088
+    second: metarig
+  - first:
+      1: 100090
+    second: palm.01.L
+  - first:
+      1: 100092
+    second: palm.01.R
+  - first:
+      1: 100094
+    second: palm.02.L
+  - first:
+      1: 100096
+    second: palm.02.R
+  - first:
+      1: 100098
+    second: palm.03.L
+  - first:
+      1: 100100
+    second: palm.03.R
+  - first:
+      1: 100102
+    second: palm.04.L
+  - first:
+      1: 100104
+    second: palm.04.R
+  - first:
+      1: 100106
+    second: pelvis.L
+  - first:
+      1: 100108
+    second: pelvis.L_end
+  - first:
+      1: 100110
+    second: pelvis.R
+  - first:
+      1: 100112
+    second: pelvis.R_end
+  - first:
+      1: 100114
+    second: shin.L
+  - first:
+      1: 100116
+    second: shin.R
+  - first:
+      1: 100118
+    second: shoulder.L
+  - first:
+      1: 100120
+    second: shoulder.R
+  - first:
+      1: 100122
+    second: spine
+  - first:
+      1: 100124
+    second: spine.001
+  - first:
+      1: 100126
+    second: spine.002
+  - first:
+      1: 100128
+    second: spine.003
+  - first:
+      1: 100130
+    second: spine.004
+  - first:
+      1: 100132
+    second: spine.005
+  - first:
+      1: 100134
+    second: spine.005_end
+  - first:
+      1: 100136
+    second: thigh.L
+  - first:
+      1: 100138
+    second: thigh.R
+  - first:
+      1: 100140
+    second: thumb.01.L
+  - first:
+      1: 100142
+    second: thumb.01.R
+  - first:
+      1: 100144
+    second: thumb.02.L
+  - first:
+      1: 100146
+    second: thumb.02.R
+  - first:
+      1: 100148
+    second: thumb.03.L
+  - first:
+      1: 100150
+    second: thumb.03.L_end
+  - first:
+      1: 100152
+    second: thumb.03.R
+  - first:
+      1: 100154
+    second: thumb.03.R_end
+  - first:
+      1: 100156
+    second: toe.L
+  - first:
+      1: 100158
+    second: toe.L_end
+  - first:
+      1: 100160
+    second: toe.R
+  - first:
+      1: 100162
+    second: toe.R_end
+  - first:
+      1: 100164
+    second: upper_arm.L
+  - first:
+      1: 100166
+    second: upper_arm.R
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Cube
+  - first:
+      4: 400004
+    second: f_index.01.L
+  - first:
+      4: 400006
+    second: f_index.01.R
+  - first:
+      4: 400008
+    second: f_index.02.L
+  - first:
+      4: 400010
+    second: f_index.02.R
+  - first:
+      4: 400012
+    second: f_index.03.L
+  - first:
+      4: 400014
+    second: f_index.03.L_end
+  - first:
+      4: 400016
+    second: f_index.03.R
+  - first:
+      4: 400018
+    second: f_index.03.R_end
+  - first:
+      4: 400020
+    second: f_middle.01.L
+  - first:
+      4: 400022
+    second: f_middle.01.R
+  - first:
+      4: 400024
+    second: f_middle.02.L
+  - first:
+      4: 400026
+    second: f_middle.02.R
+  - first:
+      4: 400028
+    second: f_middle.03.L
+  - first:
+      4: 400030
+    second: f_middle.03.L_end
+  - first:
+      4: 400032
+    second: f_middle.03.R
+  - first:
+      4: 400034
+    second: f_middle.03.R_end
+  - first:
+      4: 400036
+    second: f_pinky.01.L
+  - first:
+      4: 400038
+    second: f_pinky.01.R
+  - first:
+      4: 400040
+    second: f_pinky.02.L
+  - first:
+      4: 400042
+    second: f_pinky.02.R
+  - first:
+      4: 400044
+    second: f_pinky.03.L
+  - first:
+      4: 400046
+    second: f_pinky.03.L_end
+  - first:
+      4: 400048
+    second: f_pinky.03.R
+  - first:
+      4: 400050
+    second: f_pinky.03.R_end
+  - first:
+      4: 400052
+    second: f_ring.01.L
+  - first:
+      4: 400054
+    second: f_ring.01.R
+  - first:
+      4: 400056
+    second: f_ring.02.L
+  - first:
+      4: 400058
+    second: f_ring.02.R
+  - first:
+      4: 400060
+    second: f_ring.03.L
+  - first:
+      4: 400062
+    second: f_ring.03.L_end
+  - first:
+      4: 400064
+    second: f_ring.03.R
+  - first:
+      4: 400066
+    second: f_ring.03.R_end
+  - first:
+      4: 400068
+    second: foot.L
+  - first:
+      4: 400070
+    second: foot.R
+  - first:
+      4: 400072
+    second: forearm.L
+  - first:
+      4: 400074
+    second: forearm.R
+  - first:
+      4: 400076
+    second: hand.L
+  - first:
+      4: 400078
+    second: hand.R
+  - first:
+      4: 400080
+    second: heel.02.L
+  - first:
+      4: 400082
+    second: heel.02.L_end
+  - first:
+      4: 400084
+    second: heel.02.R
+  - first:
+      4: 400086
+    second: heel.02.R_end
+  - first:
+      4: 400088
+    second: metarig
+  - first:
+      4: 400090
+    second: palm.01.L
+  - first:
+      4: 400092
+    second: palm.01.R
+  - first:
+      4: 400094
+    second: palm.02.L
+  - first:
+      4: 400096
+    second: palm.02.R
+  - first:
+      4: 400098
+    second: palm.03.L
+  - first:
+      4: 400100
+    second: palm.03.R
+  - first:
+      4: 400102
+    second: palm.04.L
+  - first:
+      4: 400104
+    second: palm.04.R
+  - first:
+      4: 400106
+    second: pelvis.L
+  - first:
+      4: 400108
+    second: pelvis.L_end
+  - first:
+      4: 400110
+    second: pelvis.R
+  - first:
+      4: 400112
+    second: pelvis.R_end
+  - first:
+      4: 400114
+    second: shin.L
+  - first:
+      4: 400116
+    second: shin.R
+  - first:
+      4: 400118
+    second: shoulder.L
+  - first:
+      4: 400120
+    second: shoulder.R
+  - first:
+      4: 400122
+    second: spine
+  - first:
+      4: 400124
+    second: spine.001
+  - first:
+      4: 400126
+    second: spine.002
+  - first:
+      4: 400128
+    second: spine.003
+  - first:
+      4: 400130
+    second: spine.004
+  - first:
+      4: 400132
+    second: spine.005
+  - first:
+      4: 400134
+    second: spine.005_end
+  - first:
+      4: 400136
+    second: thigh.L
+  - first:
+      4: 400138
+    second: thigh.R
+  - first:
+      4: 400140
+    second: thumb.01.L
+  - first:
+      4: 400142
+    second: thumb.01.R
+  - first:
+      4: 400144
+    second: thumb.02.L
+  - first:
+      4: 400146
+    second: thumb.02.R
+  - first:
+      4: 400148
+    second: thumb.03.L
+  - first:
+      4: 400150
+    second: thumb.03.L_end
+  - first:
+      4: 400152
+    second: thumb.03.R
+  - first:
+      4: 400154
+    second: thumb.03.R_end
+  - first:
+      4: 400156
+    second: toe.L
+  - first:
+      4: 400158
+    second: toe.L_end
+  - first:
+      4: 400160
+    second: toe.R
+  - first:
+      4: 400162
+    second: toe.R_end
+  - first:
+      4: 400164
+    second: upper_arm.L
+  - first:
+      4: 400166
+    second: upper_arm.R
+  - first:
+      21: 2100000
+    second: Material
+  - first:
+      43: 4300000
+    second: Cube
+  - first:
+      74: 7400000
+    second: walk
+  - first:
+      74: 7400002
+    second: metarig|Action
+  - first:
+      74: 7400004
+    second: metarig|apose
+  - first:
+      74: 7400006
+    second: metarig|bigfootpose
+  - first:
+      74: 7400008
+    second: metarig|walkcycle_Cntact
+  - first:
+      74: 7400010
+    second: metarig|walkcycle_contact
+  - first:
+      74: 7400012
+    second: all anims
+  - first:
+      74: 7400014
+    second: metarig|walkcycle_pass
+  - first:
+      74: 7400016
+    second: metarig|walkcycle_pass.001
+  - first:
+      74: 7400018
+    second: metarig|walkcycle_up.002
+  - first:
+      74: 7400020
+    second: walk_turn
+  - first:
+      74: 7400022
+    second: turn_pose
+  - first:
+      74: 7400024
+    second: idle
+  - first:
+      74: 7400026
+    second: sit_transition
+  - first:
+      74: 7400028
+    second: sit_idle
+  - first:
+      74: 7400030
+    second: sit_bonk_right
+  - first:
+      74: 7400032
+    second: sit_bonk_left
+  - first:
+      74: 7400034
+    second: bonk_right
+  - first:
+      74: 7400036
+    second: bonk_left
+  - first:
+      74: 7400038
+    second: lookdown
+  - first:
+      74: 7400040
+    second: headscratch_loop
+  - first:
+      74: 7400042
+    second: walk_1
+  - first:
+      74: 7400044
+    second: walk_2
+  - first:
+      74: 7400046
+    second: walk_3
+  - first:
+      74: 7400048
+    second: walk_4
+  - first:
+      74: 7400050
+    second: walk_turn_1
+  - first:
+      74: 7400052
+    second: walk_turn_2
+  - first:
+      74: 7400054
+    second: walk_turn_3
+  - first:
+      74: 7400056
+    second: walk_turn_4
+  - first:
+      74: 7400058
+    second: walk_turn_5
+  - first:
+      74: 7400060
+    second: walk_turn_6
+  - first:
+      74: 7400062
+    second: walk_turn_7
+  - first:
+      74: 7400064
+    second: walk_turn_8
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Cube
+  - first:
+      74: 3027421295774639356
+    second: lookdown_mirror
+  - first:
+      74: -3452020351785230307
+    second: headscratch_loop_mirror
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -239,6 +655,7 @@ ModelImporter:
     - serializedVersion: 16
       name: all anims
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 0
       lastFrame: 784
       wrapMode: 0
@@ -267,6 +684,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 0
       lastFrame: 80
       wrapMode: 0
@@ -295,6 +713,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 80
       lastFrame: 239
       wrapMode: 0
@@ -323,6 +742,7 @@ ModelImporter:
     - serializedVersion: 16
       name: turn_pose
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 159
       lastFrame: 160
       wrapMode: 0
@@ -351,6 +771,7 @@ ModelImporter:
     - serializedVersion: 16
       name: idle
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 260
       lastFrame: 340
       wrapMode: 0
@@ -379,6 +800,7 @@ ModelImporter:
     - serializedVersion: 16
       name: sit_transition
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 340
       lastFrame: 445
       wrapMode: 0
@@ -407,6 +829,7 @@ ModelImporter:
     - serializedVersion: 16
       name: sit_idle
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 445
       lastFrame: 485
       wrapMode: 0
@@ -435,6 +858,7 @@ ModelImporter:
     - serializedVersion: 16
       name: sit_bonk_right
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 485
       lastFrame: 516
       wrapMode: 0
@@ -463,6 +887,7 @@ ModelImporter:
     - serializedVersion: 16
       name: sit_bonk_left
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 516
       lastFrame: 545
       wrapMode: 0
@@ -491,6 +916,7 @@ ModelImporter:
     - serializedVersion: 16
       name: bonk_right
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 575
       lastFrame: 619
       wrapMode: 0
@@ -519,6 +945,7 @@ ModelImporter:
     - serializedVersion: 16
       name: bonk_left
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 635
       lastFrame: 663
       wrapMode: 0
@@ -547,6 +974,7 @@ ModelImporter:
     - serializedVersion: 16
       name: lookdown
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 690
       lastFrame: 759
       wrapMode: 0
@@ -575,6 +1003,7 @@ ModelImporter:
     - serializedVersion: 16
       name: headscratch_loop
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 759
       lastFrame: 784
       wrapMode: 0
@@ -603,6 +1032,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_1
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 0
       lastFrame: 30
       wrapMode: 0
@@ -631,6 +1061,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_2
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 31
       lastFrame: 40
       wrapMode: 0
@@ -659,6 +1090,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_3
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 41
       lastFrame: 70
       wrapMode: 0
@@ -687,6 +1119,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_4
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 71
       lastFrame: 80
       wrapMode: 0
@@ -715,6 +1148,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_1
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 80
       lastFrame: 110
       wrapMode: 0
@@ -743,6 +1177,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_2
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 111
       lastFrame: 120
       wrapMode: 0
@@ -771,6 +1206,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_3
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 121
       lastFrame: 150
       wrapMode: 0
@@ -799,6 +1235,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_4
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 151
       lastFrame: 160
       wrapMode: 0
@@ -827,6 +1264,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_5
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 161
       lastFrame: 190
       wrapMode: 0
@@ -855,6 +1293,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_6
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 191
       lastFrame: 200
       wrapMode: 0
@@ -883,6 +1322,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_7
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 201
       lastFrame: 230
       wrapMode: 0
@@ -911,6 +1351,7 @@ ModelImporter:
     - serializedVersion: 16
       name: walk_turn_8
       takeName: metarig|walkcycle_down
+      internalID: 0
       firstFrame: 231
       lastFrame: 239
       wrapMode: 0
@@ -936,6 +1377,64 @@ ModelImporter:
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: lookdown_mirror
+      takeName: metarig|walkcycle_down
+      internalID: 0
+      firstFrame: 790
+      lastFrame: 859
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: headscratch_loop_mirror
+      takeName: metarig|walkcycle_down
+      internalID: 0
+      firstFrame: 859
+      lastFrame: 884
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -943,25 +1442,28 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 1
@@ -970,10 +1472,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -983,13 +1485,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
