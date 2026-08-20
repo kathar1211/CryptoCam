@@ -364,6 +364,26 @@ public class CabinLab : MonoBehaviour {
         }
     }
 
+    public void Challenges()
+    {
+        if (currentState == MenuState.Main)
+        {
+            //ted says no if you havent finished the cryptidnomicon
+            if (!ChallengeManager.ChallengeModeUnlocked())
+            {
+                currentState = MenuState.Talking;
+                textBox.gameObject.SetActive(true);
+                textBox.FeedText(Constants.TedLineChallengesLocked);
+                textBox.FeedTed(TedMoods.SquintHandUp);
+                textBox.DisplayText();
+            }
+
+            //otherwise open the challenges ui
+            
+        }
+       
+    }
+
     public void Options()
     {
         if (currentState == MenuState.Main)

@@ -161,6 +161,9 @@ public static class Constants {
     public const string CarryingMothman = "Mothman carrying a Jackalope";
     public const string NessieWithFrogman = "Nessie with a Frogman on her back";
 
+    //ted's lines if challenges are locked
+    public const string TedLineChallengesLocked = "You can't look at the challenges yet. \nWhy don't you finish the Cryptid-Nomicon first?";
+
     //holds description text for cryptids in the cryptid-nomicon
     public static Dictionary<string, string> tedsWriting = new Dictionary<string, string>()
     {
