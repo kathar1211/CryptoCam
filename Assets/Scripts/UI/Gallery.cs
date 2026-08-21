@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -252,7 +253,7 @@ public class Gallery : MonoBehaviour
         deleteConfirmationWindow.SetActive(false);
 
         //which picture was this
-        int thumbnailIndex = ArrayUtility.IndexOf(thumbnails, selectedImage);
+        int thumbnailIndex = Array.IndexOf(thumbnails, selectedImage);
         int photoIndex = (pageIndex * thumbnails.Length) + thumbnailIndex;
         allGalleryPhotos.RemoveAt(photoIndex);
         allPhotoSprites.RemoveAt(photoIndex);
