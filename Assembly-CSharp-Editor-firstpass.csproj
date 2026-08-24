@@ -1045,8 +1045,8 @@
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityFileBrowser">
-      <HintPath>Library\ScriptAssemblies\UnityFileBrowser.dll</HintPath>
+    <Reference Include="SimpleFileBrowser.Runtime">
+      <HintPath>Library\ScriptAssemblies\SimpleFileBrowser.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

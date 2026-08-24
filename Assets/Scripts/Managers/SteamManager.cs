@@ -71,8 +71,9 @@ public class SteamManager : MonoBehaviour
 	public virtual void Init()
 	{
 		// Only one instance of SteamManager at a time!
-		if (s_instance != null)
+		if (s_instance != null && s_instance != this)
 		{
+			Debug.Log("steamapi not initialized due to existing instance");
 			Destroy(gameObject);
 			return;
 		}
@@ -135,6 +136,7 @@ public class SteamManager : MonoBehaviour
 		// Valve's documentation for this is located here:
 		// https://partner.steamgames.com/doc/sdk/api#initialization_and_shutdown
 		m_bInitialized = SteamAPI.Init();
+		Debug.Log("called steamapi.init. result: " + m_bInitialized);
 		if (!m_bInitialized)
 		{
 			Debug.LogError("[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.", this);
@@ -205,6 +207,12 @@ public class SteamManager : MonoBehaviour
 			Application.Quit();
 			return;
 		}
+	}
+
+	public static bool IsSteamRunning()
+    {
+		return SteamAPI.IsSteamRunning();
+
 	}
 
 	public static void GrantAchievement(string achievementID)

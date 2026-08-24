@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using UnityFileBrowser;
+using SimpleFileBrowser;
 
 //contains only the aspects of a player's photo that need to be saved to file
 //very similar to CryptidNomicon's PageContent struct
@@ -165,7 +165,18 @@ public class Save
     {
         byte[] png = photo.EncodeToPNG();
         string filename = "CryptidCamPhoto-" + DateTime.Now.ToString("yyyy-MM-dd-HH\\hmm\\mss\\sfff");
-        string path = FileBrowser.SaveFileBrowser("", "", filename, new string[] { "png" });
-        if (!string.IsNullOrEmpty(path)) System.IO.File.WriteAllBytes(path, png);
+        //string path = FileBrowser.SaveFileBrowser("", "", filename, new string[] { "png" });
+        //string path = StandaloneFileBrowser.SaveFilePanel("", "", filename, "png");
+        //if (!string.IsNullOrEmpty(path)) System.IO.File.WriteAllBytes(path, png);
+
+        //StandaloneFileBrowser.SaveFilePanelAsync("", "", filename, "png", info => FinishSave(png, info));
+        FileBrowser.SetFilters(false, new FileBrowser.Filter(".png", ".png"));
+        FileBrowser.ShowSaveDialog((paths) => FinishSave(png, paths[0]), null, FileBrowser.PickMode.Files, false, "", filename, "Save As", "Save");
+    }
+
+    public static void FinishSave(byte[] pngData, string fileInfo)
+    {
+        Debug.Log("returned from save dialogue with fileinfo + " + fileInfo);
+        if (!string.IsNullOrEmpty(fileInfo)) System.IO.File.WriteAllBytes(fileInfo, pngData);
     }
 }
