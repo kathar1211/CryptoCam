@@ -65,7 +65,10 @@ public class Gallery : MonoBehaviour
             if (Save.SaveFileExists())
             {
                 allGalleryPhotos = Save.LoadGalleryPhotos();
+                
             }
+            //if there's no save then this list hasnt been instantialized yet
+            if (allGalleryPhotos == null) { allGalleryPhotos = new List<Texture2D>(); }
 
             allPhotoSprites = new List<Sprite>();
             foreach (Texture2D tex in allGalleryPhotos)
@@ -231,7 +234,7 @@ public class Gallery : MonoBehaviour
             allGalleryPhotos.Add(photo.pic);
         }
 
-
+        DrawThumbnails();
         return allGalleryPhotos;
     }
 

@@ -218,6 +218,7 @@ public class SteamManager : MonoBehaviour
 	public static void GrantAchievement(string achievementID)
     {
 		SteamUserStats.SetAchievement(achievementID);
+		SteamUserStats.StoreStats();
 	}
 
 	private static void SetStat(string statID, int statValue)
