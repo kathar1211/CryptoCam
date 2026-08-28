@@ -14,8 +14,8 @@ public class StarIndicator : MonoBehaviour
     public Color FilledStar;
     public Color EmptyStar;
 
-    static int TwoStarScore = 250;
-    static int ThreeStarScore = 500;
+    public const int TwoStarScore = 250;
+    public const int ThreeStarScore = 500;
 
     void Start()
     {

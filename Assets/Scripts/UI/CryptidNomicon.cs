@@ -18,9 +18,9 @@ public class PageContent
 public class CryptidNomicon : MonoBehaviour {
 
     //for cryptidnomicon
-    GameObject page;
+    protected GameObject page;
     public Sprite[] pages;
-    int currentPage;
+    protected int currentPage;
 
     public Image thumbnail;
     public TextMeshProUGUI scoreDesc;
@@ -33,8 +33,8 @@ public class CryptidNomicon : MonoBehaviour {
     public TextMeshProUGUI totalScoreText;
     public StarIndicator starRatingDisplay;
 
-    Dictionary<string, PageContent> pageContents;
-    bool isInitialized = false;
+    protected Dictionary<string, PageContent> pageContents;
+    protected bool isInitialized = false;
 
     //"state" for when a photo is clicked and enlarged for viewing
     bool viewing = false;
@@ -54,10 +54,10 @@ public class CryptidNomicon : MonoBehaviour {
     public Sprite FlatwoodsPreview;
     public Sprite TsuchinokoPreview;
 
-    private Dictionary<string, Sprite> CryptidPreviewTable;
+    protected Dictionary<string, Sprite> CryptidPreviewTable;
 
     // Use this for initialization
-    void Start () {
+    protected void Start () {
         if (!isInitialized)
         {
             page = this.transform.GetChild(0).gameObject;
@@ -102,7 +102,7 @@ public class CryptidNomicon : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	protected void Update () {
         //handle page turning if not viewing a photo
         if (!viewing)
         {
@@ -194,43 +194,11 @@ public class CryptidNomicon : MonoBehaviour {
             PageContent content = entry.Value;
             if (content == null) //no entry/ picture not taken
             {
-                thumbnail.gameObject.SetActive(false);
-                scoreDesc.gameObject.SetActive(false);
-                starRatingDisplay.gameObject.SetActive(false);
-                
-                imageDesc.gameObject.SetActive(true);
-                nameDesc.gameObject.SetActive(false);
-                notUnlockedSilhouette.gameObject.SetActive(true);
-
-                //demo stuff
-               /* if (Constants.DemoLockedCryptids.Contains(entry.Key))
-                {
-                    imageDesc.text = Constants.demoLockedEntry;
-                }
-                else
-                {*/
-                    imageDesc.text = Constants.defaultEntry;
-                //}
-                
-                notUnlockedSilhouette.sprite = CryptidPreviewTable[entry.Key];
-                //nameDesc.text = entry.Key;
+                DisplayLockedPage(entry.Key);
             }
             else //use player's saved image
             {
-                thumbnail.gameObject.SetActive(true);
-                scoreDesc.gameObject.SetActive(true);
-                imageDesc.gameObject.SetActive(true);
-                nameDesc.gameObject.SetActive(true);
-                starRatingDisplay.gameObject.SetActive(true);
-
-                notUnlockedSilhouette.gameObject.SetActive(false);
-
-                thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
-                //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
-                scoreDesc.text = "Score: " + content.photoScore;
-                starRatingDisplay.ShowStars(content.photoScore);
-                imageDesc.text = content.flavorText;
-                nameDesc.text = content.name;
+                DisplayUnlockedPage(content);
             }
            
         }
@@ -247,8 +215,50 @@ public class CryptidNomicon : MonoBehaviour {
         }
     }
 
+    protected virtual void DisplayUnlockedPage(PageContent content)
+    {
+        thumbnail.gameObject.SetActive(true);
+        scoreDesc.gameObject.SetActive(true);
+        imageDesc.gameObject.SetActive(true);
+        nameDesc.gameObject.SetActive(true);
+        starRatingDisplay.gameObject.SetActive(true);
+
+        notUnlockedSilhouette.gameObject.SetActive(false);
+
+        thumbnail.sprite = Sprite.Create(content.image, new Rect(0f, 0f, content.image.width, content.image.height), new Vector2(.5f, .5f));
+        //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
+        scoreDesc.text = "Score: " + content.photoScore;
+        starRatingDisplay.ShowStars(content.photoScore);
+        imageDesc.text = content.flavorText;
+        nameDesc.text = content.name;
+    }
+
+    protected virtual void DisplayLockedPage(string contentKey)
+    {
+        thumbnail.gameObject.SetActive(false);
+        scoreDesc.gameObject.SetActive(false);
+        starRatingDisplay.gameObject.SetActive(false);
+
+        imageDesc.gameObject.SetActive(true);
+        nameDesc.gameObject.SetActive(false);
+        notUnlockedSilhouette.gameObject.SetActive(true);
+
+        //demo stuff
+        /* if (Constants.DemoLockedCryptids.Contains(entry.Key))
+         {
+             imageDesc.text = Constants.demoLockedEntry;
+         }
+         else
+         {*/
+        imageDesc.text = Constants.defaultEntry;
+        //}
+
+        notUnlockedSilhouette.sprite = CryptidPreviewTable[contentKey];
+        //nameDesc.text = entry.Key;
+    }
+
     //convert photo taken in game to content to display on page
-    public PageContent PhotoToPage(Photograph photo)
+    public virtual PageContent PhotoToPage(Photograph photo)
     {
         PageContent content = new PageContent();
         content.image = photo.pic;
@@ -269,7 +279,7 @@ public class CryptidNomicon : MonoBehaviour {
     }
 
     //accept photos from grading to display in the crytpidnomicon
-    public Dictionary<string, PageContent> RecievePhotos(List<Photograph> finalPhotos)
+    public virtual Dictionary<string, PageContent> RecievePhotos(List<Photograph> finalPhotos)
     {
         if (!isInitialized) { Start(); }
         foreach (Photograph photo in finalPhotos)
@@ -293,7 +303,7 @@ public class CryptidNomicon : MonoBehaviour {
         return pageContents;
     }
 
-    private void UpdateScoreText()
+    protected void UpdateScoreText()
     {
         int totalScore = CalculateTotalScore(pageContents);
         if (totalScore == 0) { totalScoreText.text = "Total Score:\n-"; }

@@ -31,6 +31,8 @@ public class CabinLab : MonoBehaviour {
 
     List<Photograph> gradeablePhotos = new List<Photograph>();
     int gradingIndex = -1;
+    List<Photograph> gradeableChallengePhotos = new List<Photograph>();
+    int challengeGradingIndex = -1;
     public Animator gradingThumbnailHolder;
     public Image newThumbnail;
     public Image prevThumbnail;
@@ -97,21 +99,45 @@ public class CabinLab : MonoBehaviour {
                 textBox.DisplayText();
                 //currentState = MenuState.Grading;
             }
-
-            //other things that mightve come back from the level
-            if(gameManager.HasGalleryPhotos())
-            {
-                gallery.MergePhotos(gameManager.pics4gallery);
-                if (!grading) { SavePhotos(cryptidNomicon.GetPageContents()); }//save now if we're not grading since we won't later
-            }
-
             //todo:challenges
             if (gameManager.HasChallengePhotos())
             {
-                if (!grading) { }//todo: some text
+                if (!grading)
+                {
+                    grading = true;
+                    currentState = MenuState.Grading;
+
+                    //intro
+                    string[] dialogue = { Constants.WelcomeBack };
+                    TedMoods[] sprites = { TedMoods.Default };
+                    string[] emptyScoreTxt = { "" };
+                    textBox.ClearTextQueue();
+                    textBox.FeedText(dialogue, sprites, emptyScoreTxt);
+                    textBox.DisplayText();
+                }
 
                 //these might need to be graded same as cryptidnomicon photos. so user can choose what to keep
+                gradeableChallengePhotos.AddRange(gameManager.pics4challenge);
             }
+
+
+            //other things that mightve come back from the level
+            if (gameManager.HasGalleryPhotos())
+            {
+                gallery.MergePhotos(gameManager.pics4gallery);
+                if (!grading) {
+
+                    string[] dialogue = { Constants.GalleryNoGrading };
+                    TedMoods[] sprites = { TedMoods.Default };
+                    textBox.ClearTextQueue();
+                    textBox.FeedText(dialogue, sprites);
+                    textBox.DisplayText();
+
+                    //save now if we're not grading since we won't later
+                    SavePhotos(cryptidNomicon.GetPageContents()); 
+                }
+            }
+
         }
 
         //if it's the first time starting the game, set up the intro sequence
@@ -231,23 +257,26 @@ public class CabinLab : MonoBehaviour {
                         textBox.gameObject.SetActive(true);
                         GradePhoto(gradeablePhotos[gradingIndex]);
                     }
+                    else if (!textBox.gameObject.activeInHierarchy && challengeGradingIndex < gradeableChallengePhotos.Count - 1)
+                    {
+                        challengeGradingIndex++;
+                        //if textbox is not active it means its finished with the current photo 
+                        //set it active again and queue up the next photo
+                        textBox.ClearTextQueue();
+                        textBox.gameObject.SetActive(true);
+                        GradePhoto(gradeableChallengePhotos[challengeGradingIndex], true);
+                    }
                 }
-                if (!textBox.gameObject.activeInHierarchy && gradingIndex >= gradeablePhotos.Count - 1)
+                if (!textBox.gameObject.activeInHierarchy && 
+                    gradingIndex >= gradeablePhotos.Count - 1 && 
+                    challengeGradingIndex >= gradeableChallengePhotos.Count-1)
                 {
                     //outro
                     textBox.FeedText(Constants.DoneGrading,TedMoods.Default);
-                    //additional lines if you brought back gallery/challenge photos
-                    if (GameManager.Instance.HasChallengePhotos() && GameManager.Instance.HasGalleryPhotos())
-                    {
-                        textBox.FeedText(Constants.GalleryAndChallenge, TedMoods.Satisfied);
-                    }
-                    else if (GameManager.Instance.HasGalleryPhotos())
+                    //additional lines if you brought back gallery photos
+                    if (GameManager.Instance.HasGalleryPhotos())
                     {
                         textBox.FeedText(Constants.GalleryOnly, TedMoods.Pleased);
-                    }
-                    else if (GameManager.Instance.HasChallengePhotos())
-                    {
-                        textBox.FeedText(Constants.ChallengeOnly, TedMoods.Happy);
                     }
 
                     textBox.DisplayText();
@@ -735,6 +764,8 @@ public class CabinLab : MonoBehaviour {
         SaveData.SaveGalleryPhotos(gallery.GetGallery());
         SaveData.SaveChallengePhotos();
         SaveData.SaveGame();
+
+        AchievementManager.UpdateCryptidNomiconStats(pageContents);
     }
 }
 

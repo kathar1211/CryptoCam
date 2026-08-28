@@ -28,10 +28,38 @@ public class AchievementManager
     public enum STEAM_STATS
     {
         CRYPTIDNOMICON_ENTRIES = 3,
-        CRYTPIDNOMICON_ENTRIES_PERFECT = 4,
+        CRYPTIDNOMICON_ENTRIES_PERFECT = 4,
         CHALLENGES_COMPLETE = 5,
         CRYPTIDS_BONKED = 6
     };
+
+    public static void UpdateCryptidNomiconStats(Dictionary<string, PageContent> contents)
+    {
+        if (contents == null) { return; }
+
+        int entryCount = 0;
+        int threeStarCount = 0;
+
+        foreach (KeyValuePair<string, PageContent> content in contents)
+        {
+           if (content.Value == null) { continue; }
+           if (!string.IsNullOrEmpty(content.Value.name)) { entryCount++; }
+           if (content.Value.photoScore >= StarIndicator.ThreeStarScore) { threeStarCount++; }
+        }
+
+        SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES, entryCount);
+        SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES_PERFECT, threeStarCount);
+    }
+
+    public static void SetStat(STEAM_STATS statID, int newStatValue)
+    {
+        SteamManager.SetStat(statID.ToString(), newStatValue);
+    }
+
+    public static void GrantAchievement(STEAM_ACHIEVEMENTS achievementEnum)
+    {
+        SteamManager.GrantAchievement(achievementEnum.ToString());
+    }
 
     public static void GrantPictureAchievement(string photoSubject)
     {

@@ -84,8 +84,9 @@ public static class Constants {
     public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
     public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
     public static string GalleryOnly = "Oh, looks like you kept some photos for yourself too. \nI'll put those in the gallery for you.";
-    public static string ChallengeOnly = "Ah, I see you went above and beyond! \nYou can check out the Challenges section to see how you did.";
-    public static string GalleryAndChallenge = "Your gallery and challenge photos have been updated too. \nI'm sure you know where to find them.";
+    //public static string ChallengeOnly = "Ah, I see you went above and beyond! \nYou can check out the Challenges section to see how you did.";
+    //public static string GalleryAndChallenge = "Your gallery and challenge photos have been updated too. \nI'm sure you know where to find them.";
+    public static string GalleryNoGrading = "Oh, none for me this time, huh? No worries, \nenjoy your new gallery photos.";
 
     //button options during grading
     public static string KeepPreviousText = "Keep Previous Photo";
@@ -132,6 +133,7 @@ public static class Constants {
     public static string TedTalkIndex = "TedTalkIndex";
     public static string HasSeenAllTedDialogue = "HasTalkedToTed";
     public static string CryptidNomiconComplete = "CryptidNomiconComplete";
+    public static string CryptidsBonked = "CryptidsBonked";
 
     //used for image data- what size are these images
     public static int CameraWidth = 1920;
@@ -181,6 +183,7 @@ public static class Constants {
 
     public const string defaultEntry = "Take a photo of this cryptid and submit it to Ted to learn more about them.";
     public const string demoLockedEntry = "This cryptid will be available in the full release of the game.";
+    public const string challengesLockedEntry = "Complete this challenge to unlock cryptid concept art.";
 
     //feedback form
     public const string FeedbackFormURL = "https://forms.gle/TTNtVqNbBSVfdTrU7";

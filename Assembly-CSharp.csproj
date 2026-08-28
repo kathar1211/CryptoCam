@@ -102,6 +102,7 @@
     <Compile Include="Assets\Scripts\PlayerControls\Photography.cs" />
     <Compile Include="Assets\Scripts\PlayerControls\ThrowObject.cs" />
     <Compile Include="Assets\Scripts\UI\BigThumbnail.cs" />
+    <Compile Include="Assets\Scripts\UI\ChallengeBook.cs" />
     <Compile Include="Assets\Scripts\UI\ControllerNavigableConfirmationWindow.cs" />
     <Compile Include="Assets\Scripts\UI\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\UI\Gallery.cs" />
@@ -963,6 +964,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SimpleFileBrowser.Runtime">
+      <HintPath>Library\ScriptAssemblies\SimpleFileBrowser.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
@@ -1057,10 +1062,6 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SimpleFileBrowser.Runtime">
-      <HintPath>Library\ScriptAssemblies\SimpleFileBrowser.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
