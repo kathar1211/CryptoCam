@@ -18,6 +18,7 @@ public class CabinLab : MonoBehaviour {
     public GameObject ted;
 
     public CryptidNomicon cryptidNomicon;
+    public CryptidNomicon challengeBook;
 
     //for options
     public GameObject options;

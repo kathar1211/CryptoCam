@@ -50,14 +50,14 @@ public class ChallengeBook : CryptidNomicon
 
             CryptidPreviewTable = new Dictionary<string, Sprite>
             {
-                {Constants.SleepingJackalope, JackalopePreview },
-                {Constants.DancingFresno, FresnoPreview },
-                {Constants.SleepingTsuchinoko, TsuchinokoPreview },
-                {Constants.NessieWithFrogman, NessiePreview },
-                {Constants.PeaceSignFlatwoods, FlatwoodsPreview },
-                {Constants.SittingBigfoot, BigfootPreview },
-                {Constants.CarryingMothman, MothmanPreview },
-                {Constants.LilypadFrogman, FrogmanPreview },
+                {ChallengePhotographContent.SleepingJackalope.ToString(), JackalopePreview },
+                {ChallengePhotographContent.DancingFresno.ToString(), FresnoPreview },
+                {ChallengePhotographContent.SleepingTsuchinoko.ToString(), TsuchinokoPreview },
+                {ChallengePhotographContent.NessieWithFrogman.ToString(), NessiePreview },
+                {ChallengePhotographContent.PeaceSignFlatwoods.ToString(), FlatwoodsPreview },
+                {ChallengePhotographContent.SittingBigfoot.ToString(), BigfootPreview },
+                {ChallengePhotographContent.CarryingMothman.ToString(), MothmanPreview },
+                {ChallengePhotographContent.LilypadFrogman.ToString(), FrogmanPreview },
             };
 
             ConceptArtLookupTable = new Dictionary<string, Sprite>
@@ -136,6 +136,7 @@ public class ChallengeBook : CryptidNomicon
         starRatingDisplay.ShowStars(content.photoScore);
         imageDesc.text = content.flavorText;
         nameDesc.text = content.name;
+        unlockedConceptArt.sprite = ConceptArtLookupTable[content.name];
     }
 
     protected override void DisplayLockedPage(string contentKey)
@@ -143,6 +144,7 @@ public class ChallengeBook : CryptidNomicon
         thumbnail.gameObject.SetActive(false);
         scoreDesc.gameObject.SetActive(false);
         starRatingDisplay.gameObject.SetActive(false);
+        unlockedConceptArt.gameObject.SetActive(false);
 
         imageDesc.gameObject.SetActive(true);
         nameDesc.gameObject.SetActive(false);
@@ -155,7 +157,7 @@ public class ChallengeBook : CryptidNomicon
          }
          else
          {*/
-        imageDesc.text = Constants.defaultEntry;
+        imageDesc.text = Constants.challengesLockedEntry;
         //}
 
         notUnlockedSilhouette.sprite = CryptidPreviewTable[contentKey];

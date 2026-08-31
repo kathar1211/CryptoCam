@@ -182,6 +182,7 @@ public class LovelandFrogman : Cryptid {
                     Flee(fleeFromTarget, targetMinDistance);
                     if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                     {
+                        Debug.DrawLine(fleeFromTarget.position, transform.position, Color.black);
                         ReturnToPreviousState();
                     }
                 }
@@ -279,7 +280,7 @@ public class LovelandFrogman : Cryptid {
         if (animator.GetBool("climb")) { return; }
 
         //frogman leaves shore, returns to water
-        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit)//somethings happening here
+        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit && currentState != MoveState.flee)//somethings happening here
         {
             StartSwimming();
         }
