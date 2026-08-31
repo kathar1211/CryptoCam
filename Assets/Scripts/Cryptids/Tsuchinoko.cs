@@ -204,6 +204,8 @@ public class Tsuchinoko : Cryptid {
     {
         bool isUpright = animator.GetBool("Upright");
         if (isUpright) { animator.Play("bonk"); }
+
+        AchievementManager.UpdateBonkStats(this);
     }
 
     //wake up tsuchinoko, and specify what he should do after he's awake

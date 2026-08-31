@@ -195,6 +195,8 @@ public class Nessie : Cryptid {
         //it's possible for a carrot to land on nessie's back and stay there;
         //deactivate object to prevent it from triggering bonks forever
         if (bonked != null) { bonked.Active = false; }
+
+        AchievementManager.UpdateBonkStats(this);
     }
     
     public override bool SpecialPose()

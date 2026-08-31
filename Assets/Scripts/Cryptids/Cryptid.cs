@@ -488,6 +488,8 @@ public class Cryptid : MonoBehaviour {
         {
             animator.Play("bonk_right");
         }
+
+        AchievementManager.UpdateBonkStats(this);
     }
 
     public void AddObstacleToList(Collider obstacle)

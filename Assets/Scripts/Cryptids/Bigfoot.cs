@@ -287,6 +287,8 @@ public class Bigfoot : Cryptid
             timer = 0;
             timeToScratch = Random.Range(MinScratchTime, MaxScratchTime);
         }
+
+        AchievementManager.UpdateBonkStats(this);
     }
 
     public override bool SpecialPose()

@@ -272,6 +272,7 @@ public class Jackalope : Cryptid {
         if (currentState == MoveState.stand)
         {
             animator.Play("bonk_stand");
+            AchievementManager.UpdateBonkStats(this);
         }
         else
         {

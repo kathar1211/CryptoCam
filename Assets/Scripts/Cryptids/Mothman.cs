@@ -302,6 +302,8 @@ public class Mothman : Cryptid
                 //todo
                 break;
         }
+
+        AchievementManager.UpdateBonkStats(this);
     }
 
     //called if the object mothman is standing on gets hit with a carrot

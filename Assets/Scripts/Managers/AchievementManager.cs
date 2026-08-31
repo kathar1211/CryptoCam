@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AchievementManager 
@@ -49,6 +50,33 @@ public class AchievementManager
 
         SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES, entryCount);
         SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES_PERFECT, threeStarCount);
+    }
+
+    public static void UpdateBonkStats(Cryptid newlyBonkedCryptid)
+    {
+        string bonkedCryptids = PlayerPrefs.GetString(Constants.CryptidsBonked, null);
+        if (bonkedCryptids != null)
+        {
+            List<string> entries = bonkedCryptids.Split(',').ToList();
+            if (!entries.Contains(newlyBonkedCryptid.cryptidType.ToUpper())){
+                //newly bonked cryptid not on the list; add and increment stat
+
+                bonkedCryptids = bonkedCryptids + "," + newlyBonkedCryptid.cryptidType.ToUpper();
+                PlayerPrefs.SetString(Constants.CryptidsBonked, bonkedCryptids);
+                SetStat(STEAM_STATS.CRYPTIDS_BONKED, entries.Count + 1);
+            }
+            else
+            {
+                //newly bonked cryptid already on the list. nothing needs to be done
+                return;
+            }
+        }
+        //no list yet, so make it and increment the stat
+        else
+        {
+            PlayerPrefs.SetString(Constants.CryptidsBonked, newlyBonkedCryptid.cryptidType.ToUpper());
+            SetStat(STEAM_STATS.CRYPTIDS_BONKED, 1);
+        }
     }
 
     public static void SetStat(STEAM_STATS statID, int newStatValue)
