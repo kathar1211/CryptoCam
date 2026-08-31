@@ -62,7 +62,10 @@ public class TedConvos : MonoBehaviour {
         //mark that ted has now said this already
         blurbIndex++;
         PlayerPrefs.SetInt(Constants.TedTalkIndex, blurbIndex);
-        if (blurbIndex >= allBlurbs.Count) { PlayerPrefs.SetInt(Constants.HasSeenAllTedDialogue, 1); }
+        if (blurbIndex >= allBlurbs.Count) { 
+            PlayerPrefs.SetInt(Constants.HasSeenAllTedDialogue, 1);
+            AchievementManager.GrantAchievement(AchievementManager.STEAM_ACHIEVEMENTS.TALK_TO_TED);
+        }
     }
     
     ///

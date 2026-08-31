@@ -69,7 +69,7 @@ public class CabinLab : MonoBehaviour {
         MoveSelector(textButtons[0]);
         currentState = MenuState.Main;
         cryptidNomicon.gameObject.SetActive(false);
-
+        challengeBook.gameObject.SetActive(false);
 
         options.SetActive(false);
 
@@ -135,7 +135,7 @@ public class CabinLab : MonoBehaviour {
                     textBox.DisplayText();
 
                     //save now if we're not grading since we won't later
-                    SavePhotos(cryptidNomicon.GetPageContents()); 
+                    SavePhotos(cryptidNomicon.GetPageContents(), challengeBook.GetPageContents()); 
                 }
             }
 
@@ -235,6 +235,12 @@ public class CabinLab : MonoBehaviour {
                 if (gallery.ReadyToClose)
                 {
                     Return(gallery.gameObject);
+                }
+                break;
+            case MenuState.Challenges:
+                if (challengeBook.ReadyToClose)
+                {
+                    Return(challengeBook.gameObject);
                 }
                 break;
             case MenuState.Talking:
@@ -626,37 +632,32 @@ public class CabinLab : MonoBehaviour {
         actualTextBox.FeedText(dialogue, sprites, scoreUpdates);
 
 
-        //todo: check here for an existing photo in the cryptidnomicon, prompt user if they want to overwrite it
-        if (!isChallengePhoto)
+        CryptidNomicon cryptidData = null;
+        if (!isChallengePhoto) { cryptidData = cryptidNomicon; }
+        else{ cryptidData = challengeBook; }
+
+        if (cryptidData != null && cryptidData.HasEntry(photo.subjectName))
         {
-            CryptidNomicon cryptidData = cryptidNomicon;
-            if (cryptidData != null && cryptidData.HasEntry(photo.subjectName))
+            PageContent content = cryptidData.GetEntry(photo.subjectName);
+            if (content != null)
             {
+                Texture2D pic = content.image;
+                prevThumbnail.sprite = Sprite.Create(pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
+                Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
 
-                PageContent content = cryptidData.GetEntry(photo.subjectName);
-                if (content != null)
-                {
-                    Texture2D pic = content.image;
-                    prevThumbnail.sprite = Sprite.Create(pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f));
-                    Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
+                string existingEntry = isChallengePhoto ? Constants.ExistingEntryChallenge : Constants.ExistingEntry;
+                actualTextBox.FeedText(existingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
+                actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
+                actualTextBox.FeedTed(TedMoods.Surprised);
 
-                    actualTextBox.FeedText(Constants.ExistingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
-                    actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
-                    actualTextBox.FeedTed(TedMoods.Surprised);
+                string overwrite = isChallengePhoto ? Constants.OverwritePromptChallenge : Constants.OverwritePrompt;
+                actualTextBox.FeedText(overwrite, PromptPhotoChoice);
+                actualTextBox.FeedScore(Constants.Score + score);
+                actualTextBox.FeedTed(TedMoods.LookDownHandUp);
 
-                    actualTextBox.FeedText(Constants.OverwritePrompt, PromptPhotoChoice);
-                    actualTextBox.FeedScore(Constants.Score + score);
-                    actualTextBox.FeedTed(TedMoods.LookDownHandUp);
-
-                    actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
-                    actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
-                }
+                actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
+                actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
             }
-        }
-        //todo: do a similar check to overwrite for challenge photos
-        else
-        {
-
         }
 
         actualTextBox.DisplayText();
@@ -703,7 +704,9 @@ public class CabinLab : MonoBehaviour {
         textBox.ted.SlideTed();
 
         Debug.Log("grabbing existing photo at index " + gradingIndex);
-        //todo
+        CryptidNomicon cryptidData = challengeBook;
+        PageContent content = cryptidData.GetEntry(gradeableChallengePhotos[challengeGradingIndex].challenge.ToString());
+        prevScoreText.text = Constants.Score + content.photoScore;
     }
 
     //show buttons that give players the choice to keep an old photo vs a new one
@@ -751,22 +754,28 @@ public class CabinLab : MonoBehaviour {
         textBox.ClearLeftButtonAction();
 
         //just replace the new photo in our list of photos submitted with one created from the existing cryptidnomicon page
-        //todo
+        CryptidNomicon cryptidData = cryptidNomicon;
+        PageContent content = cryptidData.GetEntry(gradeableChallengePhotos[challengeGradingIndex].challenge.ToString());
+        gradeableChallengePhotos[challengeGradingIndex] = cryptidData.PageToPhoto(content);
     }
     #endregion
 
     //write photos from the current cryptidnomicon to file
-    public void SavePhotos(Dictionary<string, PageContent> pageContents)
+    public void SavePhotos(Dictionary<string, PageContent> pageContents, Dictionary<string, PageContent> challengeContents = null)
     {
         if (pageContents == null) { pageContents = cryptidNomicon.GetPageContents(); }
+        List<Texture2D> galleryPics = gallery.GetGallery();
 
         SaveData = new Save();
         SaveData.SaveFromCryptidNomicon(pageContents);
-        SaveData.SaveGalleryPhotos(gallery.GetGallery());
+        SaveData.SaveGalleryPhotos(galleryPics);
         SaveData.SaveChallengePhotos();
         SaveData.SaveGame();
 
         AchievementManager.UpdateCryptidNomiconStats(pageContents);
+        AchievementManager.UpdateChallengeStats(challengeContents);
+
+        if (galleryPics != null && galleryPics.Count > 0) { AchievementManager.GrantAchievement(AchievementManager.STEAM_ACHIEVEMENTS.SAVE_TO_GALLERY); }
     }
 }
 

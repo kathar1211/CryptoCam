@@ -52,6 +52,21 @@ public class AchievementManager
         SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES_PERFECT, threeStarCount);
     }
 
+    public static void UpdateChallengeStats(Dictionary<string, PageContent> contents)
+    {
+        if (contents == null) { return; }
+
+        int entryCount = 0;
+
+        foreach (KeyValuePair<string, PageContent> content in contents)
+        {
+            if (content.Value == null) { continue; }
+            if (!string.IsNullOrEmpty(content.Value.name)) { entryCount++; }
+        }
+
+        SetStat(STEAM_STATS.CHALLENGES_COMPLETE, entryCount);
+    }
+
     public static void UpdateBonkStats(Cryptid newlyBonkedCryptid)
     {
         string bonkedCryptids = PlayerPrefs.GetString(Constants.CryptidsBonked, null);

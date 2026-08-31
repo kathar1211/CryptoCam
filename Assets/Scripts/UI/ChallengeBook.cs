@@ -28,14 +28,15 @@ public class ChallengeBook : CryptidNomicon
             currentPage = 0;
             pageContents = new Dictionary<string, PageContent>
             {
-                { Constants.SleepingJackalope, null },
-                { Constants.SleepingTsuchinoko, null },
-                { Constants.NessieWithFrogman, null },
-                { Constants.LilypadFrogman, null },
-                { Constants.DancingFresno, null },
-                { Constants.PeaceSignFlatwoods, null },
-                { Constants.SittingBigfoot, null },
-                { Constants.CarryingMothman, null },
+                {ChallengePhotographContent.SleepingJackalope.ToString(), null },
+                {ChallengePhotographContent.DancingFresno.ToString(), null },
+                {ChallengePhotographContent.SleepingTsuchinoko.ToString(), null },
+                {ChallengePhotographContent.LilypadFrogman.ToString(), null },
+                {ChallengePhotographContent.PeaceSignFlatwoods.ToString(), null },
+                {ChallengePhotographContent.NessieWithFrogman.ToString(), null },
+                {ChallengePhotographContent.SittingBigfoot.ToString(), null },
+                {ChallengePhotographContent.CarryingMothman.ToString(), null },
+                
 
             };
             aboutTheAuthor.gameObject.SetActive(false);
@@ -62,14 +63,14 @@ public class ChallengeBook : CryptidNomicon
 
             ConceptArtLookupTable = new Dictionary<string, Sprite>
             {
-                {Constants.SleepingJackalope, JackalopeConceptArt },
-                {Constants.DancingFresno, FresnoConceptArt },
-                {Constants.SleepingTsuchinoko, TsuchinokoConceptArt },
-                {Constants.NessieWithFrogman, NessieConceptArt },
-                {Constants.PeaceSignFlatwoods, FlatwoodsConceptArt },
-                {Constants.SittingBigfoot, BigfootConceptArt },
-                {Constants.CarryingMothman, MothmanConceptArt },
-                {Constants.LilypadFrogman, FrogmanConceptArt },
+                {ChallengePhotographContent.SleepingJackalope.ToString(), JackalopeConceptArt },
+                {ChallengePhotographContent.DancingFresno.ToString(), FresnoConceptArt },
+                {ChallengePhotographContent.SleepingTsuchinoko.ToString(), TsuchinokoConceptArt },
+                {ChallengePhotographContent.NessieWithFrogman.ToString(), NessieConceptArt },
+                {ChallengePhotographContent.PeaceSignFlatwoods.ToString(), FlatwoodsConceptArt },
+                {ChallengePhotographContent.SittingBigfoot.ToString(), BigfootConceptArt },
+                {ChallengePhotographContent.CarryingMothman.ToString(), MothmanConceptArt },
+                {ChallengePhotographContent.LilypadFrogman.ToString(), FrogmanConceptArt },
             };
 
             //get total score to show at the front
