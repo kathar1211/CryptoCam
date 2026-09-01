@@ -211,13 +211,18 @@ public class CryptidNomicon : MonoBehaviour {
         //otherwise hide it
         else
         {
-            thumbnail.gameObject.SetActive(false);
-            scoreDesc.gameObject.SetActive(false);
-            imageDesc.gameObject.SetActive(false);
-            nameDesc.gameObject.SetActive(false);
-            notUnlockedSilhouette.gameObject.SetActive(false);
-            starRatingDisplay.gameObject.SetActive(false);
+            HideInnerContent();
         }
+    }
+
+    protected virtual void HideInnerContent()
+    {
+        thumbnail.gameObject.SetActive(false);
+        scoreDesc.gameObject.SetActive(false);
+        imageDesc.gameObject.SetActive(false);
+        nameDesc.gameObject.SetActive(false);
+        notUnlockedSilhouette.gameObject.SetActive(false);
+        starRatingDisplay.gameObject.SetActive(false);
     }
 
     protected virtual void DisplayUnlockedPage(PageContent content)

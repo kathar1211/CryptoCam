@@ -118,6 +118,12 @@ public class ChallengeBook : CryptidNomicon
         return content;
     }
 
+    protected override void HideInnerContent()
+    {
+        base.HideInnerContent();
+        unlockedConceptArt.gameObject.SetActive(false);
+    }
+
     protected override void DisplayUnlockedPage(PageContent content)
     {
         thumbnail.gameObject.SetActive(true);
