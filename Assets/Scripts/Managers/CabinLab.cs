@@ -286,15 +286,26 @@ public class CabinLab : MonoBehaviour {
                         textBox.FeedText(Constants.GalleryOnly, TedMoods.Pleased);
                     }
 
-                    textBox.DisplayText();
-                    currentState = MenuState.GradingDone;
-                    gradingThumbnailHolder.gameObject.SetActive(false);
-
                     //send over the photos to the cyrptidnomicon/gallery/challenges
                     Dictionary<string, PageContent> pageContents = cryptidNomicon.RecievePhotos(gradeablePhotos);
 
+                    bool challengesUnlockedPrev = ChallengeManager.ChallengeModeUnlocked();
+
                     //save
                     SavePhotos(pageContents);
+
+                    //if challenges became unlocked after saving, say something about it
+                    if (ChallengeManager.ChallengeModeUnlocked() && !challengesUnlockedPrev)
+                    {
+                        textBox.FeedText(Constants.CryptidNomiconCompleteDialogue, TedMoods.Surprised);
+                        textBox.FeedText(Constants.CryptidNomiconCompleteDialogue2, TedMoods.Happy);
+                        textBox.FeedText(Constants.ChallengesUnlockedDialogue, TedMoods.LookUpHandUp);
+                        textBox.FeedText(Constants.ChallengesUnlockedDialogue2, TedMoods.Default);
+                    }
+
+                    textBox.DisplayText();
+                    currentState = MenuState.GradingDone;
+                    gradingThumbnailHolder.gameObject.SetActive(false);
 
                 }
                 break;
@@ -415,6 +426,12 @@ public class CabinLab : MonoBehaviour {
             }
 
             //otherwise open the challenges ui
+            else
+            {
+                challengeBook.ReadyToClose = false;
+                challengeBook.gameObject.SetActive(true);
+                currentState = MenuState.Challenges;
+            }
             
         }
        
@@ -769,7 +786,7 @@ public class CabinLab : MonoBehaviour {
         SaveData = new Save();
         SaveData.SaveFromCryptidNomicon(pageContents);
         SaveData.SaveGalleryPhotos(galleryPics);
-        SaveData.SaveChallengePhotos();
+        SaveData.SaveChallengePhotos(challengeContents);
         SaveData.SaveGame();
 
         AchievementManager.UpdateCryptidNomiconStats(pageContents);

@@ -86,9 +86,11 @@ public static class Constants {
     public static string NewPhotoSelected = "Got it, I'll use your new photo then.";
     public static string OldPhotoSelected = "Sure thing, we'll keep your old photo then.";
     public static string GalleryOnly = "Oh, looks like you kept some photos for yourself too. \nI'll put those in the gallery for you.";
-    //public static string ChallengeOnly = "Ah, I see you went above and beyond! \nYou can check out the Challenges section to see how you did.";
-    //public static string GalleryAndChallenge = "Your gallery and challenge photos have been updated too. \nI'm sure you know where to find them.";
     public static string GalleryNoGrading = "Oh, none for me this time, huh? No worries, \nenjoy your new gallery photos.";
+    public static string CryptidNomiconCompleteDialogue = "Well, look at that! That's all the cryptid photos I \nasked for. Thank you so much for all your hard work.";
+    public static string CryptidNomiconCompleteDialogue2 = "Of course I'll always accept new submissions if you \nthink you can do better. But with this, the \nCryptid-Nomicon is complete!";
+    public static string ChallengesUnlockedDialogue = "That said, if you're up for some additional work, \nthere's some specific behaviors I've been hoping to \nsee captured on film.";
+    public static string ChallengesUnlockedDialogue2 = "You can take a look at the \"challenges\" section to see \nif any of them pique your interest.";
 
     //button options during grading
     public static string KeepPreviousText = "Keep Previous Photo";

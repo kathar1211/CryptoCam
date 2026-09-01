@@ -48,6 +48,7 @@ public class AchievementManager
            if (content.Value.photoScore >= StarIndicator.ThreeStarScore) { threeStarCount++; }
         }
 
+        if (entryCount == 8) { ChallengeManager.UnlockChallengeMode(); }
         SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES, entryCount);
         SetStat(STEAM_STATS.CRYPTIDNOMICON_ENTRIES_PERFECT, threeStarCount);
     }

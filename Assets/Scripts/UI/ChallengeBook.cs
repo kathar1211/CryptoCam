@@ -44,7 +44,7 @@ public class ChallengeBook : CryptidNomicon
             //if we have save data, load it up on creating the cryptidnomicon
             if (Save.SaveFileExists())
             {
-                pageContents = Save.LoadCryptidNomicon();
+                pageContents = Save.LoadChallengeBook();
             }
 
             isInitialized = true;
@@ -63,14 +63,14 @@ public class ChallengeBook : CryptidNomicon
 
             ConceptArtLookupTable = new Dictionary<string, Sprite>
             {
-                {ChallengePhotographContent.SleepingJackalope.ToString(), JackalopeConceptArt },
-                {ChallengePhotographContent.DancingFresno.ToString(), FresnoConceptArt },
-                {ChallengePhotographContent.SleepingTsuchinoko.ToString(), TsuchinokoConceptArt },
-                {ChallengePhotographContent.NessieWithFrogman.ToString(), NessieConceptArt },
-                {ChallengePhotographContent.PeaceSignFlatwoods.ToString(), FlatwoodsConceptArt },
-                {ChallengePhotographContent.SittingBigfoot.ToString(), BigfootConceptArt },
-                {ChallengePhotographContent.CarryingMothman.ToString(), MothmanConceptArt },
-                {ChallengePhotographContent.LilypadFrogman.ToString(), FrogmanConceptArt },
+                {Constants.SleepingJackalope.ToString(), JackalopeConceptArt },
+                {Constants.DancingFresno.ToString(), FresnoConceptArt },
+                {Constants.SleepingTsuchinoko.ToString(), TsuchinokoConceptArt },
+                {Constants.NessieWithFrogman.ToString(), NessieConceptArt },
+                {Constants.PeaceSignFlatwoods.ToString(), FlatwoodsConceptArt },
+                {Constants.SittingBigfoot.ToString(), BigfootConceptArt },
+                {Constants.CarryingMothman.ToString(), MothmanConceptArt },
+                {Constants.LilypadFrogman.ToString(), FrogmanConceptArt },
             };
 
             //get total score to show at the front
@@ -135,7 +135,6 @@ public class ChallengeBook : CryptidNomicon
         //thumbnail.rectTransform.sizeDelta = new Vector2(content.image.width/5, content.image.height/5);
         scoreDesc.text = "Score: " + content.photoScore;
         starRatingDisplay.ShowStars(content.photoScore);
-        imageDesc.text = content.flavorText;
         nameDesc.text = content.name;
         unlockedConceptArt.sprite = ConceptArtLookupTable[content.name];
     }

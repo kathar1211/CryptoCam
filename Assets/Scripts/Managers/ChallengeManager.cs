@@ -44,9 +44,41 @@ public class ChallengeManager
         }
     }
 
+    public static ChallengePhotographContent GetChallengeContentFromString(string description)
+    {
+        switch (description)
+        {
+            
+            case Constants.SleepingJackalope:
+                return ChallengePhotographContent.SleepingJackalope;
+            case Constants.SleepingTsuchinoko:
+                return ChallengePhotographContent.SleepingTsuchinoko;
+            case Constants.LilypadFrogman:
+                return ChallengePhotographContent.LilypadFrogman;
+            case Constants.NessieWithFrogman:
+                return ChallengePhotographContent.NessieWithFrogman;
+            case Constants.DancingFresno:
+                return ChallengePhotographContent.DancingFresno;
+            case Constants.SittingBigfoot:
+                return ChallengePhotographContent.SittingBigfoot;
+            case Constants.PeaceSignFlatwoods:
+                return ChallengePhotographContent.PeaceSignFlatwoods;
+            case Constants.CarryingMothman:
+                return ChallengePhotographContent.CarryingMothman;
+                
+            default:
+                return ChallengePhotographContent.None;
+        }
+    }
+
     public static bool ChallengeModeUnlocked()
     {
         return PlayerPrefs.GetInt(Constants.CryptidNomiconComplete) == 1;
+    }
+
+    public static void UnlockChallengeMode()
+    {
+        PlayerPrefs.SetInt(Constants.CryptidNomiconComplete, 1);
     }
 
     public static ChallengePhotographContent CheckChallengePhotoRequirements(List<Cryptid> photoSubjects)

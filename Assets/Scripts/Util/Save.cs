@@ -23,22 +23,12 @@ public struct PhotoOnlyData
     public byte[] imageData;
 }
 
-//structure for challenge photos
-[System.Serializable]
-public struct ChallengePhotoData
-{
-    public int photoScore;
-    public byte[] imageData;
-    public ChallengePhotographContent challenge;
-}
-
-
 [System.Serializable]
 public class Save
 {
     public List<Photodata> photos;
     public List<PhotoOnlyData> galleryPhotos;
-    public List<ChallengePhotoData> challengePhotos;
+    public List<Photodata> challengePhotos;
 
     //create save data based on contents of the crytpidnomicon
     public void SaveFromCryptidNomicon(Dictionary<string, PageContent> contents)
@@ -69,9 +59,19 @@ public class Save
         }
     }
 
-    public void SaveChallengePhotos()
+    public void SaveChallengePhotos(Dictionary<string, PageContent> contents)
     {
-
+        if (contents == null) { return; }
+        challengePhotos = new List<Photodata>();
+        foreach (KeyValuePair<string, PageContent> content in contents)
+        {
+            if (content.Value == null) { continue; }
+            Photodata data = new Photodata();
+            data.photoScore = content.Value.photoScore;
+            data.imageData = content.Value.image.GetRawTextureData();
+            data.name = content.Value.name;
+            challengePhotos.Add(data);
+        }
     }
 
     //write this save to file
@@ -137,6 +137,43 @@ public class Save
             if (Constants.tedsWriting.ContainsKey(photo.name)) { content.flavorText = Constants.tedsWriting[photo.name]; }
 
             loadedContents[content.name] = content;
+        }
+
+        return loadedContents;
+    }
+
+    public static Dictionary<string, PageContent> LoadChallengeBook()
+    {
+        Dictionary<string, PageContent> loadedContents;
+        Save loadedSave = LoadSave();
+        if (loadedSave == null) { loadedSave = new Save(); }
+
+        //start with a blank save and fill in data as we find it. keeps order consistent and allows for empty entries
+        loadedContents = new Dictionary<string, PageContent>
+        {
+            {ChallengePhotographContent.SleepingJackalope.ToString(), null },
+            {ChallengePhotographContent.DancingFresno.ToString(), null },
+            {ChallengePhotographContent.SleepingTsuchinoko.ToString(), null },
+            {ChallengePhotographContent.LilypadFrogman.ToString(), null },
+            {ChallengePhotographContent.PeaceSignFlatwoods.ToString(), null },
+            {ChallengePhotographContent.NessieWithFrogman.ToString(), null },
+            {ChallengePhotographContent.SittingBigfoot.ToString(), null },
+            {ChallengePhotographContent.CarryingMothman.ToString(), null },
+        };
+
+        if (loadedSave.challengePhotos == null) { return loadedContents; }
+
+        foreach (Photodata photo in loadedSave.challengePhotos)
+        {
+            PageContent content = new PageContent();
+            content.image = new Texture2D(Constants.CameraWidth, Constants.CameraHeight, TextureFormat.RGB24, true);
+            content.image.LoadRawTextureData(photo.imageData);
+            content.image.Apply();
+            content.name = photo.name;
+            content.photoScore = photo.photoScore;
+            //if (Constants.tedsWriting.ContainsKey(photo.name)) { content.flavorText = Constants.tedsWriting[photo.name]; }
+
+            loadedContents[ChallengeManager.GetChallengeContentFromString(content.name).ToString()] = content;
         }
 
         return loadedContents;
