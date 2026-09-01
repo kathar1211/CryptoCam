@@ -156,9 +156,12 @@ public class GradeManager : MonoBehaviour {
             if (ClickSFX != null) { ClickSFX.Play(); }
 
             selectedImage = src;
+            Photograph selectedPhotograph = allPhotos[selectedImage];
             //bigThumbnail.sprite = src.sprite;
             bigThumbnail.gameObject.SetActive(true);
-            bigThumbnail.Init(src.Image, galleryPhotos.Contains(allPhotos[selectedImage]), false, false);
+            bool qualifiesForChallenge = ChallengeManager.ChallengeModeUnlocked() && selectedPhotograph.challenge != ChallengePhotographContent.None;
+            bool isSelectedForChallenge = challengeSelection.ContainsKey(selectedPhotograph.challenge) && challengeSelection[selectedPhotograph.challenge].Equals(selectedPhotograph);
+            bigThumbnail.Init(src.Image, galleryPhotos.Contains(selectedPhotograph), qualifiesForChallenge, isSelectedForChallenge);
             textbox.FeedText(Constants.ConfirmSelectPhoto);
             textbox.DisplayText();
             ToggleInputButtons(true);
@@ -566,6 +569,7 @@ public class GradeManager : MonoBehaviour {
         if (!challengeSelection.ContainsKey(picToAdd.challenge))
         {
             challengeSelection.Add(picToAdd.challenge, picToAdd);
+            selectedImage.ChallengeSelector.SetActive(true);
         }
         else
         {
@@ -573,11 +577,13 @@ public class GradeManager : MonoBehaviour {
             if (!picToAdd.Equals(challengeSelection[picToAdd.challenge]))
             {
                 UpdateChallengePhoto(picToAdd);
+                selectedImage.ChallengeSelector.SetActive(true);
             }
             //if the existing entry is the current photo, remove it
             else
             {
                 challengeSelection.Remove(picToAdd.challenge);
+                selectedImage.ChallengeSelector.SetActive(false);
             }
         }
     }

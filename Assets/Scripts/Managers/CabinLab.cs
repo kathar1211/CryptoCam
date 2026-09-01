@@ -18,7 +18,7 @@ public class CabinLab : MonoBehaviour {
     public GameObject ted;
 
     public CryptidNomicon cryptidNomicon;
-    public CryptidNomicon challengeBook;
+    public ChallengeBook challengeBook;
 
     //for options
     public GameObject options;
@@ -119,6 +119,7 @@ public class CabinLab : MonoBehaviour {
 
                 //these might need to be graded same as cryptidnomicon photos. so user can choose what to keep
                 gradeableChallengePhotos.AddRange(gameManager.pics4challenge);
+                gameManager.pics4challenge.Clear();
             }
 
 
@@ -289,10 +290,11 @@ public class CabinLab : MonoBehaviour {
                     //send over the photos to the cyrptidnomicon/gallery/challenges
                     Dictionary<string, PageContent> pageContents = cryptidNomicon.RecievePhotos(gradeablePhotos);
 
+                    Dictionary<string, PageContent> challengePageContents = challengeBook.RecievePhotos(gradeableChallengePhotos);
                     bool challengesUnlockedPrev = ChallengeManager.ChallengeModeUnlocked();
 
                     //save
-                    SavePhotos(pageContents);
+                    SavePhotos(pageContents, challengePageContents);
 
                     //if challenges became unlocked after saving, say something about it
                     if (ChallengeManager.ChallengeModeUnlocked() && !challengesUnlockedPrev)
@@ -652,10 +654,12 @@ public class CabinLab : MonoBehaviour {
         CryptidNomicon cryptidData = null;
         if (!isChallengePhoto) { cryptidData = cryptidNomicon; }
         else{ cryptidData = challengeBook; }
+        string key = photo.subjectName;
+        if (isChallengePhoto) { key = photo.challenge.ToString(); }
 
-        if (cryptidData != null && cryptidData.HasEntry(photo.subjectName))
+        if (cryptidData != null && cryptidData.HasEntry(key))
         {
-            PageContent content = cryptidData.GetEntry(photo.subjectName);
+            PageContent content = cryptidData.GetEntry(key);
             if (content != null)
             {
                 Texture2D pic = content.image;
@@ -663,7 +667,9 @@ public class CabinLab : MonoBehaviour {
                 Debug.Log("grabbing existing photo for " + content.name + " at index " + gradingIndex);
 
                 string existingEntry = isChallengePhoto ? Constants.ExistingEntryChallenge : Constants.ExistingEntry;
-                actualTextBox.FeedText(existingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), ShowPreviousPhoto);
+                System.Action showPrev = ShowPreviousPhoto;
+                if (isChallengePhoto) { showPrev = ShowPreviousChallengePhoto; }
+                actualTextBox.FeedText(existingEntry.Replace(Constants.ParameterSTR, content.photoScore.ToString()), showPrev);
                 actualTextBox.FeedScore(Constants.Score + score); //keep feeding the score for every additional line of dialogue so it doesnt disappear
                 actualTextBox.FeedTed(TedMoods.Surprised);
 
@@ -672,7 +678,14 @@ public class CabinLab : MonoBehaviour {
                 actualTextBox.FeedScore(Constants.Score + score);
                 actualTextBox.FeedTed(TedMoods.LookDownHandUp);
 
-                actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
+                if (!isChallengePhoto)
+                {
+                    actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldPhoto);
+                }
+                else
+                {
+                    actualTextBox.SetLeftButton(Constants.KeepPreviousText, ChoseOldChallengePhoto);
+                }
                 actualTextBox.SetRightButton(Constants.UseNewText, ChoseNewPhoto);
             }
         }

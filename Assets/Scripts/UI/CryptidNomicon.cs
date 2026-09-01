@@ -60,9 +60,15 @@ public class CryptidNomicon : MonoBehaviour {
     protected void Start () {
         if (!isInitialized)
         {
-            page = this.transform.GetChild(0).gameObject;
-            currentPage = 0;
-            pageContents = new Dictionary<string, PageContent>
+            Initialize();
+        }
+    }
+
+    protected virtual void Initialize()
+    {
+        page = this.transform.GetChild(0).gameObject;
+        currentPage = 0;
+        pageContents = new Dictionary<string, PageContent>
             {
                 { Constants.Jackalope, null },
                 { Constants.Tsuchinoko, null },
@@ -74,17 +80,17 @@ public class CryptidNomicon : MonoBehaviour {
                 { Constants.Mothman, null },
 
             };
-            aboutTheAuthor.gameObject.SetActive(false);
+        aboutTheAuthor.gameObject.SetActive(false);
 
-            //if we have save data, load it up on creating the cryptidnomicon
-            if (Save.SaveFileExists())
-            {
-                pageContents = Save.LoadCryptidNomicon();
-            }
+        //if we have save data, load it up on creating the cryptidnomicon
+        if (Save.SaveFileExists())
+        {
+            pageContents = Save.LoadCryptidNomicon();
+        }
 
-            isInitialized = true;
+        isInitialized = true;
 
-            CryptidPreviewTable = new Dictionary<string, Sprite>
+        CryptidPreviewTable = new Dictionary<string, Sprite>
             {
                 {Constants.Jackalope, JackalopePreview },
                 {Constants.Fresno, FresnoPreview },
@@ -96,9 +102,8 @@ public class CryptidNomicon : MonoBehaviour {
                 {Constants.Frogman, FrogmanPreview },
             };
 
-            //get total score to show at the front
-            UpdateScoreText();
-        }
+        //get total score to show at the front
+        UpdateScoreText();
     }
 	
 	// Update is called once per frame
@@ -281,7 +286,7 @@ public class CryptidNomicon : MonoBehaviour {
     //accept photos from grading to display in the crytpidnomicon
     public virtual Dictionary<string, PageContent> RecievePhotos(List<Photograph> finalPhotos)
     {
-        if (!isInitialized) { Start(); }
+        if (!isInitialized) { Initialize(); }
         foreach (Photograph photo in finalPhotos)
         {
             if (photo.finalScore <= 0) { continue; }
@@ -339,14 +344,14 @@ public class CryptidNomicon : MonoBehaviour {
     //returns true if this cryptidnomicon has an entry for a given cryptid
     public bool HasEntry(string key)
     {
-        if (!isInitialized) { Start(); }
+        if (!isInitialized) { Initialize(); }
         return pageContents.ContainsKey(key);
     }
 
     //returns the entry for a given cryptid. returns an empty pagecontent object if no entry is found
     public PageContent GetEntry(string key)
     {
-        if (!isInitialized) { Start(); }
+        if (!isInitialized) { Initialize(); }
         if (HasEntry(key))
         {
             return pageContents[key];
@@ -362,7 +367,7 @@ public class CryptidNomicon : MonoBehaviour {
     }
 
     public Dictionary<string, PageContent> GetPageContents() { 
-        if (!isInitialized) { Start(); }
+        if (!isInitialized) { Initialize(); }
         return pageContents;
     }
 }

@@ -165,7 +165,7 @@ public class BigThumbnail : MonoBehaviour
     public void OnChallengeButtonClick()
     {
         picSelectedForChallenge = !picSelectedForChallenge;
-        challengeSelectedIndicator.SetActive(!challengeSelectedIndicator);
+        challengeSelectedIndicator.SetActive(!challengeSelectedIndicator.activeSelf);
 
         ChallengeLabel.text = picSelectedForChallenge ? Constants.UnsubmitChallenge : Constants.SubmitChallenge;
 

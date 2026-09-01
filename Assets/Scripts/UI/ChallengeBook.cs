@@ -19,14 +19,11 @@ public class ChallengeBook : CryptidNomicon
 
     private Dictionary<string, Sprite> ConceptArtLookupTable;
 
-    // Start is called before the first frame update
-    protected new void Start()
+    protected override void Initialize()
     {
-        if (!isInitialized)
-        {
-            page = this.transform.GetChild(0).gameObject;
-            currentPage = 0;
-            pageContents = new Dictionary<string, PageContent>
+        page = this.transform.GetChild(0).gameObject;
+        currentPage = 0;
+        pageContents = new Dictionary<string, PageContent>
             {
                 {ChallengePhotographContent.SleepingJackalope.ToString(), null },
                 {ChallengePhotographContent.DancingFresno.ToString(), null },
@@ -36,20 +33,20 @@ public class ChallengeBook : CryptidNomicon
                 {ChallengePhotographContent.NessieWithFrogman.ToString(), null },
                 {ChallengePhotographContent.SittingBigfoot.ToString(), null },
                 {ChallengePhotographContent.CarryingMothman.ToString(), null },
-                
+
 
             };
-            aboutTheAuthor.gameObject.SetActive(false);
+        aboutTheAuthor.gameObject.SetActive(false);
 
-            //if we have save data, load it up on creating the cryptidnomicon
-            if (Save.SaveFileExists())
-            {
-                pageContents = Save.LoadChallengeBook();
-            }
+        //if we have save data, load it up on creating the cryptidnomicon
+        if (Save.SaveFileExists())
+        {
+            pageContents = Save.LoadChallengeBook();
+        }
 
-            isInitialized = true;
+        isInitialized = true;
 
-            CryptidPreviewTable = new Dictionary<string, Sprite>
+        CryptidPreviewTable = new Dictionary<string, Sprite>
             {
                 {ChallengePhotographContent.SleepingJackalope.ToString(), JackalopePreview },
                 {ChallengePhotographContent.DancingFresno.ToString(), FresnoPreview },
@@ -61,7 +58,7 @@ public class ChallengeBook : CryptidNomicon
                 {ChallengePhotographContent.LilypadFrogman.ToString(), FrogmanPreview },
             };
 
-            ConceptArtLookupTable = new Dictionary<string, Sprite>
+        ConceptArtLookupTable = new Dictionary<string, Sprite>
             {
                 {Constants.SleepingJackalope.ToString(), JackalopeConceptArt },
                 {Constants.DancingFresno.ToString(), FresnoConceptArt },
@@ -73,9 +70,8 @@ public class ChallengeBook : CryptidNomicon
                 {Constants.LilypadFrogman.ToString(), FrogmanConceptArt },
             };
 
-            //get total score to show at the front
-            UpdateScoreText();
-        }
+        //get total score to show at the front
+        UpdateScoreText();
     }
 
     // Update is called once per frame
@@ -87,7 +83,9 @@ public class ChallengeBook : CryptidNomicon
     //accept photos from grading to display in the crytpidnomicon
     public override Dictionary<string, PageContent> RecievePhotos(List<Photograph> finalPhotos)
     {
-        if (!isInitialized) { Start(); }
+        if (finalPhotos == null || finalPhotos.Count == 0) { return null; }
+
+        if (!isInitialized) { Initialize(); }
         foreach (Photograph photo in finalPhotos)
         {
             if (photo.finalScore <= 0) { continue; }
