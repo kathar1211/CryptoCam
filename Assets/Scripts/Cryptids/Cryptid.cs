@@ -53,6 +53,8 @@ public class Cryptid : MonoBehaviour {
     private float fleeRepositionInterval = 5f;
     private float chaseRepositionInterval = .5f;
 
+    public float maximumViewableDistance = 400;
+
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
