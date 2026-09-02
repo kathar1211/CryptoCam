@@ -236,7 +236,7 @@ public class FlatwoodsMonster : Cryptid
     {
         if (Photography.Instance == null) { return false; }
         if (!Photography.Instance.CameraReady) { return false; }
-        if (!Photography.Instance.IsInCameraView(renderer, null, true)){ return false; }
+        if (!Photography.Instance.IsInCameraView(renderer, maximumViewableDistance, null, true)){ return false; }
 
         return true;
 

@@ -176,7 +176,7 @@ public class Photography : MonoBehaviour {
             if (Component.CenterOfMass != null) { positionInShot = Component.CenterOfMass; }
             else if (Component.HeadBone != null) { positionInShot = Component.HeadBone.transform; }
 
-            if (IsInCameraView(Component.renderer, positionInShot))
+            if (IsInCameraView(Component.renderer, Component.maximumViewableDistance, positionInShot))
             {
                 //dont add cryptids that are in frame but not visible
                 if (checkVisibility(Component) != 0) { subjects.Add(Component); }
@@ -437,7 +437,7 @@ public class Photography : MonoBehaviour {
         return allPics;
     }
 
-    public bool IsInCameraView(Renderer renderer, Transform centerofMass = null, bool suppressDebug = false)
+    public bool IsInCameraView(Renderer renderer, float maximumDistance, Transform centerofMass = null, bool suppressDebug = false)
     {
         //https://answers.unity.com/questions/8003/how-can-i-know-if-a-gameobject-is-seen-by-a-partic.html
         //check if cyrptid position is visible by camera
@@ -447,7 +447,7 @@ public class Photography : MonoBehaviour {
             if (centerofMass == null) viewPos = cryptoCam.WorldToViewportPoint(renderer.transform.position);
             else { viewPos = cryptoCam.WorldToViewportPoint(centerofMass.position); }
             //setting a maximum distance; if cryptid is too far away it doesnt count as in view
-            if (viewPos.z >= 400)
+            if (viewPos.z >= maximumDistance)
             {
                 if (!suppressDebug) { Debug.Log(renderer.name + " is not in frame due to exceeding maximum distance"); }
                 return false;
