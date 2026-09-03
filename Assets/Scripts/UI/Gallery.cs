@@ -232,6 +232,7 @@ public class Gallery : MonoBehaviour
         foreach (Photograph photo in newPhotos)
         {
             allGalleryPhotos.Add(photo.pic);
+            allPhotoSprites.Add(Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f), 100, 0, SpriteMeshType.FullRect));
         }
 
         DrawThumbnails();

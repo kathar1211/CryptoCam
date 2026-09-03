@@ -127,6 +127,7 @@ public class CabinLab : MonoBehaviour {
             if (gameManager.HasGalleryPhotos())
             {
                 gallery.MergePhotos(gameManager.pics4gallery);
+                gameManager.pics4gallery.Clear();
                 if (!grading) {
 
                     string[] dialogue = { Constants.GalleryNoGrading };
