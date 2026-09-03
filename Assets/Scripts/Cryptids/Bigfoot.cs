@@ -21,7 +21,7 @@ public class Bigfoot : Cryptid
 
     public const float MaxSitTime = 300;
     public const float MinSitTime = -1;
-    public const float MaxScratchTime = 60;
+    public const float MaxScratchTime = 30;
     public const float MinScratchTime = 0;
 
     //keep track of  move state,
@@ -279,6 +279,7 @@ public class Bigfoot : Cryptid
 
             //stop moving while getting bonked
             currentState = MoveState.befuddle;
+            KillNavMeshMovement();
 
             //prepare to rotate towards the object
             targetPos = bonked.transform.position;
@@ -294,7 +295,7 @@ public class Bigfoot : Cryptid
     public override bool SpecialPose()
     {
         //todo
-
+        if (animator.GetBool("IsTurning")) { return true; }
         return base.SpecialPose();
     }
 

@@ -31,6 +31,7 @@ public class Mothman : Cryptid
     public float targetHeightOffset; //aim for a little above the resting point so he can ease down
 
     public Transform JackalopeAttachTarget;
+    public CryptidTrigger JackalopeZone;
 
     public float upSpeed;
     public float forwardSpeed;
@@ -310,5 +311,28 @@ public class Mothman : Cryptid
     public void PerchBonked()
     {
         TakeOff();
+    }
+
+    public void AquireTarget(Jackalope jackalopeAquired)
+    {
+        //if we somehow already have a target, prioritize the closer one
+        if (jackalopeTarget != null)
+        {
+            float newJackalopeDistance = (this.transform.position - jackalopeAquired.transform.position).magnitude;
+            float oldJackalopeDistance = (this.transform.position - jackalopeTarget.transform.position).magnitude;
+
+            if (newJackalopeDistance < oldJackalopeDistance) { jackalopeTarget = jackalopeAquired; }
+        }
+        else
+        {
+            jackalopeTarget = jackalopeAquired;
+        }
+        
+    }
+
+    public void LoseTarget(Jackalope jackalopeLost)
+    {
+        //if this is somehow a different jackalope than our target, dont worry about it
+        if (jackalopeLost != jackalopeTarget) { return; }
     }
 }

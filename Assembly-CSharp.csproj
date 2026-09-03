@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\CryptidTrigger.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\HeadBone.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\MothmanPathPoint.cs" />
+    <Compile Include="Assets\Scripts\Cryptids\Cryptid Utilities\MothmanTriggerZone.cs" />
     <Compile Include="Assets\Scripts\Cryptids\Cryptid.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FlatwoodsMonster.cs" />
     <Compile Include="Assets\Scripts\Cryptids\FresnoNightcrawler.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Assets\Scripts\Util\SetCursorState.cs" />
     <Compile Include="Assets\Scripts\Util\VersionLabel.cs" />
     <Compile Include="Assets\Scripts\Util\spin2d.cs" />
+    <Compile Include="Assets\ToggleAnimationParameterBool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
