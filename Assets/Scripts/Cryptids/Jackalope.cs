@@ -288,6 +288,7 @@ public class Jackalope : Cryptid {
         animator.SetBool(StandUp, false);
         animator.SetBool(Run, true);
         animator.SetBool(Sniff, false);
+        rb.useGravity = false;
     }
 
 }

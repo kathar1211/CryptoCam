@@ -16,7 +16,7 @@ public class Mothman : Cryptid
     private const string animatorTriggerFlap = "flapOnce";
     private const string animatorBoolGrabbing = "Grabbing";
 
-    public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Skedaddling, None }
+    public enum MoveState { Resting, Takeoff, Ascending, Descending, Landing, Targeting, Grabbing, Skedaddling, None }
     public MoveState currentMoveState;
     private MoveState nextMoveState = MoveState.None;
     private bool justChangedStates = false;
@@ -31,7 +31,6 @@ public class Mothman : Cryptid
     public float targetHeightOffset; //aim for a little above the resting point so he can ease down
 
     public Transform JackalopeAttachTarget;
-    public CryptidTrigger JackalopeZone;
 
     public float upSpeed;
     public float forwardSpeed;
@@ -93,7 +92,14 @@ public class Mothman : Cryptid
                 {
                     animator.SetBool(animatorBoolFlying, true);
                     animator.SetBool(animatorBoolFlap, true);
-                    currentMoveState = MoveState.Ascending;
+                    if (jackalopeTarget == null)
+                    {
+                        currentMoveState = MoveState.Ascending;
+                    }
+                    else
+                    {
+                        currentMoveState = MoveState.Targeting;
+                    }
                     timer = 0;
                 }
                 break;
@@ -190,6 +196,31 @@ public class Mothman : Cryptid
 
                 break;
             case MoveState.Targeting:
+                target = jackalopeTarget.transform.position;
+                RotateToward(target, rotateSpeed);
+                Move(forwardSpeed);
+                Descend(upSpeed, target.y);
+
+                float distanceFromJackalope = (this.transform.position - target).magnitude;
+                if (distanceFromJackalope > jackalopeGrabRange)
+                {
+                    animator.SetBool(animatorBoolFlying, false);
+                    currentMoveState = MoveState.Grabbing;
+                }
+                break;
+            case MoveState.Grabbing:
+                target = jackalopeTarget.transform.position;
+                RotateToward(target, rotateSpeed);
+                Move(forwardSpeed);
+                Descend(upSpeed, target.y);
+
+                distanceFromJackalope = (this.transform.position - target).magnitude;
+                if (distanceFromJackalope > jackalopeGrabRange)
+                {
+                    animator.SetBool(animatorBoolFlying, false);
+                    currentMoveState = MoveState.Grabbing;
+                }
+
                 break;
         }
     }
@@ -326,6 +357,16 @@ public class Mothman : Cryptid
         else
         {
             jackalopeTarget = jackalopeAquired;
+        }
+
+        //take off if perched, otherwise go straight in for the kill
+        if (currentMoveState == MoveState.Resting)
+        {
+            currentMoveState = MoveState.Takeoff;
+        }
+        else
+        {
+            currentMoveState = MoveState.Targeting;
         }
         
     }
