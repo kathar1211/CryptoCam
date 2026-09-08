@@ -376,4 +376,10 @@ public class Mothman : Cryptid
         //if this is somehow a different jackalope than our target, dont worry about it
         if (jackalopeLost != jackalopeTarget) { return; }
     }
+
+    //used for animations to trigger mothman's wing flap sound at the right time
+    public void PlaySFX()
+    {
+        audioSource.Play();
+    }
 }

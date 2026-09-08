@@ -25,6 +25,7 @@ public class Cryptid : MonoBehaviour {
     new public Renderer renderer;
 
     protected Animator animator;
+    protected AudioSource audioSource;
 
     //allows base class to override child class and stop movement
     protected bool lockMovementSuper = false;
@@ -61,6 +62,7 @@ public class Cryptid : MonoBehaviour {
         nav = this.gameObject.GetComponent<NavMeshAgent>();
         renderer = this.gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         obstacles = new List<Collider>();
 	}
 	
