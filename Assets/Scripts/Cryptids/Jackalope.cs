@@ -34,9 +34,10 @@ public class Jackalope : Cryptid {
     string Speed = "Speed";
     string Awake = "Awake";
     string Eat = "Eat";
+    string Caught = "Caught";
     public bool startAwake;
 
-    public enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward, caught};
+    public enum MoveState { run, stand, scratch, flee, sleep, eat, wake, runtoward, caught, falling};
     public MoveState currentState;
     MoveState nextState;
 
@@ -140,6 +141,7 @@ public class Jackalope : Cryptid {
             //dont move in these states
             case MoveState.caught:
             case MoveState.sleep:
+            case MoveState.falling:
                //do nothing
                 break;
             case MoveState.wake:
@@ -226,7 +228,7 @@ public class Jackalope : Cryptid {
         }
         else if (other.tag == Constants.WaterTag)
         {
-            Poof();
+            Poof(false);
         }
 
         base.OnTriggerEnter(other);
@@ -286,9 +288,36 @@ public class Jackalope : Cryptid {
         nav.enabled = false;
         currentState = MoveState.caught;
         animator.SetBool(StandUp, false);
-        animator.SetBool(Run, true);
+        animator.SetBool(Run, false);
         animator.SetBool(Sniff, false);
         rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+        animator.SetBool(Caught, true);
+    }
+
+    public void GetReleased()
+    {
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        rb.velocity = Vector3.zero;
+        animator.SetBool(Caught, false);
+        currentState = MoveState.falling;
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        base.OnCollisionEnter(collision);
+
+        //detect contact with ground when falling
+        if (currentState == MoveState.falling && collision.gameObject.tag == Constants.TerrainTag)
+        {
+            nav.enabled = true;
+            currentState = MoveState.run;
+            animator.SetBool(StandUp, false);
+            animator.SetBool(Caught, false);
+            animator.SetBool(Run, true);
+            animator.SetBool(Sniff, false);
+        }
     }
 
 }

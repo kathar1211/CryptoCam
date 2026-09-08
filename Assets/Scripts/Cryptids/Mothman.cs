@@ -81,7 +81,8 @@ public class Mothman : Cryptid
                 //just hang out until its time to move to the next point
                 if (TakeOffChance.UpdateTimerAndCheckSuccess() || nextMoveState == MoveState.Takeoff)
                 {
-                    TakeOff();
+                    //TEMP WHILE TESTING JACKALOPE GRABBING
+                    //TakeOff();
                 }
                 break;
             case MoveState.Takeoff:
@@ -95,6 +96,10 @@ public class Mothman : Cryptid
                     if (jackalopeTarget == null)
                     {
                         currentMoveState = MoveState.Ascending;
+                    }
+                    else if (jackalopeTarget.currentState == Jackalope.MoveState.caught)
+                    {
+                        currentMoveState = MoveState.Skedaddling;
                     }
                     else
                     {
@@ -166,11 +171,20 @@ public class Mothman : Cryptid
                 break;
             case MoveState.Skedaddling:
                 //mothman flies to a spot the player cant reach
-                RotateToward(outOfBoundsPoint.transform.position, rotateSpeed);
+                target = outOfBoundsPoint.transform.position;
+                RotateToward(target, rotateSpeed);
                 Move(forwardSpeed);
                 Ascend(upSpeed, maximumAltitude);
 
+                if (this.transform.position.y > maximumAltitude / 3f) { animator.SetBool(animatorBoolFlying, true); }
+
                 //at a certain point he and the jackalope should probably despawn
+                xzTarget = new Vector3(target.x, target.y, target.z);
+                xzTarget.y = this.transform.position.y;
+                if ((this.transform.position - xzTarget).magnitude < landingRangeForRestPoint)
+                {
+                    Poof(false);
+                }
 
                 break;
             case MoveState.Landing:
@@ -198,27 +212,59 @@ public class Mothman : Cryptid
             case MoveState.Targeting:
                 target = jackalopeTarget.transform.position;
                 RotateToward(target, rotateSpeed);
-                Move(forwardSpeed);
-                Descend(upSpeed, target.y);
+                Move(forwardSpeed * 1.5f);
+
+                if (this.transform.position.y < target.y)
+                {
+                    Ascend(upSpeed, maximumAltitude);
+
+                    //we should be flapping if we still need to go up
+                    if ((target.y + targetHeightOffset) - this.transform.position.y > targetHeightOffset * 2)
+                    {
+                        animator.SetBool(animatorBoolFlap, true);
+                    }
+                }
+                else
+                {
+                    Descend(upSpeed, target.y);
+                    animator.SetBool(animatorBoolFlap, false);
+                }
 
                 float distanceFromJackalope = (this.transform.position - target).magnitude;
-                if (distanceFromJackalope > jackalopeGrabRange)
+                if (distanceFromJackalope < jackalopeGrabRange)
                 {
-                    animator.SetBool(animatorBoolFlying, false);
+                    animator.SetBool(animatorBoolGrabbing, true);
                     currentMoveState = MoveState.Grabbing;
                 }
                 break;
             case MoveState.Grabbing:
                 target = jackalopeTarget.transform.position;
+                float xyDistancefromTarget = (new Vector3(target.x, target.y) - new Vector3(this.transform.position.x, this.transform.position.y)).magnitude;
+
                 RotateToward(target, rotateSpeed);
-                Move(forwardSpeed);
-                Descend(upSpeed, target.y);
+                Move(forwardSpeed * 2f, 0, xyDistancefromTarget);
+                if (this.transform.position.y < target.y)
+                {
+                    Ascend(upSpeed, maximumAltitude);
+
+                    //we should be flapping if we still need to go up
+                    if ((target.y + targetHeightOffset) - this.transform.position.y > targetHeightOffset * 2)
+                    {
+                        animator.SetBool(animatorBoolFlap, true);
+                    }
+                }
+                else
+                {
+                    Descend(upSpeed * 2f, target.y);
+                    animator.SetBool(animatorBoolFlap, false);
+                }
 
                 distanceFromJackalope = (this.transform.position - target).magnitude;
-                if (distanceFromJackalope > jackalopeGrabRange)
+                if (distanceFromJackalope <= minDistFromJackalope)
                 {
-                    animator.SetBool(animatorBoolFlying, false);
-                    currentMoveState = MoveState.Grabbing;
+                    SnatchJackalope();
+                    currentMoveState = MoveState.Takeoff;
+                    timer = 0;
                 }
 
                 break;
@@ -247,6 +293,7 @@ public class Mothman : Cryptid
             }
         }
         pathIndex++;
+        if (pathIndex >= PathPoints.Length) { pathIndex = 0; }
 
         animator.SetBool(animatorBoolResting, false);
         currentMoveState = MoveState.Takeoff;
@@ -281,6 +328,7 @@ public class Mothman : Cryptid
         if (jackalopeTarget == null) { return; }
         jackalopeTarget.GetCaught();
         jackalopeTarget.transform.SetParent(JackalopeAttachTarget);
+        jackalopeTarget.transform.localPosition = Vector3.zero;
     }
 
     //mark how far the next resting spot is when we first takeoff, so that later we can measure progress against it
@@ -309,6 +357,7 @@ public class Mothman : Cryptid
             case MoveState.Takeoff:
             case MoveState.Landing:
             case MoveState.Targeting:
+            case MoveState.Grabbing:
                 //hover looks for forward and back rather than left/right, so we have to calculate impact direction again
                 //line from cryptid to carrot
                 Vector3 bonkDistance = this.gameObject.transform.position - bonked.gameObject.transform.position;
@@ -331,10 +380,37 @@ public class Mothman : Cryptid
                 break;
 
             case MoveState.Skedaddling:
-                //todo
+                
+                if (animator.GetBool(animatorBoolFlying))
+                {
+                    if (leftImpact) { animator.SetTrigger(animatorTiggerBonkLeft); }
+                    else { animator.SetTrigger(animatorTriggerBonkRight); }
+                }
+                else
+                {
+                    bonkDistance = this.gameObject.transform.position - bonked.gameObject.transform.position;
+
+                    //if the line from the cryptid to the carrot is in the same direction as the cryptid's forward vector,
+                    //then the carrot is in front of the cryptid
+                    frontImpact = false;
+                    if (Vector3.Dot(this.transform.forward, bonkDistance) < 0)
+                    {
+                        frontImpact = true;
+                    }
+                    if (frontImpact) { animator.SetTrigger(animatorTiggerBonkFront); }
+                    else { animator.SetTrigger(animatorTriggerBonkBack); }
+                }
+
                 break;
         }
 
+        //if mothman has a jackalope, drop it
+        if (jackalopeTarget != null)
+        {
+            jackalopeTarget.GetReleased();
+            LoseTarget(jackalopeTarget);
+        }
+        
         AchievementManager.UpdateBonkStats(this);
     }
 
@@ -362,10 +438,12 @@ public class Mothman : Cryptid
         //take off if perched, otherwise go straight in for the kill
         if (currentMoveState == MoveState.Resting)
         {
-            currentMoveState = MoveState.Takeoff;
+            TakeOff();
         }
         else
         {
+            animator.SetBool(animatorBoolGrabbing, true);
+            animator.SetBool(animatorBoolFlying, false);
             currentMoveState = MoveState.Targeting;
         }
         
@@ -375,6 +453,11 @@ public class Mothman : Cryptid
     {
         //if this is somehow a different jackalope than our target, dont worry about it
         if (jackalopeLost != jackalopeTarget) { return; }
+
+        jackalopeTarget = null;
+        animator.SetBool(animatorBoolGrabbing, false);
+        animator.SetBool(animatorBoolFlying, false);
+        TakeOff();
     }
 
     //used for animations to trigger mothman's wing flap sound at the right time

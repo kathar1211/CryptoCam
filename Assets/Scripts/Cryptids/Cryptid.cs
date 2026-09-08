@@ -77,10 +77,20 @@ public class Cryptid : MonoBehaviour {
 	}
 
     //standard method to move forward some amount and to turn some amount
-    public void Move(float forwardSpeed, float rotateSpeed = 0)
+    public void Move(float forwardSpeed, float rotateSpeed = 0, float maximumDistance = -1)
     {
-        //move forward
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        if (maximumDistance == -1)
+        {
+            //move forward
+            transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        }
+        else
+        {
+            //move forward unless it would put us past our target
+            float distanceToMove = Mathf.Min(Time.deltaTime * forwardSpeed, maximumDistance);
+            transform.Translate(distanceToMove * Vector3.forward);
+        }
+        
 
         //turn right
         if (rotateSpeed != 0)
@@ -437,7 +447,7 @@ public class Cryptid : MonoBehaviour {
     }
 
     //remove cryptid from the level
-    protected void Poof()
+    protected void Poof(bool triggerAchievement = true)
     {
         //we're instantiating the particles and the sfx bc both these references are expected to be to prefabs
         if (particles != null)
@@ -447,6 +457,8 @@ public class Cryptid : MonoBehaviour {
             //newParticles.transform.localScale = this.transform.localScale * 2;
             //newParticles.transform.Translate(0, 1, 0);//move it up a lil
         }
+
+        if (triggerAchievement) { AchievementManager.GrantAchievement(AchievementManager.STEAM_ACHIEVEMENTS.CRYPTID_POOF); }
 
         Destroy(this.gameObject);
     }
