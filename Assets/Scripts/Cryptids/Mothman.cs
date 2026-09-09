@@ -36,6 +36,7 @@ public class Mothman : Cryptid
     public float forwardSpeed;
     public float rotateSpeed;
     public float takeOffTime;
+    public float targetingRotateSpeed;
 
     RandomChanceInterval TakeOffChance;
     RandomChanceInterval FlapChance;
@@ -211,7 +212,7 @@ public class Mothman : Cryptid
                 break;
             case MoveState.Targeting:
                 target = jackalopeTarget.transform.position;
-                RotateToward(target, rotateSpeed);
+                RotateToward(target, targetingRotateSpeed);
                 Move(forwardSpeed * 1.5f);
 
                 if (this.transform.position.y < target.y)
@@ -241,7 +242,7 @@ public class Mothman : Cryptid
                 target = jackalopeTarget.transform.position;
                 float xyDistancefromTarget = (new Vector3(target.x, target.y) - new Vector3(this.transform.position.x, this.transform.position.y)).magnitude;
 
-                RotateToward(target, rotateSpeed);
+                RotateToward(target, targetingRotateSpeed);
                 Move(forwardSpeed * 2f, 0, xyDistancefromTarget);
                 if (this.transform.position.y < target.y)
                 {
@@ -264,6 +265,7 @@ public class Mothman : Cryptid
                 {
                     SnatchJackalope();
                     currentMoveState = MoveState.Takeoff;
+                    rb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
                     timer = 0;
                 }
 
@@ -407,6 +409,7 @@ public class Mothman : Cryptid
         //if mothman has a jackalope, drop it
         if (jackalopeTarget != null)
         {
+            jackalopeTarget.transform.parent = null;
             jackalopeTarget.GetReleased();
             LoseTarget(jackalopeTarget);
         }
@@ -446,6 +449,8 @@ public class Mothman : Cryptid
             animator.SetBool(animatorBoolFlying, false);
             currentMoveState = MoveState.Targeting;
         }
+
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
         
     }
 
@@ -458,6 +463,7 @@ public class Mothman : Cryptid
         animator.SetBool(animatorBoolGrabbing, false);
         animator.SetBool(animatorBoolFlying, false);
         TakeOff();
+        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePosition;
     }
 
     //used for animations to trigger mothman's wing flap sound at the right time

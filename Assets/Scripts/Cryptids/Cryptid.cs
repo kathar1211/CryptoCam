@@ -442,6 +442,7 @@ public class Cryptid : MonoBehaviour {
     {
         if (other.tag == "DestroyZone")
         {
+            Debug.Log("destroying " + cryptidType + " due to impact with " + other.gameObject.name);
             Poof();
         }
     }
