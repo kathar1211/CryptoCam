@@ -82,8 +82,7 @@ public class Mothman : Cryptid
                 //just hang out until its time to move to the next point
                 if (TakeOffChance.UpdateTimerAndCheckSuccess() || nextMoveState == MoveState.Takeoff)
                 {
-                    //TEMP WHILE TESTING JACKALOPE GRABBING
-                    //TakeOff();
+                    TakeOff();
                 }
                 break;
             case MoveState.Takeoff:

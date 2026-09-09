@@ -10,6 +10,7 @@ public class MothmanTriggerZone : MonoBehaviour
     {
         if (other.transform.root.TryGetComponent<Jackalope>(out Jackalope foundJackalope))
         {
+            if (foundJackalope.currentState == Jackalope.MoveState.sleep) { return; }
             mothman.AquireTarget(foundJackalope);
         }
     }
