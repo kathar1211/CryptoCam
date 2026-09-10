@@ -105,6 +105,7 @@
     <Compile Include="Assets\Scripts\UI\BigThumbnail.cs" />
     <Compile Include="Assets\Scripts\UI\ChallengeBook.cs" />
     <Compile Include="Assets\Scripts\UI\ControllerNavigableConfirmationWindow.cs" />
+    <Compile Include="Assets\Scripts\UI\Credits.cs" />
     <Compile Include="Assets\Scripts\UI\CryptidNomicon.cs" />
     <Compile Include="Assets\Scripts\UI\Gallery.cs" />
     <Compile Include="Assets\Scripts\UI\HelpPrompt.cs" />
