@@ -8,8 +8,8 @@ public class LovelandFrogman : Cryptid {
     ParticleSystem ripples;
 
     //keep track of frogmans move state, serializable bc his default state isnt set in stone yet
-    enum MoveState { swim, walk, walkforward, walktoward, edgeLeap, sit, lilypadsit, flee, stand, floating}
-    [SerializeField] MoveState currentState;
+    public enum MoveState { swim, walk, walkforward, walktoward, edgeLeap, sit, lilypadsit, flee, stand, floating}
+    [SerializeField] public MoveState currentState;
     MoveState previousState;
 
     //amount position needs to be adjusted after a leap
@@ -80,7 +80,8 @@ public class LovelandFrogman : Cryptid {
             animator.SetBool("climb", false);
             animator.SetBool("swim", false);
             animator.Play("sit");
-            timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+            //timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+            timeToSit = -1;
             nav.baseOffset = 0;
         }
         else if (currentState == MoveState.swim)
@@ -182,6 +183,7 @@ public class LovelandFrogman : Cryptid {
                     Flee(fleeFromTarget, targetMinDistance);
                     if ((fleeFromTarget.position - transform.position).magnitude > safeZone)
                     {
+                        Debug.DrawLine(fleeFromTarget.position, transform.position, Color.black);
                         ReturnToPreviousState();
                     }
                 }
@@ -225,6 +227,7 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+        timer = 0;
 
         //do some extra stuff if we just leapt on nessie
         Nessie tryGetNessie = GetNessieComponentFromTransform(transform.parent);
@@ -279,7 +282,7 @@ public class LovelandFrogman : Cryptid {
         if (animator.GetBool("climb")) { return; }
 
         //frogman leaves shore, returns to water
-        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit)//somethings happening here
+        if (other.tag == Constants.WaterTag && currentState != MoveState.swim && currentState != MoveState.lilypadsit && currentState != MoveState.flee)//somethings happening here
         {
             StartSwimming();
         }
@@ -460,5 +463,10 @@ public class LovelandFrogman : Cryptid {
     {
         Transform root = other.root;
         return root.GetComponent<Nessie>();
+    }
+
+    public bool IsRidingNessie()
+    {
+        return ridingNessie != null;
     }
 }

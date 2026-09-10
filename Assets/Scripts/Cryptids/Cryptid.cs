@@ -25,6 +25,7 @@ public class Cryptid : MonoBehaviour {
     new public Renderer renderer;
 
     protected Animator animator;
+    protected AudioSource audioSource;
 
     //allows base class to override child class and stop movement
     protected bool lockMovementSuper = false;
@@ -61,6 +62,7 @@ public class Cryptid : MonoBehaviour {
         nav = this.gameObject.GetComponent<NavMeshAgent>();
         renderer = this.gameObject.GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         obstacles = new List<Collider>();
 	}
 	
@@ -75,15 +77,50 @@ public class Cryptid : MonoBehaviour {
 	}
 
     //standard method to move forward some amount and to turn some amount
-    public void Move(float forwardSpeed, float rotateSpeed = 0)
+    public void Move(float forwardSpeed, float rotateSpeed = 0, float maximumDistance = -1)
     {
-        //move forward
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        if (maximumDistance == -1)
+        {
+            //move forward
+            transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        }
+        else
+        {
+            //move forward unless it would put us past our target
+            float distanceToMove = Mathf.Min(Time.deltaTime * forwardSpeed, maximumDistance);
+            transform.Translate(distanceToMove * Vector3.forward);
+        }
+        
 
         //turn right
         if (rotateSpeed != 0)
         {
             transform.Rotate(Vector3.up * Time.deltaTime * rotateSpeed);
+        }
+    }
+
+    //move a cryptid in a direction without necessarily rotating them to face it
+    public void SlideToward(float slideSpeed, Vector3 targetPosition)
+    {
+        Vector3 targetDir = targetPosition - transform.position;
+        targetDir = Vector3.Normalize(targetDir);
+        transform.Translate(targetDir * Time.deltaTime * slideSpeed, Space.World);
+        Debug.DrawLine(transform.position, targetPosition, Color.magenta);
+    }
+
+    public void Ascend(float upSpeed, float heightCap = -1)
+    {
+        if (transform.position.y < heightCap || heightCap == -1)
+        {
+            transform.Translate(Vector3.up * Time.deltaTime * upSpeed);
+        }
+    }
+
+    public void Descend(float downSpeed, float heightMin = -1)
+    {
+        if (transform.position.y > heightMin || heightMin == -1)
+        {
+            transform.Translate(Vector3.down * Time.deltaTime * downSpeed);
         }
     }
 
@@ -271,6 +308,14 @@ public class Cryptid : MonoBehaviour {
         Debug.DrawRay(transform.position, transform.forward * 10, Color.cyan);
     }
 
+    public void RotateToMatchDirection(Vector3 targetforward, float rotateSpeed)
+    {
+        targetforward = Vector3.Normalize(targetforward); //this should be a normal vector to begin with, but lets not assume
+        Vector3 newDir = Vector3.RotateTowards(transform.forward, targetforward, rotateSpeed * Time.deltaTime, 0);
+        transform.rotation = Quaternion.LookRotation(newDir, Vector3.up);
+        transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0); //lock rotation to only rotate about y axis
+    }
+
     public void RotateAway(Vector3 target, float rotateSpeed)
     {
         rotateSpeed = Mathf.Abs(rotateSpeed);
@@ -397,6 +442,7 @@ public class Cryptid : MonoBehaviour {
     {
         if (other.tag == "DestroyZone")
         {
+            Debug.Log("destroying " + cryptidType + " due to impact with " + other.gameObject.name);
             Poof();
         }
     }
