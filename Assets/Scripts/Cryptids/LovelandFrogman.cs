@@ -80,7 +80,8 @@ public class LovelandFrogman : Cryptid {
             animator.SetBool("climb", false);
             animator.SetBool("swim", false);
             animator.Play("sit");
-            timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+            //timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+            timeToSit = -1;
             nav.baseOffset = 0;
         }
         else if (currentState == MoveState.swim)
@@ -226,6 +227,7 @@ public class LovelandFrogman : Cryptid {
         currentState = MoveState.lilypadsit;
         AdjustPosition(true);
         timeToSit = Random.Range(sitTimeMin, sitTimeMax);
+        timer = 0;
 
         //do some extra stuff if we just leapt on nessie
         Nessie tryGetNessie = GetNessieComponentFromTransform(transform.parent);

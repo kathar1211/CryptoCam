@@ -17,17 +17,33 @@ public class BonkableObject : MonoBehaviour
 
     private float bonkCooldownTime = .5f; //time in seconds between when we trigger the bonk effects
     private float bonkTimer = .5f;
+    private Rigidbody rb;
+    bool checkedLanding = false;
 
     // Start is called before the first frame update
     void Start()
     {
         Active = true;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Active) { bonkTimer += Time.deltaTime; }
+
+        //check what this landed on so we can grant the lilypad achievement if applicable
+        if (this.rb.velocity.magnitude == 0 && !checkedLanding)
+        {
+            if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit)){
+                if (hit.collider.tag == "lilypad")
+                {
+                    AchievementManager.GrantAchievement(AchievementManager.STEAM_ACHIEVEMENTS.LAND_CARROT_ON_LILYPAD);
+                }
+            }
+
+            checkedLanding = true;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -43,7 +59,7 @@ public class BonkableObject : MonoBehaviour
     {
         if (bonkTimer < bonkCooldownTime) { return false; }
         if (!Active) { return false; }
-        if (Mathf.Abs(this.gameObject.GetComponent<Rigidbody>().velocity.magnitude) < VelocityThreshold) { return false; }
+        if (Mathf.Abs(rb.velocity.magnitude) < VelocityThreshold) { return false; }
 
         return true;
     }

@@ -27,7 +27,6 @@ public class Bigfoot : Cryptid
     //keep track of  move state,
     public enum MoveState { wander, sit, idle, befuddle, flee, pointReached }
     [SerializeField] public MoveState currentState;
-    private bool lookedOnce;
 
     //wandering properties
     public float wanderDistance;
@@ -102,14 +101,9 @@ public class Bigfoot : Cryptid
                     break;
                 }
 
-                if (pathIndex < PathPoints.Length)
-                {
-                    MoveToward(PathPoints[pathIndex].transform);
-                }
-                else
-                {
-                    Wander(wanderDistance, minDistance);
-                }
+                if (pathIndex >= PathPoints.Length) { pathIndex = 0; }
+                MoveToward(PathPoints[pathIndex].transform);
+
                 //move forward after setting direction in other methods
                 //Move(walkSpeed);
                 CheckPath();

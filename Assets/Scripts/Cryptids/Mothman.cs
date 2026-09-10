@@ -255,7 +255,14 @@ public class Mothman : Cryptid
                 }
                 else
                 {
-                    Descend(upSpeed * 2f, target.y);
+                    float descendSpeed = upSpeed * 2;
+                    //let mothman swoop in quick if he's directly above jackalope
+                    if (xyDistancefromTarget < minDistFromJackalope)
+                    {
+                        descendSpeed *= 10;
+                    }
+
+                    Descend(descendSpeed, target.y);
                     animator.SetBool(animatorBoolFlap, false);
                 }
 
