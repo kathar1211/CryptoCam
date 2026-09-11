@@ -20,6 +20,8 @@ public class BonkableObject : MonoBehaviour
     private Rigidbody rb;
     bool checkedLanding = false;
 
+    float prevFrameVelocity = -1;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,17 +35,19 @@ public class BonkableObject : MonoBehaviour
         if (Active) { bonkTimer += Time.deltaTime; }
 
         //check what this landed on so we can grant the lilypad achievement if applicable
-        if (this.rb.velocity.magnitude == 0 && !checkedLanding)
+        if (this.rb.velocity.magnitude == 0 && prevFrameVelocity == 0 && !checkedLanding)
         {
-            if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit)){
+            if (Physics.Raycast(this.transform.position, Vector3.down, out RaycastHit hit, 20)){
                 if (hit.collider.tag == "lilypad")
                 {
                     AchievementManager.GrantAchievement(AchievementManager.STEAM_ACHIEVEMENTS.LAND_CARROT_ON_LILYPAD);
                 }
+                checkedLanding = true;
+                Debug.Log("carrot landed on " + hit.collider.gameObject.name);
             }
-
-            checkedLanding = true;
+            
         }
+        prevFrameVelocity = rb.velocity.magnitude;
     }
 
     private void OnCollisionEnter(Collision collision)
