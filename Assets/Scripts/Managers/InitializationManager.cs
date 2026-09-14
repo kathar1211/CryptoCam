@@ -12,6 +12,7 @@ public class InitializationManager : MonoBehaviour
     public GameObject LoadingIcon;
     private bool isSceneLoading = false;
     public bool useSteam;
+    public bool useSentry;
 
     [SerializeField] SentryOptionConfiguration SentryConfig;
     [SerializeField] SteamManager SteamManager;
@@ -33,17 +34,20 @@ public class InitializationManager : MonoBehaviour
     //anything we want to do before launching the title screen happens here
     private async void Init()
     {
-        //check if we've asked for permission around error tracking
-        if (!PlayerPrefs.HasKey(Constants.ErrorTrackingConsent))
+        if (useSentry)
         {
-            ErrorsPrompt.AnimateOnscreen();
-            PauseInitialization = true;
-        }
-        else
-        {
-            bool errorTrackingAllowed = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent) == 1;
-            if (errorTrackingAllowed) { SentryConfig.EnableSentry(); Debug.Log("initialization: enabling sentry"); }
-            else { SentryConfig.DisableSentry(); Debug.Log("initialization: disabling sentry"); }
+            //check if we've asked for permission around error tracking
+            if (!PlayerPrefs.HasKey(Constants.ErrorTrackingConsent))
+            {
+                ErrorsPrompt.AnimateOnscreen();
+                PauseInitialization = true;
+            }
+            else
+            {
+                bool errorTrackingAllowed = PlayerPrefs.GetInt(Constants.ErrorTrackingConsent) == 1;
+                if (errorTrackingAllowed) { SentryConfig.EnableSentry(); Debug.Log("initialization: enabling sentry"); }
+                else { SentryConfig.DisableSentry(); Debug.Log("initialization: disabling sentry"); }
+            }
         }
 
         await UniTask.WaitUntil(() => PauseInitialization == false);

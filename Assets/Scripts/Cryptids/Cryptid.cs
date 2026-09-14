@@ -56,6 +56,9 @@ public class Cryptid : MonoBehaviour {
 
     public float maximumViewableDistance = 400;
 
+    protected float minimumFleeDistance = 10;
+    protected float maximumFleeDistance = 50;
+
     // Use this for initialization- needs to be called manually from base class's "Start" function
     protected void StartUp () {
         rb = this.gameObject.GetComponent<Rigidbody>();
@@ -241,7 +244,7 @@ public class Cryptid : MonoBehaviour {
         //get a random position on the navmesh by sampling a few times at a small radius
         for (int i = 0; i < 10; i++)
         {
-            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(10, 50)); //lets make sure this works before getting overly concerned about values
+            Vector3 positionAwayFromTarget = this.transform.position + (oppositeDirection * Random.Range(minimumFleeDistance, maximumFleeDistance)); //lets make sure this works before getting overly concerned about values
             positionAwayFromTarget.y = transform.position.y - (nav.baseOffset * transform.localScale.y);
             Debug.DrawLine(transform.position, positionAwayFromTarget, Color.gray);
 

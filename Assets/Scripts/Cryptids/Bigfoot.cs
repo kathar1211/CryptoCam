@@ -27,6 +27,7 @@ public class Bigfoot : Cryptid
     //keep track of  move state,
     public enum MoveState { wander, sit, idle, befuddle, flee, pointReached }
     [SerializeField] public MoveState currentState;
+    private MoveState nextState;
 
     //wandering properties
     public float wanderDistance;
@@ -58,6 +59,8 @@ public class Bigfoot : Cryptid
     {
         baseScore = 250;
         cryptidType = Constants.Bigfoot;
+        minimumFleeDistance = 50;
+        maximumFleeDistance = 200;
 
         StartUp();
 
@@ -149,17 +152,17 @@ public class Bigfoot : Cryptid
                     currentState = MoveState.wander;
                 }
 
-                /*
-                //chance to start sittin
-                if (SitChance.UpdateTimerAndCheckSuccess())
+                //if we were waiting for animations to be done before fleeing, check on their progress here
+                if (nextState == MoveState.flee)
                 {
-                    animator.SetBool(SitBool, true);
-                    currentState = MoveState.sit;
-
-                    //how long we sittin?
-                    timer = 0;
-                    timeToSit = Random.Range(MinSitTime, MaxSitTime);
-                }*/
+                    if (!animator.GetCurrentAnimatorStateInfo(0).IsName(SIT_IDLE) && !animator.GetCurrentAnimatorStateInfo(0).IsName(SIT_TRANSITION_UP))
+                    {
+                        SetNavmeshFleeTarget(avoidTarget);
+                        animator.SetBool(WalkBool, true);
+                        currentState = MoveState.flee;
+                        nextState = MoveState.wander;
+                    }
+                }
 
                 break;
             case MoveState.befuddle:
@@ -226,10 +229,14 @@ public class Bigfoot : Cryptid
             {
                 animator.SetBool(SitBool, false);
                 currentState = MoveState.idle;
+                nextState = MoveState.flee;
+                avoidTarget = other.transform;
                 return;
             }
             else if (animator.GetCurrentAnimatorStateInfo(0).IsName(SIT_IDLE) || animator.GetCurrentAnimatorStateInfo(0).IsName(SIT_TRANSITION_UP)){
                 //wait for these anims to finish
+                nextState = MoveState.flee;
+                avoidTarget = other.transform;
                 return;
             }
 
@@ -248,7 +255,7 @@ public class Bigfoot : Cryptid
 
         if (currentState == MoveState.sit)
         {
-            if (leftImpact)
+            if (!leftImpact) //why is this backwards?
             {
                 animator.Play(SIT_BONK_LEFT);
             }
@@ -262,7 +269,7 @@ public class Bigfoot : Cryptid
         }
         else
         {
-            if (leftImpact)
+            if (!leftImpact)
             {
                 animator.Play(STAND_BONK_LEFT);
             }
