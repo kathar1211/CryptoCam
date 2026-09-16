@@ -52,6 +52,7 @@ public class Mothman : Cryptid
         FlapChance = new RandomChanceInterval(5, .15f);
 
         pathIndex = -1;
+        if (currentMoveState == MoveState.Takeoff) { TakeOff(); }
     }
 
     // Update is called once per frame

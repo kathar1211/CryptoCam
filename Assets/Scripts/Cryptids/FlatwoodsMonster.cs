@@ -218,6 +218,11 @@ public class FlatwoodsMonster : Cryptid
             Debug.Log("flatwoods fleeing from" + other.gameObject.name);
         }
 
+        else if (other.tag == Constants.WaterTag)
+        {
+            Poof(false);
+        }
+
 
         base.OnTriggerEnter(other);
     }
