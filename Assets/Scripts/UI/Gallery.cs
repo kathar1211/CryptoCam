@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,8 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Gallery : MonoBehaviour
 {
+    public const int GALLERY_MAX = 90;
+
     [SerializeField]
     SelectableImage[] thumbnails;
     [SerializeField]
@@ -53,6 +56,9 @@ public class Gallery : MonoBehaviour
     private bool isInitialized = false;
     int pageIndex = 0;
 
+    public Color capacityOKcolor;
+    public Color capacityBadColor;
+    public TextMeshProUGUI capacityText;
 
     public CabinLab cabinLab;
 
@@ -101,12 +107,14 @@ public class Gallery : MonoBehaviour
             emptyGalleryText.gameObject.SetActive(true);
             thumbnailHolder.SetActive(false);
             pageNavigation.gameObject.SetActive(false);
+            capacityText.gameObject.SetActive(false);
             return;
         }
         else
         {
             emptyGalleryText.gameObject.SetActive(false);
             thumbnailHolder.SetActive(true);
+            capacityText.gameObject.SetActive(true);
         }
 
         //show left/right navigation only if we have more photos than can show on a screen
@@ -132,6 +140,11 @@ public class Gallery : MonoBehaviour
 
         //update pagedots
         pageNavigation.SelectPage(pageIndex);
+
+        //update capacity
+        capacityText.text = allGalleryPhotos.Count + "/" + GALLERY_MAX;
+        if (allGalleryPhotos.Count >= GALLERY_MAX) { capacityText.color = capacityBadColor; }
+        else { capacityText.color = capacityOKcolor; }
     }
 
 
@@ -234,6 +247,10 @@ public class Gallery : MonoBehaviour
             allGalleryPhotos.Add(photo.pic);
             allPhotoSprites.Add(Sprite.Create(photo.pic, new Rect(0f, 0f, photo.pic.width, photo.pic.height), new Vector2(.5f, .5f), 100, 0, SpriteMeshType.FullRect));
         }
+
+        //reinitialize page dots bc our amount of photos has changed
+        int pageIndexLimit = Mathf.FloorToInt((allGalleryPhotos.Count * 1f) / (thumbnails.Length * 1f));
+        pageNavigation.Init(pageIndexLimit);
 
         DrawThumbnails();
         return allGalleryPhotos;

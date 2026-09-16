@@ -121,6 +121,7 @@ public class TitleScreen : MonoBehaviour {
         PlayerPrefs.DeleteKey(Constants.TedTalkIndex);
         PlayerPrefs.DeleteKey(Constants.HasSeenAllTedDialogue);
         PlayerPrefs.DeleteKey(Constants.CryptidNomiconComplete);
+        PlayerPrefs.DeleteKey(Constants.GalleryAtCapacity);
         SceneManager.LoadSceneAsync("Lab");
         if (selectSFX != null) { selectSFX.Play(); }
 

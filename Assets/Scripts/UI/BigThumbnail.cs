@@ -52,6 +52,8 @@ public class BigThumbnail : MonoBehaviour
 
         gallerySelectedIndicator.SetActive(selectedForGallery);
         challengeSelectedIndicator.SetActive(selectedForChallenge);
+
+        if (PlayerPrefs.GetInt(Constants.GalleryAtCapacity, 0) == 1) { GalleryButton.GetComponent<Button>().interactable = false; }
     }
 
     public void Update()

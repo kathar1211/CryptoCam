@@ -138,6 +138,7 @@ public static class Constants {
     public static string HasSeenAllTedDialogue = "HasTalkedToTed";
     public static string CryptidNomiconComplete = "CryptidNomiconComplete";
     public static string CryptidsBonked = "CryptidsBonked";
+    public static string GalleryAtCapacity = "GalleryAtCapacity";
 
     //used for image data- what size are these images
     public static int CameraWidth = 1920;

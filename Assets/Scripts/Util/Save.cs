@@ -57,6 +57,15 @@ public class Save
             data.imageData = photo.GetRawTextureData();
             galleryPhotos.Add(data);
         }
+
+        if (galleryPhotos.Count >= Gallery.GALLERY_MAX)
+        {
+            PlayerPrefs.SetInt(Constants.GalleryAtCapacity, 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(Constants.GalleryAtCapacity, 0);
+        }
     }
 
     public void SaveChallengePhotos(Dictionary<string, PageContent> contents)
