@@ -101,6 +101,7 @@ public class Bigfoot : Cryptid
                 {
                     // MoveToward(targetPos, rotateSpeed);
                     KillNavMeshMovement();
+                    ResetNavAgentPosition();
                     break;
                 }
 
@@ -110,6 +111,7 @@ public class Bigfoot : Cryptid
                 //move forward after setting direction in other methods
                 //Move(walkSpeed);
                 CheckPath();
+                if (currentState == MoveState.sit) { break; } //if path navigation triggered a sit, dont try to do an idle or turn pose
 
                 //i dont want to interrupt the turn pose by checking and firing other states
                 if (animator.GetBool("IsTurning")) { break; }
